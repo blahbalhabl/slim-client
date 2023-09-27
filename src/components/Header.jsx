@@ -6,7 +6,7 @@ import Tooltip from "./Tooltip";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icons } from '../utils/Icons'
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import logo from '../assets/site-logo.png';
+import logo from '../assets/site-logo.svg';
 import "../styles/Header.css";
 
 const Header = () => {
