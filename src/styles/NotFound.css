@@ -1,0 +1,18 @@
+.Notfound {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.Notfound > h1 {
+  font-size: 8rem;
+  margin-bottom: 20px;
+}
+
+.Notfound > h2 {
+  margin-bottom: 30px;
+}

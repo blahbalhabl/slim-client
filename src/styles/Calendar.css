@@ -1,0 +1,9 @@
+.Calendar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  outline: 1px solid black;
+  max-width: 30%;
+  background-color: gray;
+}

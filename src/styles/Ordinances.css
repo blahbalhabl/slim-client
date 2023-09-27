@@ -1,0 +1,283 @@
+.Ordinances {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.Ordinances__Top__Title {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.Ordinances__Container {
+  display: inherit;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+}
+
+.Ordinances__Link {
+  cursor: pointer;
+  user-select: none;
+}
+
+.Ordinances__Link:hover {
+  background-color: gainsboro;
+  border: none;
+}
+
+.Ordinances__Link:hover td {
+  border: none;
+}
+
+.Ordinances__Content {
+  padding: 10px;
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 15px;
+  border-collapse: collapse;
+  box-shadow: 3px 3px 3px #b6b5b5;
+}
+
+td, th {
+  text-align: left;
+  border: none;
+  padding: 10px;
+}
+
+.Ordinances__Center {
+  text-align: center;
+}
+
+.Ordinances__Download {
+  cursor: pointer;
+}
+
+.Ordinances__Card {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  background-color: white;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #b6b5b5;
+}
+
+.Ordinances__Legend {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  margin: 10px 0px 10px 0px;
+  padding: 20px;
+  box-shadow: 3px 3px 3px #b6b5b5;
+}
+
+.Ordinances__Legend > div {
+  display: flex;
+  margin-left: 20px;
+}
+
+.Ordinances__Legend > div > div {
+  margin: 3px;
+  height: 15px;
+  width: 15px;
+  border-radius: 5px;
+}
+
+.Ordinances__Details {
+  height: 90vh;
+  width: 90vw;
+  overflow-y: scroll;
+}
+
+.Ordinances__Details__Form {
+  height: max-content;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Ordinances__Details__Title {
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.Ordinances__Details__Title__Input {
+  padding: 10px;
+  font-size: 1.5rem;
+  border: none;
+  background-color: transparent;
+  color: white;
+  outline: none;
+}
+
+.Ordinances__Details__Title__Input.editing {
+  padding: 5px;
+  margin: 5px;
+  background-color: white;
+  border-radius: 5px;
+  color: black;
+}
+
+.Ordinances__Details__Title__Input.editing > option {
+  font-size: 1.3rem;
+}
+
+.Ordinances__Details__Content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.Ordinances__Card__Container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* flex-grow: 1; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: gainsboro;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.Ordinances__PDFViewer__Frame {
+  width: 100%;
+  height: 800px; 
+}
+
+.Ordinances__PDFViewer__Frame.collapsed {
+  height: 0px;
+}
+
+.Ordinances__Minutes__Frame {
+  width: 100%;
+  height: 800px; 
+}
+
+.Ordinances__Minutes__Frame.collapsed {
+  height: 0px;
+}
+
+.Ordinances__PDFViewer__Button {
+  display: flex;
+  padding-inline: 10px;
+  width: 100%;
+  justify-content: space-between;
+  user-select: none;
+  cursor: pointer;
+}
+
+.Ordinances__Proceedings {
+  width: 100%;
+}
+
+.Ordinances__Details__Proceedings {
+  background-color: var(--primary-color);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.Ordinances__Edit__Button{
+color: var(--orange-color);
+background-color: transparent;
+font-size: 1.3rem;
+border: none;
+cursor: pointer;
+}
+
+.Ordinances__Delete__Button{
+  color: var(--error-color);
+  background-color: transparent;
+  font-size: 1.3rem;
+  border: none;
+  cursor: pointer;
+}
+
+.Ordinances__Upload__button{
+  background-color:var(--highlight-color);
+}
+
+.Ordinances__Cancel__Button {
+  color: var(--highlight-color);
+  margin: 5px;
+  padding: 5px;
+  background-color: white;
+  font-size: 1.1rem;
+  border: 1px solid var(--highlight-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.Ordinances__Update__Button {
+  color: white;
+  margin: 5px;
+  padding: 5px;
+  background-color: var(--highlight-color);
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes__Buttons {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+
+.Ordinances__Minutes__Add {
+  margin: 5px;
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes__Dropdown {
+  margin: 5px 5px 0px 5px;
+  background-color: var(--secondary-color);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes__Buttons > ul {
+  margin: 0px 5px 5px 5px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes__List:hover {
+  background-color: gainsboro;
+}
+
+.Ordinances__Delete__Button:hover,
+.Ordinances__Update__Button:hover,
+.Ordinances__Cancel__Button:hover,
+.Ordinances__Edit__Button:hover {
+  transform: scale(1.1);
+}

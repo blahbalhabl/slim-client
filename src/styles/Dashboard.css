@@ -1,0 +1,24 @@
+.Dashboard {
+  display: flex;
+  margin: 0;
+  padding: 10px;
+  flex-grow: 1;
+  height: auto;
+  right: 0;
+  /* overflow: hidden; */
+}
+
+.Dashboard__Info {
+  margin: 0px 10px 10px 0px;
+  padding: 20px;
+  color: white;
+  background-color: var(--highlight-color);
+}
+
+.Dashboard__Header {
+  flex-grow: 1;
+}
+
+.Dashboard__Container {
+  flex-grow: 1;
+}

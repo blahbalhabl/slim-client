@@ -1,0 +1,20 @@
+.Alert {
+  position: absolute;
+  text-align: center;
+  z-index: 20000;
+  bottom: 0;
+  right: 0;
+  background: var(--highlight-color);
+  width: 200px;
+  height: max-content;
+  margin: 20px;
+  padding: 40px;
+  color: white;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #b6b5b5;
+}
+
+.Alert > p {
+  font-size: 1rem;
+  font-weight: 500;
+}

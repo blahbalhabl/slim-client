@@ -1,0 +1,45 @@
+.Modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.Modal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Modal__Container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 20px;
+  height: max-content;
+  width: auto;
+  background-color: white;
+  border-radius: 15px;
+  z-index: 1000;
+}
+
+.Modal__Close__Button {
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--error-color);
+  background-color: pink;
+  width: min-content;
+  border-radius: 5px;
+  border: none;
+}
+
+.Modal__Close__Button:hover {
+  transform: scale(1.2);
+}

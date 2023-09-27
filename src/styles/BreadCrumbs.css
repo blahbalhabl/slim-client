@@ -1,0 +1,21 @@
+.BreadCrumbs {
+    margin-bottom: 20px;
+    padding: 10px;
+    padding-left: 0;
+    background-color: var(--secondary-color);
+    width: 100%;
+    border-radius: 10px;
+    color: white;
+    font-weight: 300;
+    user-select: none;
+}
+
+.BreadCrumbs > ul {
+    padding-left: 10px;
+    display: flex;
+    list-style: none;
+}
+
+.BreadCrumbs > li {
+    margin-right: 10px;
+}

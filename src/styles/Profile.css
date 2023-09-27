@@ -1,0 +1,109 @@
+.Profile {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.Profile__Container {
+  display: flex;
+  height: 100%;
+}
+
+.Profile__Card {
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 30%;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #b6b5b5;
+}
+
+.Profile__Card__Right {
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  flex-grow: 1;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #b6b5b5;
+  height: auto;
+}
+
+.Profile__Avatar {
+  position: relative;
+  margin-inline: auto;
+  height: 300px;
+  width: 300px;
+  border-radius: 500px;
+}
+
+.Profile__Avatar > img {
+  height: 100%;
+  width: 100%;
+  border-radius: 500px;
+  user-select: none;
+}
+
+.Profile__Avatar__Change {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 500px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Profile__Information {
+  margin-left: 20%;
+  margin-top: 10%;
+  font-size: 1.5rem;
+}
+
+.Profile__Information > p {
+  font-size: 1.2rem;
+}
+
+.Profile__Container__Card {
+  flex-grow: 1;
+}
+
+.Profile__Modal > form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.Profile__Input {
+  padding-left: 20px;
+  margin-bottom: 10px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  height: 30px;
+  width: auto;
+  background-color: gainsboro;
+}
+
+.Profile__Modal__Button {
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  height: 10%;
+  cursor: pointer;
+  color: white;
+  user-select: none;
+}
+
+.Profile__Password__Toggle {
+  z-index: 1000;
+}

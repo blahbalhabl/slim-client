@@ -1,0 +1,141 @@
+.Signup {
+  display: flex;
+  flex-grow: 1;
+  padding: 10px;
+}
+.Signup__Create__Account {
+  margin: 5px;
+  color: white;
+  width: 35%;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  box-shadow: 0px 1px 3px 0px #b6b5b5;
+}
+
+.Signup__Container {
+  margin: auto;
+  padding: 30px;
+  flex-grow: 1;
+  border-radius: 15px;
+}
+
+.Signup__Container > h4 {
+  margin-bottom: 20px;
+}
+
+.Signup__Input {
+  margin: 5px 0px 5px 0px;
+  height: 50px;
+  width: 100%;
+  background-color: white;
+  border: 2px solid var(--highlight-color);
+  border-radius: 10px;
+  padding: 5px;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.Signup__Input__Select {
+  margin: 5px 0px 5px 0px;
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  border: 2px solid var(--highlight-color);
+  border-radius: 10px;
+  padding: 5px;
+  outline: none;
+  font-size: 1rem;
+}
+
+.Signup__Button__Container {
+  display: flex;
+}
+
+.Signup__Button {
+  background-color: var(--highlight-color);
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 10px 5px 10px 0px;
+}
+
+.Signup__Button__Cancel {
+  background-color: transparent;
+  color: var(--highlight-color);
+  border: 1px solid var(--highlight-color);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin: 10px 5px 10px 5px;
+}
+
+.Signup__Button:hover {
+  background-color: whitesmoke;
+  color: var(--highlight-color);
+  outline: 1px solid var(--highlight-color);
+}
+
+.Signup__Button__Cancel:hover {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.Signup__Users {
+  padding: 10px;
+  margin: 5px;
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0px 1px 3px 0px #b6b5b5;
+}
+
+.Signup__Users__Title {
+  background-color: var(--secondary-color);
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  color: white;
+}
+
+.Signup__Users__Button {
+  background-color: var(--highlight-color);
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.Signup__Users__Button:hover {
+  background-color: white;
+  color: var(--highlight-color);
+  border-radius: 5px;
+  border: var(--highlight-color);
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.Signup__Users__Table {
+  margin: 10px 0px 10px 0px;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  background-color: whitesmoke;
+}
+
+.Signup__Users__Table > tbody > tr {
+  cursor: pointer;
+}
+
+.Signup__Users__Table > tbody > tr:hover {
+  background-color: var(--highlight-color); 
+}

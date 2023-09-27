@@ -1,0 +1,56 @@
+.Accordion {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-color);
+    /* border-bottom: 0.1px inset var(--tertiary-color); */
+    padding: 10px 0px 10px 20px;
+    cursor: pointer;
+}
+
+.Accordion:hover {
+    background-color: darkslateblue;
+}
+
+.Accordion__Title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    user-select: none;
+    height: 20px;
+}
+
+.Accordion__Text {
+    margin-left: 10%;
+    flex-grow: 1;
+    text-align: left;
+  }
+
+.Accordion__Icon {
+    margin-left: none;
+    margin-right: 10px;
+}
+
+.Accordion__Content {
+    padding-left: 10px;
+    max-height: 0;
+    font-size: .95rem;
+    overflow: hidden;
+    width: auto;
+    transition: max-height 0.3s ease-in-out;
+}
+
+.Accordion__Content.active  {
+    padding-left: 10px;
+    max-height: 400px;
+    font-size: .95rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: auto;
+}
+
+.Accordion__Content.active > div {
+    width: 100%;
+    transition: max-height all 0.3s;
+}
