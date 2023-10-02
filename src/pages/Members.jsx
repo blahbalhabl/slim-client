@@ -5,7 +5,8 @@ const Members = () => {
 
   useEffect(() => {
     document.title = 'SLIM | Sanggunian Members';
-  })
+  });
+  
   return (
     <div className='Members'>
       <h1>Sanggunian Members</h1>

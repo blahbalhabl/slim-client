@@ -203,7 +203,11 @@ const UserProfile = () => {
           <div className="Profile__Card__Right">
             <h2>Security</h2>
             <button onClick={openModal}>Change Password</button>
-            <label htmlFor="otp-on">Use Google Authenticator
+            <label 
+              htmlFor="otp-on"
+              className="Profile__Google__Auth">
+              <FontAwesomeIcon icon={icons.shield}/>
+              <span>Use Google Authenticator</span>
             <input
               type='checkbox'
               checked={isChecked}
@@ -213,7 +217,8 @@ const UserProfile = () => {
             </label>
           </div>
           <div className="Profile__Card__Right">
-            <h2>Audit</h2>
+            <h2>Audit Trail</h2>
+            <div className="Profile__Table__Container">
             <table className="Profile__Audit__Table">
               <thead>
                 <tr>
@@ -222,7 +227,6 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody>
-                {console.log(audit)}
                 {audit && audit.map((event, i) => {
                   return (
                     <tr key={i}>
@@ -233,6 +237,7 @@ const UserProfile = () => {
                 })}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
         <Modal 

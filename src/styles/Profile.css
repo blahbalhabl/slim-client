@@ -107,3 +107,18 @@
 .Profile__Password__Toggle {
   z-index: 1000;
 }
+
+.Profile__Table__Container {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.Profile__Google__Auth {
+  margin-top: 10px;
+  color: blue;
+}
+
+.Profile__Google__Auth > span {
+  margin-inline: 10px;
+  color: black;
+}

@@ -6,6 +6,7 @@ import CreateOrdinances from '../components/CreateOrdinances';
 import Loader from '../components/Loader';
 import Modal from '../components/Modal';
 import BreadCrumbs from '../components/BreadCrumbs';
+import SearchBar from '../components/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '../utils/Icons'
 import '../styles/Ordinances.css'
@@ -35,7 +36,7 @@ const Ordinances = () => {
     date: "",
     agenda: "",
     description: "",
-    speaker: ""
+    speaker: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -107,8 +108,6 @@ const Ordinances = () => {
     try {
       e.preventDefault();
       const proceedings = selectedOrdinance.proceedings;
-      console.log(proceedings)
-
       const res = await axiosPrivate.post(`/update-proceedings/${filename}?level=${auth.level}`, {proceedings}, {
         headers: {'Content-Type': 'application/json'}
       });
@@ -271,6 +270,7 @@ const Ordinances = () => {
       <div className="Ordinances__Card">
         <CreateOrdinances sendRequest={sendRequest}/>
       </div>
+      <SearchBar data={ordinances} fn={setOrdinances} />
       <div className="Ordinances__Container">
       <h3 className='Ordinances__Top__Title'>{status.toUpperCase()} ORDINANCES</h3>
       <div className="Ordinances__Legend">

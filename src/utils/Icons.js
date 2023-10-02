@@ -25,7 +25,9 @@ import { faPencil,
   faCaretRight,
   faHouse,
   faTrash,
-  faPlus, } from '@fortawesome/free-solid-svg-icons';
+  faPlus,
+  faShieldHalved,
+  faMagnifyingGlass, } from '@fortawesome/free-solid-svg-icons';
 
 export const icons = {
   reports: faScroll,
@@ -55,5 +57,7 @@ export const icons = {
   like: faThumbsUp,
   house: faHouse,
   trash: faTrash,
-  plus: faPlus
+  plus: faPlus,
+  shield: faShieldHalved,
+  search: faMagnifyingGlass,
 };
