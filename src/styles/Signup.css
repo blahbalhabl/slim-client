@@ -132,10 +132,19 @@
   background-color: whitesmoke;
 }
 
-.Signup__Users__Table > tbody > tr {
+.Signup__Users__Table__Button {
+  background-color: transparent;
+  text-align: center;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 .Signup__Users__Table > tbody > tr:hover {
   background-color: var(--highlight-color); 
+}
+
+.Signup__Users__Table__Button:hover {
+  background-color: white;
 }
