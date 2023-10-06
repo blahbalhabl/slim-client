@@ -5,7 +5,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import {roles} from '../utils/userRoles';
 import '../styles/CreateOrdinances.css'
 
-const CreateOrdinances = ({sendRequest}) => {
+const CreateOrdinances = () => {
   const role = roles.role;
   const level = roles.level;
   const { auth } = useAuth();
