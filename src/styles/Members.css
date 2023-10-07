@@ -8,6 +8,35 @@
   right: 0;
 }
 
+.Members__Header {
+  flex-grow: 1;
+  margin: 10px;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  height: max-content;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Members__Header__Button {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--highlight-color);
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.Members__Header__Button:hover {
+  background-color: transparent;
+  color: white;
+  outline: 2px solid var(--highlight-color);
+}
+
 .Members__Card__Container {
   margin: 10px;
   flex-grow: 1;
