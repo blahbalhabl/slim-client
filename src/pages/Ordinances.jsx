@@ -199,7 +199,7 @@ const Ordinances = () => {
       updateData.append('proceedings', selectedOrdinance.proceedings);
       updateData.append('file', file);
 
-      const res = await axiosPrivate.put(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
+      const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
         headers: {'Content-Type': 'multipart/form-data'}
       });
       if(res.status === 200) {

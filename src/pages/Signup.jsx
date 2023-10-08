@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAuth from "../hooks/useAuth";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import Alert from "../components/Alert";
@@ -11,6 +12,7 @@ import '../styles/Signup.css'
 const Signup = () => {
   const role = Object.entries(roles.role);
   const levels = Object.entries(roles.level);
+  const { auth } = useAuth();
 
   const axiosPrivate = useAxiosPrivate();
   const [otpAuthUrl, setOtpAuthUrl] = useState();
@@ -227,12 +229,14 @@ const handleUpdateUser = async (e, user) => {
                 </button>
               </div>
             )}
-            <button
-              className="Signup__Users__Table__Button"
-              onClick={(e) => handleEditing(e, user, 'actions')}
-            >
-              <FontAwesomeIcon icon={icons.ellipsis} />
-            </button>
+            { user.username !== auth.name ? (
+              <button
+                className="Signup__Users__Table__Button"
+                onClick={(e) => handleEditing(e, user, 'actions')}
+              >
+                <FontAwesomeIcon icon={icons.ellipsis} />
+              </button>
+            ) : (<p>Current User</p>)}
           </td>
         </tr>
       );
