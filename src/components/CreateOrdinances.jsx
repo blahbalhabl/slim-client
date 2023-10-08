@@ -2,7 +2,7 @@ import Modal from './Modal';
 import { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import {roles} from '../utils/userRoles';
+import { roles } from '../utils/userRoles';
 import '../styles/CreateOrdinances.css'
 
 const CreateOrdinances = () => {
@@ -13,6 +13,7 @@ const CreateOrdinances = () => {
   const [message, setMessage] = useState();
   const [uploading, setUploading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [members, setMembers ] = useState(null);
   const [inputs, setInputs] = useState({
     number: "",
     series: "",
@@ -30,6 +31,18 @@ const CreateOrdinances = () => {
       return { ...prev, [name]: value };
     });
   };
+
+  const getAuthors = async () => {
+    try {
+      const res = await axiosPrivate.get('/sanggunian-members');
+      const members = res.data;
+      return {
+        members: members,
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };  
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -67,6 +80,13 @@ const CreateOrdinances = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    getAuthors()
+    .then(({ members }) => {
+      setMembers(members);
+    })
+  }, []);
 
   useEffect(() => {
     if (message) {
@@ -122,14 +142,20 @@ const CreateOrdinances = () => {
                   onChange={handleChange}
                 />
                 <label htmlFor="ordinance-title">Author:</label>
-                <input 
+                <select 
+                  name="author" 
+                  id="author"
                   className='CreateOrdinances__Input'
-                  type="text"
-                  name='author'
-                  id='ordinance-author'
-                  placeholder="e.g. 'Mark Leigh'"
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}>
+                   {members && members.map((member, i) => (
+                    <option
+                      key={i}
+                      value={member.name}
+                    >
+                      {member.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="CreateOrdinances__Content">
                 { uploading === true ? (

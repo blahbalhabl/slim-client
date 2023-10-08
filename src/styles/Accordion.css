@@ -31,7 +31,8 @@
 }
 
 .Accordion__Content {
-    padding-left: 10px;
+    /* padding-left: 5px; */
+    border-left: 5px solid var(--highlight-color);
     max-height: 0;
     font-size: .95rem;
     overflow: hidden;
@@ -40,7 +41,8 @@
 }
 
 .Accordion__Content.active  {
-    padding-left: 10px;
+    /* padding-left: 5px; */
+    border-left: 5px solid var(--highlight-color);
     max-height: 400px;
     font-size: .95rem;
     display: flex;

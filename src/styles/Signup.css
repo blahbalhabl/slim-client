@@ -148,3 +148,11 @@
 .Signup__Users__Table__Button:hover {
   background-color: white;
 }
+
+.Signup__Users__Table__Input {
+  border: none;
+  outline: 1px solid var(--highlight-color);
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 1rem;
+}

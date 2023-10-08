@@ -161,6 +161,7 @@ const handleUpdateUser = async (e, user) => {
             <select 
               name="level" 
               id="level"
+              className="Signup__Users__Table__Input"
               onChange={handleChange}
               >
               {levels.map(([key, value]) => (
@@ -177,6 +178,7 @@ const handleUpdateUser = async (e, user) => {
                 type="text"
                 name="username"
                 id="username"
+                className="Signup__Users__Table__Input"
                 onChange={handleChange}
                 placeholder={user.username}
               />
@@ -189,6 +191,7 @@ const handleUpdateUser = async (e, user) => {
               <select 
                 name="role" 
                 id="role"
+                className="Signup__Users__Table__Input"
                 onChange={handleChange}
                 >
                   {role.map(([key, value]) => (
