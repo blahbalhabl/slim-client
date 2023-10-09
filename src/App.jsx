@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar"
 import NotFound from "./components/NotFound"
 
 import Login from "./pages/Login"
+import ForgotPass from "./pages/ForgotPass"
 import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"
 import Unauthorized from "./pages/Unauthorized"
@@ -51,6 +52,7 @@ const level = roles.level;
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
+          <Route path='/forgot-password' element={<ForgotPass />} />
 
           {/* Persistent Login Routes */}
           <Route element={<PersistLogin />}>
