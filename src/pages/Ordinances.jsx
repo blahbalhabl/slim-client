@@ -19,6 +19,7 @@ const Ordinances = () => {
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(true);
   const [ordinances, setOrdinances] = useState();
+  const [members, setMembers] = useState();
   const [isEditing, setIsEditing] = useState(true);
   const [dropDown, setDropdown] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
@@ -69,9 +70,12 @@ const Ordinances = () => {
   const sendRequest = async () => {
     try {
       const res = await axiosPrivate.get(`/ordinances?type=ordinances&level=${auth.level}&status=${status}`);
+      const memRes = await axiosPrivate.get('/sanggunian-members');
       const ordinances = res.data;
+      const members = memRes.data;
       return {
         ordinances: ordinances,
+        members: members,
       }
     } catch (err) {
       console.log(err)
@@ -195,7 +199,7 @@ const Ordinances = () => {
       updateData.append('proceedings', selectedOrdinance.proceedings);
       updateData.append('file', file);
 
-      const res = await axiosPrivate.put(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
+      const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
         headers: {'Content-Type': 'multipart/form-data'}
       });
       if(res.status === 200) {
@@ -231,9 +235,11 @@ const Ordinances = () => {
     sendRequest()
     .then(({
       ordinances,
+      members,
     }) => {
       if ( isMounted ) {
         setOrdinances(ordinances);
+        setMembers(members);
       }
       setLoading(false);
     })
@@ -423,8 +429,14 @@ const Ordinances = () => {
                     onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, author: e.target.value })}
                     disabled={isEditing}
                   >
-                    <option value="Mark Leigh David">Mark Leigh David</option>
-                    <option value="Kenneth Rana">Kenneth Rana</option>
+                    {members.map((member, i) => (
+                      <option
+                        key={i}
+                        value={member.name}
+                      >
+                        {member.name}
+                      </option>
+                    ))}
                   </select>
                 </label>
               </div>

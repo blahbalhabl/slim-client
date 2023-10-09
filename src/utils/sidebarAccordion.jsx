@@ -30,14 +30,14 @@ export const sidebarAccordion = [
                     <p>List of Enacted Ordinances</p>
                 </Link>
       },
-      {
-        title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/enacted/category'}>
-                    <FontAwesomeIcon icon={icons.like} />
-                    <p>List of Enacted Ordinances by Category</p>
-                </Link>
-      },
+      // {
+      //   title:  <Link
+      //             className='Sidebar__Button'
+      //             to={'/records/ordinances/enacted/category'}>
+      //               <FontAwesomeIcon icon={icons.like} />
+      //               <p>List of Enacted Ordinances by Category</p>
+      //           </Link>
+      // },
       {
         title:  <Link
                   className='Sidebar__Button'
@@ -46,14 +46,14 @@ export const sidebarAccordion = [
                     <p>List of Approved Ordinances</p>
                 </Link>
       },
-      {
-        title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/approved/category'}>
-                    <FontAwesomeIcon icon={icons.check} />
-                    <p>List of Approved Ordinances by Category</p>
-                </Link>
-      },
+      // {
+      //   title:  <Link
+      //             className='Sidebar__Button'
+      //             to={'/records/ordinances/approved/category'}>
+      //               <FontAwesomeIcon icon={icons.check} />
+      //               <p>List of Approved Ordinances by Category</p>
+      //           </Link>
+      // },
       {
         title:  <Link
                   className='Sidebar__Button'
