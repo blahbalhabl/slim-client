@@ -6,12 +6,15 @@ import { icons } from "../utils/Icons";
 import axios from "../api/axios";
 import Alert from "../components/Alert";
 import OtpInput from 'react-otp-input';
+import { TextField } from '@mui/material';
 import '../styles/Login.css'
 
 const Login = () => {
   const [otp, setOtp] = useState();
   const [visible, setVisible] = useState(false);
   const [otpValue, setOtpValue] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passError, setPassError] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
   const inputType = visible ? "text" : "password";
   const toggleIcon = visible ? <FontAwesomeIcon icon={icons.eye} /> : <FontAwesomeIcon icon={icons.eyeslash} />;
@@ -36,34 +39,36 @@ const Login = () => {
   const userLogin = async (e) => {
     e.preventDefault();
     try {
+      // Append all Input Data into useData object.
       const userData = {
         email: inputs.email,
         password: inputs.password,
         otp: otpValue || null,
       };
-
+      // Send Request to the Server API.
       const res = await axios.post('/login', userData, {
         headers: {"Content-Type": "application/json"},
       });
-
+      // Await Server Response and save it in an object.
       const data = await res.data;
-
-      if (res.status === 200) {
-        setAuth(data);
-        navigate(from, { replace: true });
-        return data;
-      } else if (res.status === 201) {
-        setOtp(true);
-      } else {
-        setServerMessage(data.message);
-      }
-
+      // Authenticate or Handle Errors depending on the response status code.
+      switch(res.status) {
+        case 200:
+          setAuth(data);
+          navigate(from, { replace: true });
+          break;
+        case 201:
+          setOtp(true);
+          break;
+        default:
+          setServerMessage(data.message);
+      };
+      // If user uses OTP show OTP input box
       if (otp) {
         // If otp returned as true
         const res = await axios.post('/verify', userData, {
           headers: {"Content-Type": "application/json"},
         });
-
         if (res.status === 200) {
           const data = await res.data;
           setAuth(data);
@@ -71,11 +76,21 @@ const Login = () => {
           return data;
         } else {
           setServerMessage(data.message);
-        }
-      }
+        };
+      };
     } catch (err) {
-      setServerMessage("Incorrect Credentials!"); 
-    }
+      // Handle Error response statuses accccordingly.
+      switch(err.response.status) {
+        case 400:
+          setEmailError(true)
+          break;
+        case 401:
+          setPassError(true);
+          break;
+        default:
+          null;
+      };
+    };
   };
 
   useEffect(() => {
@@ -87,27 +102,40 @@ const Login = () => {
     <div className="Login">
       <form onSubmit={userLogin}>
         <div className="Login__Container">
-          <h4>Login</h4>
-          <input 
-            type="email"
+          <h4>Welcome to SLIM: Bacolor</h4>
+          <p>Sign in to continue</p>
+          <TextField
+            error={emailError}
+            className="Login__Input" 
+            id="email"
             name="email"
+            label="Email Address" 
+            variant="outlined"
+            margin="normal"
+            helperText={emailError && 'Invalid Email.'}
             onChange={handleChange}
-            placeholder="Email"
             required
           />
-          <input 
-            type={inputType}
-            name="password"
-            onChange={handleChange}
-            placeholder="Password" 
-            required
-          />
-          <span
-            className="Login__Password__Toggle"
-            onClick={() => setVisible(visible => !visible)}>
-              {toggleIcon}
+          <span className="Login__Input__Password">
+            <TextField
+              error={passError}
+              className="Login__Input" 
+              id="password"
+              name="password"
+              label="Password" 
+              variant="outlined"
+              margin="normal"
+              helperText={passError && 'Incrrect Password.'}
+              type={inputType}
+              onChange={handleChange}
+              required
+            />
+            <span
+              className="Login__Password__Toggle"
+              onClick={() => setVisible(visible => !visible)}>
+                {toggleIcon}
+            </span>
           </span>
-          <br />
           { otp && (
             <label htmlFor="otp">Google Authenticator OTP
               <OtpInput
@@ -127,7 +155,7 @@ const Login = () => {
             > {otp ? "Verify OTP" : "Login"}
           </button>
           <div
-            onClick={() => navigate('/forgot-password')}
+            onClick={() => navigate('/reset-password')}
             className="Login__Forgot__Password">
             Forgot Password
           </div>

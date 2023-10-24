@@ -21,25 +21,6 @@ import { roles } from "./utils/userRoles"
 import './App.css'
 
 function App() {
-
-  // document.onkeydown = (e) => {
-  //   if (e.key == 123) {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'I') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'C') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'J') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.key == 'U') {
-  //       e.preventDefault();
-  //   }
-  // };
-
 const role = roles.role;
 const level = roles.level;
 
@@ -52,7 +33,7 @@ const level = roles.level;
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
-          <Route path='/forgot-password' element={<ForgotPass />} />
+          <Route path='/reset-password' element={<ForgotPass />} />
 
           {/* Persistent Login Routes */}
           <Route element={<PersistLogin />}>
