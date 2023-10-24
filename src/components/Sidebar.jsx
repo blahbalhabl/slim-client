@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 import Accordion from './Accordion';
@@ -17,7 +17,6 @@ const Sidebar = () => {
 
   const links = {
     dash: '/',
-    adn: '/admin-page',
     sign: '/users',
     mem: '/sanggunian-members',
   };
@@ -28,7 +27,7 @@ const Sidebar = () => {
 
   const isActive = (link) => location.pathname === link;
 
-  return auth ? (
+  return auth && (
     <div className={`Sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className='Sidebar__Top'>
         <FontAwesomeIcon
@@ -71,7 +70,7 @@ const Sidebar = () => {
         )}
       </div>
     </div>
-  ) : null;
+  )
 };
 
 export default Sidebar;

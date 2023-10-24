@@ -35,11 +35,6 @@
   font-size: 1rem;
 }
 
-.Login__Container > label {
-  /* color: white; */
-  text-align: center;
-}
-
 .Login__OTP {
   margin: 10px 10px 20px 10px;
   padding: 9px;
@@ -88,6 +83,7 @@
 
 .Login__Container > h4{
   color: var(--secondary-color);
+  text-align: center;
   font-size: 1.5rem;
 }
 
@@ -111,8 +107,13 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .Login {
+    background-color: white;
+  }
+
   .Login__Container {
-    width: 70vw;
+    width: 75vw;
+    box-shadow: none;
   }
 }
 

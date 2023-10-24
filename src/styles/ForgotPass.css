@@ -13,7 +13,6 @@
   margin: auto;
   padding: 30px;
   height: max-content;
-  min-width: 400px;
   width: max-content;
   display: flex;
   justify-content: center;
@@ -120,4 +119,27 @@
 
 .ForgotPass__Reset__Button:hover {
   border-radius: 40px;
+}
+
+@media only screen and (min-width: 1000px) {
+  .ForgotPass__Main {
+    min-width: 400px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .ForgotPass {
+    background-color: white;
+  }
+
+  .ForgotPass__Main {
+    min-width: none;
+    width: 75vw;
+    flex-direction: column;
+    box-shadow: none;
+  }
+
+  .ForgotPass__ResetPass {
+    margin-left: 0px;
+  }
 }

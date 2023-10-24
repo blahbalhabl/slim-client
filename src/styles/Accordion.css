@@ -17,6 +17,7 @@
     width: 100%;
     user-select: none;
     height: 20px;
+    color: var(--tertiary-color);
 }
 
 .Accordion__Text {
@@ -55,4 +56,10 @@
 .Accordion__Content.active > div {
     width: 100%;
     transition: max-height all 0.3s;
+}
+
+@media only screen and (max-width: 800px) {
+    .Accordion {
+        width: 100%;
+    }
 }

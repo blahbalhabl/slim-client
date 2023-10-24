@@ -63,3 +63,9 @@
   width: 53px;
   transition: width ease-in-out 0.2s;
 }
+
+@media only screen and (max-width: 800px) {
+  .Sidebar {
+    display: none;
+  }
+}

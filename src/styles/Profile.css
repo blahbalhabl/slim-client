@@ -122,3 +122,13 @@
   margin-inline: 10px;
   color: black;
 }
+
+@media only screen and (max-width: 800px) {
+  .Profile__Container {
+    flex-direction: column;
+  }
+
+  .Profile__Card {
+    width: auto;
+  }
+}

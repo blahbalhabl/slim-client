@@ -1,8 +1,9 @@
 import { 
   Routes, 
   Route, } from "react-router-dom"
-import RequireAuth from "./components/RequireAuth"
 import { AuthProvider } from "./context/AuthContext"
+
+import RequireAuth from "./components/RequireAuth"
 import PersistLogin from "./components/PersistLogin"
 import Header from "./components/Header"
 import Sidebar from "./components/Sidebar"

@@ -1,0 +1,53 @@
+.MobileNav {
+  display: none;
+}
+
+@media only screen and (max-width: 800px) {
+  .MobileNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 10px;
+    height: max-content;
+    background-color: var(--secondary-color);
+    transition: ease-in-out 200ms;
+  }
+
+  .MobileNav.collapsed {
+    height: 40px;
+    transition: ease-in-out 200ms;
+  }
+
+  .MobileNav__Dropdown__Button {
+    height: 40px;
+    text-align: end;
+    border: none;
+    background-color: transparent;
+    color: var(--tertiary-color);
+  }
+
+  .MobileNav__Links {
+    width: 100%;
+  }
+
+  .MobileNav__Buttons {
+    width: 100%;
+  }
+
+  .MobileNav__Button {
+    display: flex;
+    align-items: center;
+    padding: 10px 0px 10px 20px;
+    transition: ease 200ms; 
+    color: black;
+    text-decoration: none;
+    user-select: none;
+    color: var(--tertiary-color);
+    height: 20px;
+    width: 100%;
+  }
+
+  .MobileNav__Button > p {
+    margin-left: 10%;
+  }
+}

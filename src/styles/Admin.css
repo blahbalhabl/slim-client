@@ -72,3 +72,9 @@
 .Admin__Card:hover {
   transform: scale(1.005);
 }
+
+@media only screen and (max-width: 600px) {
+  .Admin__Container {
+    grid-template-columns: auto;
+  }
+}
