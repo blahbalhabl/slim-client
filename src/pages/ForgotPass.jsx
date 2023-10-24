@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import Alert from '../components/Alert';
@@ -96,6 +96,11 @@ const ForgotPass = () => {
     }
   };
 
+  useEffect(() => {
+    document.title = 'SLIM | Reset Password';
+  }, [])
+  
+
   return (
     <div className="ForgotPass">
       <div className="ForgotPass__Container">
@@ -114,6 +119,10 @@ const ForgotPass = () => {
           disabled={send}
         >
           Send Email
+        </button>
+        <button
+        onClick={navigate('/login')}>
+          Back
         </button>
         {send && (
           <div>
