@@ -81,6 +81,14 @@ export const sidebarAccordion2 = [
       {
         title:  <Link
                   className='Sidebar__Button'
+                  to={'/attendance'}>
+                    <FontAwesomeIcon icon={icons.horn} />
+                    <p>Attendance</p>
+                </Link>
+      },
+      {
+        title:  <Link
+                  className='Sidebar__Button'
                   to={'/announcements'}>
                     <FontAwesomeIcon icon={icons.horn} />
                     <p>Announcements</p>

@@ -6,6 +6,12 @@ import Modal from '../components/Modal';
 import Loader from "../components/Loader";
 import useAuth from "../hooks/useAuth";
 import Alert from "../components/Alert";
+import { 
+  deviceDetect, 
+  browserName, 
+  browserVersion,  
+  osName, 
+  osVersion } from 'react-device-detect';
 
 import '../styles/Profile.css'
 
@@ -36,15 +42,12 @@ const UserProfile = () => {
     try {
       const res = await axiosPrivate.get('/user');
       const audit = await axiosPrivate.get(`/profile-audit/${auth.id}`);
-      const data = res.data
-      const auditData = audit.data;
-      setIsChecked(data.otp)
-      setAudit(auditData);
+      setIsChecked(res.data.otp);
+      setAudit(audit.data);
 
-      return data ;
+      return res.data;
     } catch (err) {
-      console.log(err);
-      return null;
+      console.error(err);
     }
   };
 
@@ -128,11 +131,10 @@ const UserProfile = () => {
     setIsButtonVisible(false);
   };
 
-  function formatDate(date) {
+  const formatDate = (date) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return new Date(date).toLocaleDateString(undefined, options);
-  }
-  
+  };
 
   useEffect(() => {
     document.title = 'SLIM | Profile';
@@ -215,6 +217,12 @@ const UserProfile = () => {
                onChange={handleCheckboxChange}
             />
             </label>
+            <div>
+              <p>{browserName}</p>
+              <p>{browserVersion}</p>
+              <p>{osName}</p>
+              <p>{osVersion}</p>
+            </div>
           </div>
           <div className="Profile__Card__Right">
             <h2>Audit Trail</h2>
