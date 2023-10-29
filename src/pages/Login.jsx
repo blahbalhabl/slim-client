@@ -24,10 +24,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from.pathname || '/';
 
-  const [inputs, setInputs] = useState({
-    email: "",
-    password: "",
-  });
+  const [inputs, setInputs] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

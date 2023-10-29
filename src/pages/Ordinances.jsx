@@ -8,6 +8,7 @@ import Modal from '../components/Modal';
 import BreadCrumbs from '../components/BreadCrumbs';
 import SearchBar from '../components/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Pagination } from '@mui/material';
 import { icons } from '../utils/Icons'
 import '../styles/Ordinances.css'
 
@@ -32,6 +33,7 @@ const Ordinances = () => {
   const [minCollapsed, setMinCollapsed] = useState(true);
   const [selectedOrdinance, setSelectedOrdinance] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [page, setPage] = useState(1);
   const [isDateChanged, setDateChanged] = useState(false);
   const [inputs, setInputs] = useState({
     date: "",
@@ -67,9 +69,9 @@ const Ordinances = () => {
     setFile(file);
   };
 
-  const sendRequest = async () => {
+  const sendRequest = async (page) => {
     try {
-      const res = await axiosPrivate.get(`/ordinances?type=ordinances&level=${auth.level}&status=${status}`);
+      const res = await axiosPrivate.get(`/ordinances?type=ordinances&level=${auth.level}&status=${status}&page=${page}`);
       const memRes = await axiosPrivate.get('/sanggunian-members');
       const ordinances = res.data;
       const members = memRes.data;
@@ -226,6 +228,13 @@ const Ordinances = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handlePageChange = (e, value) => {
+    sendRequest(value)
+      .then(({ordinances}) => {
+        setOrdinances(ordinances);
+      })
   }
 
   useEffect(() => {
@@ -363,6 +372,14 @@ const Ordinances = () => {
                   </tbody> )
           }
         </table>
+        <div className='Ordinances__Pagination'>
+          <Pagination 
+            count={10} 
+            variant="outlined" 
+            color='primary'
+            onChange={(e, value) => handlePageChange(e, value)}
+          />
+        </div>
       </div>
       {selectedOrdinance && (
         <Modal isOpen={isModalOpen} closeModal={closeModal}>
@@ -413,7 +430,7 @@ const Ordinances = () => {
                     onChange={(e) => setSelectedOrdinance({...selectedOrdinance, status: e.target.value})}
                     disabled={isEditing}>
                       <option style={{color: 'orange'}} value="draft">Draft</option>
-                      <option style={{color: 'yellow'}}value="pending">Pending</option>
+                      <option style={{color: 'orange'}}value="pending">Pending</option>
                       <option style={{color: 'green'}}value="enacted">Enacted</option>
                       <option style={{color: 'blue'}}value="approved">Approved</option>
                       <option style={{color: 'green'}}value="amended">Amended</option>

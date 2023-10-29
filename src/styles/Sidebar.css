@@ -42,6 +42,21 @@
   color: white;
 }
 
+.Sidebar__Button.collapsed > span {
+  display: none;
+  position: relative;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+}
+
+.Sidebar__Button.collapsed:hover > span {
+  position: absolute;
+  left: 110%;
+  display: block;
+}
+
 .Sidebar__Top {
   display: flex;
   width: 100%;
@@ -62,6 +77,10 @@
 .Sidebar.collapsed {
   width: 53px;
   transition: width ease-in-out 0.2s;
+}
+
+.Sidebar.collapsed {
+
 }
 
 @media only screen and (max-width: 800px) {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Switch, TextField } from "@mui/material";
 import { icons } from '../utils/Icons'
 import Modal from '../components/Modal';
 import Loader from "../components/Loader";
@@ -25,11 +26,9 @@ const UserProfile = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [audit, setAudit] = useState([]);
   const [serverMessage, setServerMessage] = useState('');
-  const [inputs, setInputs] = useState({
-    oldpass: "",
-    newpass: "",
-    confirm: "",
-  });
+  const [severity, setSeverity] = useState('');
+  const [disabled, setDisabled] = useState(true);
+  const [inputs, setInputs] = useState({});
   const [visible, setVisible] = useState(false);
   const inputType = visible ? "text" : "password";
   const toggleIcon = visible ? <FontAwesomeIcon icon={icons.eye} /> : <FontAwesomeIcon icon={icons.eyeslash} />;
@@ -69,17 +68,18 @@ const UserProfile = () => {
       if (res.status === 200) {
         setIsChecked(is2faOn); // Update the state locally
         setServerMessage(res.data.message);
-      } else {
-        console.error('Failed to update user data.');
+        setSeverity(res.status);
       }
     } catch (error) {
-      console.error('Error updating user data:', error);
+      setServerMessage('Error updating user data:', error);
+      setSeverity(res.status);
     }
   };
 
   const handleAvatarChange = (e) => {
     const photo = e.target.files[0];
     setAvatar(photo);
+    setDisabled(false);
   };
 
   const formData = new FormData();
@@ -176,23 +176,27 @@ const UserProfile = () => {
             onMouseLeave={handleAvatarLeave}>
             {user.avatar ? (
               <>
-                <img src={imageSrc} />
+                <img className="Profile__Avatar__Img" src={imageSrc} />
               </>
             ) : (
-              <FontAwesomeIcon icon={icons.user} />
+              <FontAwesomeIcon className="Profile__Avatar__Img" icon={icons.user} />
             )}
             {isButtonVisible && 
                 <div className="Profile__Avatar__Change">
                   <label htmlFor="avatar-input">Upload Avatar</label>
-                  <input 
-                    // hidden
+                  <input
                     type="file" 
                     name="avatar-input" 
                     id="avatar-input" 
                     accept="image/*"
                     onChange={handleAvatarChange}
                   />
-                  <button onClick={handleUpload}>Upload</button>
+                  <button
+                    className="Profile__Avatar__Button"
+                    onClick={handleUpload}
+                    disabled={disabled}>
+                      Upload
+                  </button>
                 </div>
                 }
           </div>
@@ -204,28 +208,27 @@ const UserProfile = () => {
         <div className="Profile__Container__Card">
           <div className="Profile__Card__Right">
             <h2>Security</h2>
-            <button onClick={openModal}>Change Password</button>
-            <label 
-              htmlFor="otp-on"
-              className="Profile__Google__Auth">
-              <FontAwesomeIcon icon={icons.shield}/>
-              <span>Use Google Authenticator</span>
-            <input
-              type='checkbox'
-              checked={isChecked}
-              id="otp-on"
-               onChange={handleCheckboxChange}
-            />
-            </label>
-            <div>
-              <p>{browserName}</p>
+            <button 
+              className="Profile__Card__Right__Button"
+              onClick={openModal}>
+                Change Password
+            </button>
+            <div className="Profile__Google__Auth">
+              <h3>Enable Two Factor Authentication</h3>
+              <Switch
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+            <div className="Profile__Card__Info">
+              {/* <p>{browserName}</p>
               <p>{browserVersion}</p>
               <p>{osName}</p>
-              <p>{osVersion}</p>
+              <p>{osVersion}</p> */}
             </div>
           </div>
           <div className="Profile__Card__Right">
-            <h2>Audit Trail</h2>
+            <h2>Actions</h2>
             <div className="Profile__Table__Container">
             <table className="Profile__Audit__Table">
               <thead>
@@ -253,33 +256,27 @@ const UserProfile = () => {
           closeModal={closeModal}
         >
           <div className="Profile__Modal">
-            <form>
-              <label htmlFor="oldpass">Old Password</label>
-              <input
-                className="Profile__Input"
+            <form className="Profile__Modal__Form">
+              <TextField
                 type={inputType}
                 name="oldpass"
-                id="oldpass"
-                onChange={handleChange}
-                value={inputs.oldpass}
+                label="Old Password" 
+                variant="outlined"
+                onChange={handleChange} 
               />
-              <label htmlFor="newpass">New Password</label>
-              <input
-                className="Profile__Input"
+              <TextField
                 type={inputType}
                 name="newpass"
-                id="newpass"
-                onChange={handleChange}
-                value={inputs.newpass}
+                label="New Password" 
+                variant="outlined"
+                onChange={handleChange} 
               />
-              <label htmlFor="confirm">Confirm Password</label>
-              <input
-                className="Profile__Input"
+              <TextField
                 type={inputType}
                 name="confirm"
-                id="confirm"
+                label="Confirm Password" 
+                variant="outlined"
                 onChange={handleChange}
-                value={inputs.confirm}
               />
               <span
                 className="Profile__Password__Toggle"
@@ -298,7 +295,7 @@ const UserProfile = () => {
     ) : (
         <Loader />
       )}
-      <Alert message={serverMessage} onClose={() => setServerMessage('')}/>
+      <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   );
 };

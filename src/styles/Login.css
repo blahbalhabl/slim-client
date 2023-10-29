@@ -41,7 +41,7 @@
   border-radius: 5px;
   border: none;
   font-size: 2rem;
-  outline: none;
+  outline: 1px solid black;
 }
 
 .Login__OTP::-webkit-outer-spin-button,

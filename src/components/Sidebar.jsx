@@ -38,33 +38,36 @@ const Sidebar = () => {
       </div>
       <div className="Sidebar__Buttons">
         <Link
-          className={`Sidebar__Button ${isActive(links.dash) ? 'active' : ''}`}
+          className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.dash) ? 'active' : ''}`}
           to={links.dash}
         >
           <FontAwesomeIcon icon={icons.chart} />
           {!collapsed && <p>Dashboard</p>}
+          {collapsed && <span>Dashboard</span>}
         </Link>
         {auth.role === role.adn && (
           <Accordion data={sidebarAccordion} collapse={collapsed} />
         )}
         {auth.role === role.spr && (
           <Link
-            className={`Sidebar__Button ${isActive(links.sign) ? 'active' : ''}`}
+            className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.sign) ? 'active' : ''}`}
             to={links.sign}
           >
             <FontAwesomeIcon icon={icons.user} />
             {!collapsed && <p>Users</p>}
+            {collapsed && <span>Users</span>}
           </Link>
         )}
         {(auth.role === role.spr || auth.role === role.adn) && (
           <>
             <Accordion data={sidebarAccordion2} collapse={collapsed} />
             <Link
-              className={`Sidebar__Button ${isActive(links.mem) ? 'active' : ''}`}
+              className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.mem) ? 'active' : ''}`}
               to={links.mem}
             >
               <FontAwesomeIcon icon={icons.user} />
               {!collapsed && <p>Sanggunian Members</p>}
+              {collapsed && <span>Sanggunian Members</span>}
             </Link>
           </>
         )}

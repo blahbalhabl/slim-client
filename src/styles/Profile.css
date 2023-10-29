@@ -39,7 +39,7 @@
   border-radius: 500px;
 }
 
-.Profile__Avatar > img {
+.Profile__Avatar__Img {
   height: 100%;
   width: 100%;
   border-radius: 500px;
@@ -92,6 +92,12 @@
   background-color: gainsboro;
 }
 
+.Profile__Modal__Form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .Profile__Modal__Button {
   background-color: var(--highlight-color);
   border: none;
@@ -115,12 +121,24 @@
 
 .Profile__Google__Auth {
   margin-top: 10px;
-  color: blue;
+  width: max-content;
 }
 
-.Profile__Google__Auth > span {
-  margin-inline: 10px;
-  color: black;
+.Profile__Google__Auth > h3 {
+  font-size: 1rem;
+}
+
+.Profile__Card__Info {
+  width: 50%;
+  height: max-content;
+}
+
+.Profile__Card__Right__Button {
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  width: 40%;
 }
 
 @media only screen and (max-width: 800px) {
@@ -130,5 +148,9 @@
 
   .Profile__Card {
     width: auto;
+  }
+
+  .Profile__Card__Right__Button {
+    width: 100%;
   }
 }
