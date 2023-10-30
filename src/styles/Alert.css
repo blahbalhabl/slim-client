@@ -22,7 +22,8 @@
 }
 
 .Alert.Error {
-
+  color: red;
+  background-color: lightcoral;
 }
 
 .Alert.Warning {

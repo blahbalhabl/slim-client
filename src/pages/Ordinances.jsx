@@ -33,7 +33,6 @@ const Ordinances = () => {
   const [minCollapsed, setMinCollapsed] = useState(true);
   const [selectedOrdinance, setSelectedOrdinance] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [page, setPage] = useState(1);
   const [isDateChanged, setDateChanged] = useState(false);
   const [inputs, setInputs] = useState({
     date: "",
@@ -235,7 +234,7 @@ const Ordinances = () => {
       .then(({ordinances}) => {
         setOrdinances(ordinances);
       })
-  }
+  };
 
   useEffect(() => {
     document.title = `SLIM | ${status} Ordinances`;

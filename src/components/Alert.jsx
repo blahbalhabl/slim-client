@@ -8,7 +8,10 @@ const Alert = ({ message, severity, onClose }) => {
     if (severity >= 200 && severity < 300) {
       return 'Success';
     }
-  }
+    if(severity >= 400) {
+      return 'Error';
+    }
+  };
 
   useEffect(() => {
     if (message) {

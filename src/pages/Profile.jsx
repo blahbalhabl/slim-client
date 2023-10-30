@@ -30,6 +30,8 @@ const UserProfile = () => {
   const [disabled, setDisabled] = useState(true);
   const [inputs, setInputs] = useState({});
   const [visible, setVisible] = useState(false);
+  const [error, setError] = useState(false);
+  const [newPassErr, setNewPassErr] = useState(false);
   const inputType = visible ? "text" : "password";
   const toggleIcon = visible ? <FontAwesomeIcon icon={icons.eye} /> : <FontAwesomeIcon icon={icons.eyeslash} />;
 
@@ -72,7 +74,7 @@ const UserProfile = () => {
       }
     } catch (error) {
       setServerMessage('Error updating user data:', error);
-      setSeverity(res.status);
+      setSeverity(error.status);
     }
   };
 
@@ -106,20 +108,25 @@ const UserProfile = () => {
 
   const handleChangePass = async (e) => {
     e.preventDefault();
-    const passData = {
-      oldpass: inputs.oldpass,
-      newpass: inputs.newpass,
-      confirm: inputs.confirm,
-    }
     try {
+      const passData = {
+        oldpass: inputs.oldpass,
+        newpass: inputs.newpass,
+        confirm: inputs.confirm,
+      };
+
       const res = await axiosPrivate.post('/change-password', passData, {
         headers: {"Content-Type": "application/json"}
       })
       if (res.status === 200) {
-        alert(res.data.message);
-      }
+        setServerMessage(res.data.message);
+        setSeverity(res.status);
+      };
     } catch (err) {
-      console.log(err);
+      const res = err.response;
+      setServerMessage(res.data.message);
+      setSeverity(res.status);
+      setError(true);
     }
   }
 
@@ -143,6 +150,13 @@ const UserProfile = () => {
       setUser(data);
     })
   },[])
+
+  useEffect(() => {
+    if (inputs.newpass !== inputs.confirm) { 
+      return setNewPassErr(true);
+    }
+    setNewPassErr(false);
+  }, [inputs.confirm, inputs.newpass]);
 
   useEffect(() => {
     if (auth) {
@@ -215,10 +229,14 @@ const UserProfile = () => {
             </button>
             <div className="Profile__Google__Auth">
               <h3>Enable Two Factor Authentication</h3>
-              <Switch
+              <div>
+                <label>Google Authenticator</label>
+                <Switch
                 checked={isChecked}
                 onChange={handleCheckboxChange}
-              />
+                />
+              </div>
+              
             </div>
             <div className="Profile__Card__Info">
               {/* <p>{browserName}</p>
@@ -258,34 +276,48 @@ const UserProfile = () => {
           <div className="Profile__Modal">
             <form className="Profile__Modal__Form">
               <TextField
+                error={error}
                 type={inputType}
                 name="oldpass"
                 label="Old Password" 
                 variant="outlined"
-                onChange={handleChange} 
+                onChange={handleChange}
+                helperText={error && 'Incorrect Password.'}
+                required
               />
               <TextField
+                error={error}
                 type={inputType}
                 name="newpass"
-                label="New Password" 
-                variant="outlined"
-                onChange={handleChange} 
-              />
-              <TextField
-                type={inputType}
-                name="confirm"
-                label="Confirm Password" 
+                label="New Password"
                 variant="outlined"
                 onChange={handleChange}
+                helperText={error && 'Must contain atleast 8 characters.'}
+                required
               />
-              <span
+              <TextField
+                error={newPassErr}
+                type={inputType}
+                name="confirm"
+                label="Confirm Password"
+                variant="outlined"
+                onChange={handleChange}
+                helperText={newPassErr && 'Must be the same with New Password.'}
+                required
+              />
+              {/* <span
                 className="Profile__Password__Toggle"
                 onClick={() => setVisible(visible => !visible)}>
                   {toggleIcon}
-              </span>
+              </span> */}
               <button
                 className="Profile__Modal__Button"
-                onClick={handleChangePass}>
+                onClick={handleChangePass}
+                disabled={
+                  ( inputs.oldpass == undefined &&
+                    inputs.newpass == undefined &&
+                    inputs.confirm == undefined ) || newPassErr
+                }>
                   Change Password
               </button>
             </form>
