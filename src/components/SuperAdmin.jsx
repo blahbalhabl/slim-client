@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Loader from './Loader';
-import LineGraph from './LineGraph';
+import LineCharts from './LineCharts';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '../utils/Icons';
@@ -30,6 +30,7 @@ const SuperAdmin = () => {
       }) => { 
         if ( isMounted ) {
           setUsers(users);
+          graphData(users);
         }
         setLoading(false);
       })
@@ -46,13 +47,13 @@ const SuperAdmin = () => {
 	if (loading) {
     return <Loader />;
   }
-    
+
+  
   return (
     <div className='SuperAdmin'>
       <div className="Admin__Card users">
         <div className="Admin__Card__Info">
-          {/* <LineGraph chartData={users}/> */}
-         </div>
+        </div>
         <span><FontAwesomeIcon icon={icons.user}/></span>
       </div>
   </div>

@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
 import axios from '../api/axios';
 import Alert from '../components/Alert';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { icons } from '../utils/Icons';
 import '../styles/ForgotPass.css';
 
 const ForgotPass = () => {
   const navigate = useNavigate();
   const [send, setSend] = useState(false);
   const [otp, setOtp] = useState(null);
+  const [viewPassword, setViewPassword] = useState(false);
+  const [viewConfirm, setViewConfirm] = useState(false);
+  const [inputError, setInputError] = useState({
+    email: false,
+    password: false,
+    otp: false,
+    confirm: false,
+  });
   const [verify, setVerify] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
   const [inputs, setInputs] = useState({
@@ -24,7 +35,8 @@ const ForgotPass = () => {
     });
   };
 
-  const resetPassword = async () => {
+  const resetPassword = async (e) => {
+    e.preventDefault();
     try {
       const userData = {
         email: inputs.email,
@@ -45,18 +57,26 @@ const ForgotPass = () => {
       } else {
         console.log('Password Reset Failed');
       }
+
     } catch (err) {
-      console.error(err);
-    }
+      switch(err.response.status) {
+        case 401:
+          setInputError({password: true});
+          break;
+        default:
+          null
+      };
+    };
   };
 
   const verifyCode = () => {
     if(inputs.otp === otp) {
+      // if OTP Code is correct. Invalidate the OTP code by setting it to null.
       setOtp(null);
       setVerify(true);
-      console.log('Correct Code');
+      setInputError(false);
     } else {
-      console.log('Incorrect Code');
+      setInputError({otp: true})
     }
   };
 
@@ -65,9 +85,10 @@ const ForgotPass = () => {
       const res = await axios.post(`/forgot-password/${inputs.email}`);
       
       if(res.status === 200) {
-        setOtp(res.data.otp)
+        setOtp(res.data.otp);
+        setInputError(false);
         setSend(true);
-        // Set a timer to clear OTP after 5 minutes (300,000 milliseconds)
+        // Set a timer to invalidate OTP after 5 minutes (300,000 milliseconds)
         setTimeout(() => {
           setOtp(null);
         }, 300000);
@@ -92,73 +113,119 @@ const ForgotPass = () => {
         });
       }
     } catch (err) {
-      console.error(err);
+        setInputError({email: true});
     }
   };
 
+  useEffect(() => {
+    
+  }, [inputs.password]);
+
+  useEffect(() => {
+    if (inputs.password !== inputs.confirmPassword) {
+      setInputError({confirm: true});
+    } else if (inputs.password === inputs.confirmPassword) {
+      setInputError({confirm: false});
+    }
+  }, [inputs.confirmPassword]);
+
+  useEffect(() => {
+    document.title = 'SLIM | Reset Password';
+  }, [])
+  
   return (
     <div className="ForgotPass">
-      <div className="ForgotPass__Container">
-        <h4>Forgot Password</h4>
-        <label> Email:
-          <input 
-            type="email"
-            name='email'
-            id='email'
-            onChange={handleChange}
-            placeholder="Email"
-          />
-        </label>
-        <button
-          onClick={sendEmail}
-          disabled={send}
-        >
-          Send Email
-        </button>
-        {send && (
-          <div>
-            <label htmlFor="otp">Verification Code:
-            <input 
-              type="number"
-              name='otp'
-              id='otp'
-              onChange={handleChange}
-              placeholder="Verification Code"
-            />
-            </label>
+      <div className="ForgotPass__Main">
+        <div className="ForgotPass__Container">
+          <span className='ForgotPass__Header'>
             <button
-              onClick={verifyCode}>
-              Submit
+              className='ForgotPass__Back__Button'
+              onClick={() => navigate('/login')}
+            >
+              <FontAwesomeIcon icon={icons.chevLeft}/> Back
             </button>
+          </span>
+          <h4>Reset Password</h4>
+          <TextField
+            error={inputError.email}
+            className="ForgotPass__Input" 
+            id="email"
+            name="email"
+            label="Email Address" 
+            variant="outlined"
+            margin="normal"
+            helperText={inputError.email && 'Invalid Email.'}
+            onChange={handleChange}
+            required
+          />
+          <button
+            className='ForgotPass__Send__Button'
+            onClick={sendEmail}
+            disabled={send}
+          >
+            Send Email
+          </button>
+          {send && (
+            <div className='ForgotPass__OTP__Container'>
+              <TextField
+                error={inputError.otp}
+                className="ForgotPass__Input" 
+                id="otp"
+                name="otp"
+                label="OTP" 
+                variant="outlined"
+                margin="normal"
+                helperText={inputError.otp && 'Incorrect OTP.'}
+                onChange={handleChange}
+                required
+              />
+              <button
+                className='ForgotPass__Verify__Button'
+                onClick={verifyCode}>
+                Verify
+              </button>
+            </div>
+          )}
+        </div>
+        {verify && (
+        <div className='ForgotPass__ResetPass'>
+          <div>
+            <p></p>
           </div>
+          <TextField
+            error={inputError.password}
+            className="ForgotPass__Input" 
+            id="password"
+            name="password"
+            label="New Password" 
+            variant="outlined"
+            margin="normal"
+            type={viewPassword}
+            helperText={inputError.password && "New Password can't be the same with Old Password."}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            error={inputError.confirm}
+            className="ForgotPass__Input" 
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm New Password" 
+            variant="outlined"
+            margin="normal"
+            type={viewConfirm}
+            helperText={inputError.confirm && 'New Password must be the same'}
+            onChange={handleChange}
+            required
+          />
+          <button
+            className='ForgotPass__Reset__Button'
+            onClick={resetPassword}>
+            Reset Password
+          </button>
+        </div>
         )}
       </div>
-      {verify && (
-        <div className='ForgotPass__ResetPass'>
-        <label htmlFor="password">New Password:
-          <input 
-            type="password"
-            name='password'
-            id='password'
-            onChange={handleChange}
-            placeholder="New Password"
-          />
-        </label>
-        <label htmlFor="confirmPassword">Confirm Password:
-          <input 
-            type="password"
-            name='confirmPassword'
-            id='confirmPassword'
-            onChange={handleChange}
-            placeholder="Confirm Password"
-          />
-        </label>
-        <button
-          onClick={resetPassword}>
-          Reset Password
-        </button>
-      </div>
-      )}
       {serverMessage && (
         <Alert
           message={serverMessage}

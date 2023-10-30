@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 import Accordion from './Accordion';
@@ -17,7 +17,6 @@ const Sidebar = () => {
 
   const links = {
     dash: '/',
-    adn: '/admin-page',
     sign: '/users',
     mem: '/sanggunian-members',
   };
@@ -28,7 +27,7 @@ const Sidebar = () => {
 
   const isActive = (link) => location.pathname === link;
 
-  return auth ? (
+  return auth && (
     <div className={`Sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className='Sidebar__Top'>
         <FontAwesomeIcon
@@ -39,39 +38,39 @@ const Sidebar = () => {
       </div>
       <div className="Sidebar__Buttons">
         <Link
-          className={`Sidebar__Button ${isActive(links.dash) ? 'active' : ''}`}
+          className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.dash) ? 'active' : ''}`}
           to={links.dash}
         >
           <FontAwesomeIcon icon={icons.chart} />
-          {!collapsed && <p>Dashboard</p>}
+          {!collapsed ? <p>Dashboard</p> : <span>Dashboard</span>}
         </Link>
         {auth.role === role.adn && (
           <Accordion data={sidebarAccordion} collapse={collapsed} />
         )}
         {auth.role === role.spr && (
           <Link
-            className={`Sidebar__Button ${isActive(links.sign) ? 'active' : ''}`}
+            className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.sign) ? 'active' : ''}`}
             to={links.sign}
           >
             <FontAwesomeIcon icon={icons.user} />
-            {!collapsed && <p>Users</p>}
+            {!collapsed ? <p>Users</p> : <span>Users</span>}
           </Link>
         )}
         {(auth.role === role.spr || auth.role === role.adn) && (
           <>
             <Accordion data={sidebarAccordion2} collapse={collapsed} />
             <Link
-              className={`Sidebar__Button ${isActive(links.mem) ? 'active' : ''}`}
+              className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.mem) ? 'active' : ''}`}
               to={links.mem}
             >
               <FontAwesomeIcon icon={icons.user} />
-              {!collapsed && <p>Sanggunian Members</p>}
+              {!collapsed ? <p>Sanggunian Members</p> : <span>Sanggunian Members</span>}
             </Link>
           </>
         )}
       </div>
     </div>
-  ) : null;
+  )
 };
 
 export default Sidebar;

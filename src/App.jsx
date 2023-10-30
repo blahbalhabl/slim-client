@@ -1,8 +1,9 @@
 import { 
   Routes, 
   Route, } from "react-router-dom"
-import RequireAuth from "./components/RequireAuth"
 import { AuthProvider } from "./context/AuthContext"
+
+import RequireAuth from "./components/RequireAuth"
 import PersistLogin from "./components/PersistLogin"
 import Header from "./components/Header"
 import Sidebar from "./components/Sidebar"
@@ -16,30 +17,12 @@ import Unauthorized from "./pages/Unauthorized"
 import Ordinances from "./pages/Ordinances"
 import Profile from "./pages/Profile"
 import Members from "./pages/Members"
+import Attendance from "./pages/Attendance"
 import { roles } from "./utils/userRoles"
 
 import './App.css'
 
 function App() {
-
-  // document.onkeydown = (e) => {
-  //   if (e.key == 123) {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'I') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'C') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.shiftKey && e.key == 'J') {
-  //       e.preventDefault();
-  //   }
-  //   if (e.ctrlKey && e.key == 'U') {
-  //       e.preventDefault();
-  //   }
-  // };
-
 const role = roles.role;
 const level = roles.level;
 
@@ -52,7 +35,7 @@ const level = roles.level;
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
-          <Route path='/forgot-password' element={<ForgotPass />} />
+          <Route path='/reset-password' element={<ForgotPass />} />
 
           {/* Persistent Login Routes */}
           <Route element={<PersistLogin />}>
@@ -64,6 +47,7 @@ const level = roles.level;
               <Route path="/" element={<Dashboard />} />
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/sanggunian-members" element={< Members />} />
+              <Route path="/attendance" element={<Attendance />}/>
             </Route>
 
             {/* Private Admin Routes*/}

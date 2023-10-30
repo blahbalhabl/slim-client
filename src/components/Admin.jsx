@@ -12,7 +12,6 @@ const Users = () => {
 
   const { auth } = useAuth();
   const navigate = useNavigate();
-  const [users, setUser] = useState();
   const [ordinances, setOrdinances] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,11 +19,9 @@ const Users = () => {
 
   const sendRequest = async () => {
     try {
-      const usersRes = await axiosPrivate.get('/users');
-      const ordinanceRes = await axiosPrivate.get(`/count-ordinances?level=${auth.level}`);
+      const res = await axiosPrivate.get(`/count-ordinances?level=${auth.level}`);
       return { 
-        users: usersRes.data, 
-        ordinances: ordinanceRes.data,
+        ordinances: res.data,
       };
     } catch (err) {
       setError("An error occurred while fetching data.");
@@ -37,11 +34,9 @@ const Users = () => {
     const controller = new AbortController();
     sendRequest()
       .then(({
-        users, 
         ordinances,
       }) => { 
         if ( isMounted ) {
-          setUser(users);
           setOrdinances(ordinances);
         }
         setLoading(false);

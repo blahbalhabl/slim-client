@@ -1,4 +1,5 @@
 .Accordion {
+    position: relative;
     display: flex;
     flex-direction: column;
     background-color: var(--secondary-color);
@@ -12,11 +13,13 @@
 }
 
 .Accordion__Title {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
     user-select: none;
     height: 20px;
+    color: var(--tertiary-color);
 }
 
 .Accordion__Text {
@@ -55,4 +58,35 @@
 .Accordion__Content.active > div {
     width: 100%;
     transition: max-height all 0.3s;
+}
+
+.Accordion > span {
+    max-height: 0;
+    width: 0;
+    position: relative;
+    transition: all 200ms;
+}
+
+.Accordion.collapsed:hover > span {
+    position: absolute;
+    width: 200px;
+    max-height: max-content;
+    left: 100%;
+    top: 0;
+    background-color: var(--secondary-color);
+    border-left: 5px solid var(--highlight-color);
+}
+
+.Accordion > span > div > div {
+    display: none;
+}
+
+.Accordion.collapsed:hover > span > div > div {
+    display: block;
+}
+
+@media only screen and (max-width: 800px) {
+    .Accordion {
+        width: 100%;
+    }
 }

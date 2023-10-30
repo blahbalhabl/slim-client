@@ -28,7 +28,8 @@ import { faPencil,
   faPlus,
   faShieldHalved,
   faMagnifyingGlass,
-  faEllipsis, } from '@fortawesome/free-solid-svg-icons';
+  faEllipsis,
+  faChevronLeft, } from '@fortawesome/free-solid-svg-icons';
 
 export const icons = {
   reports: faScroll,
@@ -48,6 +49,7 @@ export const icons = {
   left: faCaretLeft,
   right: faCaretRight,
   down: faSortDown,
+  chevLeft: faChevronLeft,
   sad: faFaceSadTear,
   burger: faBars,
   download: faFileArrowDown,

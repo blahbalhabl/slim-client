@@ -39,7 +39,7 @@
   border-radius: 500px;
 }
 
-.Profile__Avatar > img {
+.Profile__Avatar__Img {
   height: 100%;
   width: 100%;
   border-radius: 500px;
@@ -75,12 +75,6 @@
   flex-grow: 1;
 }
 
-.Profile__Modal > form {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
 .Profile__Input {
   padding-left: 20px;
   margin-bottom: 10px;
@@ -92,16 +86,33 @@
   background-color: gainsboro;
 }
 
+.Profile__Modal {
+  width: 400px;
+}
+
+.Profile__Modal__Form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
 .Profile__Modal__Button {
   background-color: var(--highlight-color);
   border: none;
   border-radius: 5px;
-  padding: 10px;
+  padding: 15px;
+  font-size: 1rem;
   width: 100%;
   height: 10%;
   cursor: pointer;
   color: white;
   user-select: none;
+  transition: ease-in-out 200ms;
+}
+
+.Profile__Modal__Button:hover {
+  border-radius: 40px;
 }
 
 .Profile__Password__Toggle {
@@ -115,10 +126,43 @@
 
 .Profile__Google__Auth {
   margin-top: 10px;
-  color: blue;
+  width: max-content;
 }
 
-.Profile__Google__Auth > span {
-  margin-inline: 10px;
-  color: black;
+.Profile__Google__Auth > h3 {
+  font-size: 1rem;
+}
+
+.Profile__Card__Info {
+  width: 50%;
+  height: max-content;
+}
+
+.Profile__Card__Right__Button {
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  width: 40%;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: ease-in-out 200ms;
+}
+
+.Profile__Card__Right__Button:hover {
+  border-radius: 40px;
+}
+
+@media only screen and (max-width: 800px) {
+  .Profile__Container {
+    flex-direction: column;
+  }
+
+  .Profile__Card {
+    width: auto;
+  }
+
+  .Profile__Card__Right__Button {
+    width: 100%;
+  }
 }

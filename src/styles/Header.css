@@ -9,6 +9,12 @@
 }
 
 .Header__Title > h3 {
+    display: none;
+    margin-left: 30px;
+}
+
+.Header__Title > h4 {
+    font-size: 1.5rem;
     margin-left: 30px;
 }
 
@@ -38,6 +44,7 @@
     border-radius: 100px;
     font-size: 1.2rem;
     color: var(--tertiary-color);
+    cursor: pointer;
 }
 
 .Header__Tooltip {
@@ -67,3 +74,18 @@
     height: 20px;
     width: 20px;
 }
+
+@media only screen and (max-width: 800px) {
+    .Header__Title > h4 {
+      display: none;
+    }
+
+    .Header__Title > h3 {
+        display: block;
+        font-size: 1.5rem;
+    }
+
+    .Header__Info > p {
+        display: none;
+    }
+  }

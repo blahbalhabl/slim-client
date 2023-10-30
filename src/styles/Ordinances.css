@@ -89,6 +89,13 @@ td, th {
   border-radius: 5px;
 }
 
+.Ordinances__Pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .Ordinances__Details {
   height: 90vh;
   width: 90vw;

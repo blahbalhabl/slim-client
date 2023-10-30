@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Switch, TextField } from "@mui/material";
 import { icons } from '../utils/Icons'
 import Modal from '../components/Modal';
 import Loader from "../components/Loader";
 import useAuth from "../hooks/useAuth";
 import Alert from "../components/Alert";
+import { 
+  deviceDetect, 
+  browserName, 
+  browserVersion,  
+  osName, 
+  osVersion } from 'react-device-detect';
 
 import '../styles/Profile.css'
 
@@ -19,12 +26,12 @@ const UserProfile = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [audit, setAudit] = useState([]);
   const [serverMessage, setServerMessage] = useState('');
-  const [inputs, setInputs] = useState({
-    oldpass: "",
-    newpass: "",
-    confirm: "",
-  });
+  const [severity, setSeverity] = useState('');
+  const [disabled, setDisabled] = useState(true);
+  const [inputs, setInputs] = useState({});
   const [visible, setVisible] = useState(false);
+  const [error, setError] = useState(false);
+  const [newPassErr, setNewPassErr] = useState(false);
   const inputType = visible ? "text" : "password";
   const toggleIcon = visible ? <FontAwesomeIcon icon={icons.eye} /> : <FontAwesomeIcon icon={icons.eyeslash} />;
 
@@ -36,15 +43,12 @@ const UserProfile = () => {
     try {
       const res = await axiosPrivate.get('/user');
       const audit = await axiosPrivate.get(`/profile-audit/${auth.id}`);
-      const data = res.data
-      const auditData = audit.data;
-      setIsChecked(data.otp)
-      setAudit(auditData);
+      setIsChecked(res.data.otp);
+      setAudit(audit.data);
 
-      return data ;
+      return res.data;
     } catch (err) {
-      console.log(err);
-      return null;
+      console.error(err);
     }
   };
 
@@ -66,17 +70,18 @@ const UserProfile = () => {
       if (res.status === 200) {
         setIsChecked(is2faOn); // Update the state locally
         setServerMessage(res.data.message);
-      } else {
-        console.error('Failed to update user data.');
+        setSeverity(res.status);
       }
     } catch (error) {
-      console.error('Error updating user data:', error);
+      setServerMessage('Error updating user data:', error);
+      setSeverity(error.status);
     }
   };
 
   const handleAvatarChange = (e) => {
     const photo = e.target.files[0];
     setAvatar(photo);
+    setDisabled(false);
   };
 
   const formData = new FormData();
@@ -103,20 +108,25 @@ const UserProfile = () => {
 
   const handleChangePass = async (e) => {
     e.preventDefault();
-    const passData = {
-      oldpass: inputs.oldpass,
-      newpass: inputs.newpass,
-      confirm: inputs.confirm,
-    }
     try {
+      const passData = {
+        oldpass: inputs.oldpass,
+        newpass: inputs.newpass,
+        confirm: inputs.confirm,
+      };
+
       const res = await axiosPrivate.post('/change-password', passData, {
         headers: {"Content-Type": "application/json"}
       })
       if (res.status === 200) {
-        alert(res.data.message);
-      }
+        setServerMessage(res.data.message);
+        setSeverity(res.status);
+      };
     } catch (err) {
-      console.log(err);
+      const res = err.response;
+      setServerMessage(res.data.message);
+      setSeverity(res.status);
+      setError(true);
     }
   }
 
@@ -128,11 +138,10 @@ const UserProfile = () => {
     setIsButtonVisible(false);
   };
 
-  function formatDate(date) {
+  const formatDate = (date) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return new Date(date).toLocaleDateString(undefined, options);
-  }
-  
+  };
 
   useEffect(() => {
     document.title = 'SLIM | Profile';
@@ -141,6 +150,13 @@ const UserProfile = () => {
       setUser(data);
     })
   },[])
+
+  useEffect(() => {
+    if (inputs.newpass !== inputs.confirm) { 
+      return setNewPassErr(true);
+    }
+    setNewPassErr(false);
+  }, [inputs.confirm, inputs.newpass]);
 
   useEffect(() => {
     if (auth) {
@@ -174,23 +190,27 @@ const UserProfile = () => {
             onMouseLeave={handleAvatarLeave}>
             {user.avatar ? (
               <>
-                <img src={imageSrc} />
+                <img className="Profile__Avatar__Img" src={imageSrc} />
               </>
             ) : (
-              <FontAwesomeIcon icon={icons.user} />
+              <FontAwesomeIcon className="Profile__Avatar__Img" icon={icons.user} />
             )}
             {isButtonVisible && 
                 <div className="Profile__Avatar__Change">
                   <label htmlFor="avatar-input">Upload Avatar</label>
-                  <input 
-                    // hidden
+                  <input
                     type="file" 
                     name="avatar-input" 
                     id="avatar-input" 
                     accept="image/*"
                     onChange={handleAvatarChange}
                   />
-                  <button onClick={handleUpload}>Upload</button>
+                  <button
+                    className="Profile__Avatar__Button"
+                    onClick={handleUpload}
+                    disabled={disabled}>
+                      Upload
+                  </button>
                 </div>
                 }
           </div>
@@ -202,22 +222,31 @@ const UserProfile = () => {
         <div className="Profile__Container__Card">
           <div className="Profile__Card__Right">
             <h2>Security</h2>
-            <button onClick={openModal}>Change Password</button>
-            <label 
-              htmlFor="otp-on"
-              className="Profile__Google__Auth">
-              <FontAwesomeIcon icon={icons.shield}/>
-              <span>Use Google Authenticator</span>
-            <input
-              type='checkbox'
-              checked={isChecked}
-              id="otp-on"
-               onChange={handleCheckboxChange}
-            />
-            </label>
+            <button 
+              className="Profile__Card__Right__Button"
+              onClick={openModal}>
+                Change Password
+            </button>
+            <div className="Profile__Google__Auth">
+              <h3>Enable Two Factor Authentication</h3>
+              <div>
+                <label>Google Authenticator</label>
+                <Switch
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+                />
+              </div>
+              
+            </div>
+            <div className="Profile__Card__Info">
+              {/* <p>{browserName}</p>
+              <p>{browserVersion}</p>
+              <p>{osName}</p>
+              <p>{osVersion}</p> */}
+            </div>
           </div>
           <div className="Profile__Card__Right">
-            <h2>Audit Trail</h2>
+            <h2>Actions</h2>
             <div className="Profile__Table__Container">
             <table className="Profile__Audit__Table">
               <thead>
@@ -245,42 +274,50 @@ const UserProfile = () => {
           closeModal={closeModal}
         >
           <div className="Profile__Modal">
-            <form>
-              <label htmlFor="oldpass">Old Password</label>
-              <input
-                className="Profile__Input"
+            <form className="Profile__Modal__Form">
+              <TextField
+                error={error}
                 type={inputType}
                 name="oldpass"
-                id="oldpass"
+                label="Old Password" 
+                variant="outlined"
                 onChange={handleChange}
-                value={inputs.oldpass}
+                helperText={error && 'Incorrect Password.'}
+                required
               />
-              <label htmlFor="newpass">New Password</label>
-              <input
-                className="Profile__Input"
+              <TextField
+                error={error}
                 type={inputType}
                 name="newpass"
-                id="newpass"
+                label="New Password"
+                variant="outlined"
                 onChange={handleChange}
-                value={inputs.newpass}
+                helperText={error && 'Must contain atleast 8 characters.'}
+                required
               />
-              <label htmlFor="confirm">Confirm Password</label>
-              <input
-                className="Profile__Input"
+              <TextField
+                error={newPassErr}
                 type={inputType}
                 name="confirm"
-                id="confirm"
+                label="Confirm Password"
+                variant="outlined"
                 onChange={handleChange}
-                value={inputs.confirm}
+                helperText={newPassErr && 'Must be the same with New Password.'}
+                required
               />
-              <span
+              {/* <span
                 className="Profile__Password__Toggle"
                 onClick={() => setVisible(visible => !visible)}>
                   {toggleIcon}
-              </span>
+              </span> */}
               <button
                 className="Profile__Modal__Button"
-                onClick={handleChangePass}>
+                onClick={handleChangePass}
+                disabled={
+                  ( inputs.oldpass == undefined &&
+                    inputs.newpass == undefined &&
+                    inputs.confirm == undefined ) || newPassErr
+                }>
                   Change Password
               </button>
             </form>
@@ -290,7 +327,7 @@ const UserProfile = () => {
     ) : (
         <Loader />
       )}
-      <Alert message={serverMessage} onClose={() => setServerMessage('')}/>
+      <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   );
 };

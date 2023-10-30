@@ -1,20 +1,45 @@
 .Alert {
   position: absolute;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   z-index: 20000;
   bottom: 0;
   right: 0;
-  background: var(--highlight-color);
-  width: 200px;
+  width: max-content;
   height: max-content;
   margin: 20px;
-  padding: 40px;
-  color: white;
-  border-radius: 15px;
+  padding: 10px; 
+  color: black;
+  border-radius: 5px;
   box-shadow: 3px 3px 3px #b6b5b5;
 }
 
-.Alert > p {
+.Alert.Success {
+  color: green;
+  background-color: rgba(144, 238, 144, .5);
+}
+
+.Alert.Error {
+  color: red;
+  background-color: lightcoral;
+}
+
+.Alert.Warning {
+
+}
+
+.Alert.Info {
+
+}
+
+.Alert > h1 {
   font-size: 1rem;
   font-weight: 500;
+}
+
+.Alert > p {
+  font-size: .8rem;
+  font-weight: 300;
 }

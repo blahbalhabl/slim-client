@@ -102,7 +102,7 @@ const Members = () => {
       <div className="Members__Header">
         <h1>Sanggunian Members</h1>
         <div>
-          {(auth.role === role.adn || auth.role === role.spr) && (
+          {(auth.role === role.spr) && (
             <button
               className='Members__Header__Button'
               onClick={openModal}
