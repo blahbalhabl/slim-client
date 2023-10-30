@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icons } from "../utils/Icons"
 import '../styles/Accordion.css'
@@ -6,6 +6,7 @@ import '../styles/Accordion.css'
 const Accordion = ({ data, collapse }) => {
 
 	const [selected, setSelected] = useState(null);
+  const [collapsed, setCollapsed] = useState('');
 
 	const toggleAccordion = (i) => {
 		if (selected === i) {
@@ -14,13 +15,17 @@ const Accordion = ({ data, collapse }) => {
 		setSelected(i);
 	};
 
+  useEffect(() => {
+    collapse ? setCollapsed('collapsed') : setCollapsed('');
+  }, [collapse]);
+
   return (
 		<>
       {data.map((item, i) => (
         <div key={i}>
           <div
             key={i}
-            className="Accordion"
+            className={`Accordion ${collapsed}`}
             onClick={() => toggleAccordion(i)}
           >
             <div className="Accordion__Title">
@@ -34,6 +39,23 @@ const Accordion = ({ data, collapse }) => {
 									</>
 								)}
             </div>
+            {/* Mobile Accordion */}
+            <span>
+              <div
+                className={
+                  selected === i
+                    ? 'Accordion__Mobile__Content active'
+                    : 'Accordion__Mobile__Content'
+                }
+              >
+                {item.contents.map((content, j) => (
+                  <div key={j}>
+                    <div>{content.title}</div>
+                  </div>
+                ))}
+              </div>
+            </span>
+            {/* End of Mobile Accordion */}
           </div>
           <div
             className={

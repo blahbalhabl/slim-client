@@ -42,7 +42,7 @@
   color: white;
 }
 
-.Sidebar__Button.collapsed > span {
+.Sidebar__Button > span {
   display: none;
   position: relative;
   background-color: var(--secondary-color);
@@ -77,10 +77,6 @@
 .Sidebar.collapsed {
   width: 53px;
   transition: width ease-in-out 0.2s;
-}
-
-.Sidebar.collapsed {
-
 }
 
 @media only screen and (max-width: 800px) {

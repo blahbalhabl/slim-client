@@ -42,8 +42,7 @@ const Sidebar = () => {
           to={links.dash}
         >
           <FontAwesomeIcon icon={icons.chart} />
-          {!collapsed && <p>Dashboard</p>}
-          {collapsed && <span>Dashboard</span>}
+          {!collapsed ? <p>Dashboard</p> : <span>Dashboard</span>}
         </Link>
         {auth.role === role.adn && (
           <Accordion data={sidebarAccordion} collapse={collapsed} />
@@ -54,8 +53,7 @@ const Sidebar = () => {
             to={links.sign}
           >
             <FontAwesomeIcon icon={icons.user} />
-            {!collapsed && <p>Users</p>}
-            {collapsed && <span>Users</span>}
+            {!collapsed ? <p>Users</p> : <span>Users</span>}
           </Link>
         )}
         {(auth.role === role.spr || auth.role === role.adn) && (
@@ -66,8 +64,7 @@ const Sidebar = () => {
               to={links.mem}
             >
               <FontAwesomeIcon icon={icons.user} />
-              {!collapsed && <p>Sanggunian Members</p>}
-              {collapsed && <span>Sanggunian Members</span>}
+              {!collapsed ? <p>Sanggunian Members</p> : <span>Sanggunian Members</span>}
             </Link>
           </>
         )}
