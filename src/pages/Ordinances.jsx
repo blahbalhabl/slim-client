@@ -74,6 +74,7 @@ const Ordinances = () => {
       const memRes = await axiosPrivate.get('/sanggunian-members');
       const ordinances = res.data;
       const members = memRes.data;
+      console.log(res);
       return {
         ordinances: ordinances,
         members: members,
@@ -284,28 +285,30 @@ const Ordinances = () => {
       <div className="Ordinances__Card">
         <CreateOrdinances sendRequest={sendRequest}/>
       </div>
-      <SearchBar data={ordinances} fn={setOrdinances} />
       <div className="Ordinances__Container">
-      <h3 className='Ordinances__Top__Title'>{status.toUpperCase()} ORDINANCES</h3>
-      <div className="Ordinances__Legend">
-        <h4>Legend:</h4>
-        <div>
-          <div style={{backgroundColor: 'orange'}}></div>
-          <p>Draft</p>
+        <div className="Ordinances__Top__Header">
+          <h3>{status.toUpperCase()} ORDINANCES</h3>
+          <SearchBar data={ordinances} fn={setOrdinances} />
         </div>
-        <div>
-          <div style={{backgroundColor: 'green'}}></div>
-          <p>Enacted</p>
+        <div className="Ordinances__Legend">
+          <h4>Legend:</h4>
+          <div>
+            <div style={{backgroundColor: 'orange'}}></div>
+            <p>Draft</p>
+          </div>
+          <div>
+            <div style={{backgroundColor: 'green'}}></div>
+            <p>Enacted</p>
+          </div>
+          <div>
+            <div style={{backgroundColor: 'blue'}}></div>
+            <p>Approved</p>
+          </div>
+          <div>
+            <div style={{backgroundColor: 'red'}}></div>
+            <p>Amended</p>
+          </div>
         </div>
-        <div>
-          <div style={{backgroundColor: 'blue'}}></div>
-          <p>Approved</p>
-        </div>
-        <div>
-          <div style={{backgroundColor: 'red'}}></div>
-          <p>Amended</p>
-        </div>
-      </div>
         <table className="Ordinances__Content">
           <thead>
             <tr className="Ordinances__Header">
@@ -373,7 +376,7 @@ const Ordinances = () => {
         </table>
         <div className='Ordinances__Pagination'>
           <Pagination 
-            count={10} 
+            count={10} //Dyanmically change
             variant="outlined" 
             color='primary'
             onChange={(e, value) => handlePageChange(e, value)}

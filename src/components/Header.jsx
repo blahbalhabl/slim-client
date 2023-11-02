@@ -131,7 +131,7 @@ const Header = () => {
     </div>
     {/* Mobile Navigation Bar */}
     { auth && (
-    <div className={`MobileNav ${collapsed ? 'collapsed' : ''}`}>
+    <div className={`MobileNav${collapsed ? ' collapsed' : ''}`}>
       <div className="MobileNav__Links">
         {/* Render All Navigational Links here */}
         <Link
@@ -142,7 +142,9 @@ const Header = () => {
           <p>Dashboard</p>
         </Link>
         {auth.role === role.adn && (
-          <Accordion data={sidebarAccordion} />
+          <div className="MobileNav__Accordion">
+            <Accordion data={sidebarAccordion} />
+          </div>
         )}
         {auth.role === role.spr && (
         <Link
@@ -155,7 +157,9 @@ const Header = () => {
         )}
         {(auth.role === role.spr || auth.role === role.adn) && (
           <>
-            <Accordion data={sidebarAccordion2} collapse={collapsed} />
+            <div className="MobileNav__Accordion">
+              <Accordion data={sidebarAccordion2} />
+            </div>
             <Link
               className={`MobileNav__Button ${isActive(links.mem) ? 'active' : ''}`}
               to={links.mem}

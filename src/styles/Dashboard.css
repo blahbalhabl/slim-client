@@ -22,3 +22,13 @@
 .Dashboard__Container {
   flex-grow: 1;
 }
+
+@media only screen and (max-width: 1200px) {
+  .Dashboard {
+    flex-direction: column;
+  }
+
+  .Dashboard__Info {
+    margin-right: 0;
+  }
+}

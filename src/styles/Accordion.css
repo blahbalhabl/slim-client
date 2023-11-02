@@ -8,6 +8,14 @@
     cursor: pointer;
 }
 
+.Accordion.active {
+    background-color: var(--highlight-color);
+}
+
+.Accordion.active > .Accordion__Title {
+    color: white;
+}
+
 .Accordion:hover {
     background-color: darkslateblue;
 }
@@ -88,5 +96,9 @@
 @media only screen and (max-width: 800px) {
     .Accordion {
         width: 100%;
+    }
+
+    .Accordion > span {
+        display: none;
     }
 }

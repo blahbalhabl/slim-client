@@ -23,16 +23,14 @@ const Dashboard = () => {
             <p>Welcome back, {auth.name}, {auth.role.toLowerCase()}</p>
           )}
         </div>
-
           { auth && auth?.role === role.adn 
             ? <Admin />
             : auth && auth?.role === role.spr
             ? <SuperAdmin />
             : null
           }
-
       </div>
-      {/* <Calendar /> */}
+      <Calendar />
     </div>
   )
 };

@@ -50,4 +50,15 @@
   .MobileNav__Button > p {
     margin-left: 10%;
   }
+
+  .MobileNav > 
+  .MobileNav__Links > 
+  .MobileNav__Accordion {
+    display: block;
+  }
+  .MobileNav.collapsed > 
+  .MobileNav__Links > 
+  .MobileNav__Accordion {
+    display: none;
+  }
 }

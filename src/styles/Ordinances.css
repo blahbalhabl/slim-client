@@ -6,16 +6,15 @@
   flex-grow: 1;
 }
 
-.Ordinances__Top__Title {
-  margin-left: 10px;
-  margin-bottom: 10px;
-}
-
 .Ordinances__Container {
   display: inherit;
   flex-direction: column;
   justify-content: left;
   width: 100%;
+}
+
+.Ordinances__Top__Header {
+  display: flex;
 }
 
 .Ordinances__Link {

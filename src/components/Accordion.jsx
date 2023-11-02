@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icons } from "../utils/Icons"
 import '../styles/Accordion.css'
 
 const Accordion = ({ data, collapse }) => {
 
+  const location = useLocation();
+
 	const [selected, setSelected] = useState(null);
   const [collapsed, setCollapsed] = useState('');
+  
+  const links = {
+    rec: '/records',
+    cal: '/attendace'
+  };
 
 	const toggleAccordion = (i) => {
 		if (selected === i) {
@@ -15,8 +23,16 @@ const Accordion = ({ data, collapse }) => {
 		setSelected(i);
 	};
 
+  const isActive = (link) => {
+    if(location.pathname.includes(link)) {
+      return 'active';
+    } else {
+      return '';
+    }
+  };
+
   useEffect(() => {
-    collapse ? setCollapsed('collapsed') : setCollapsed('');
+    collapse ? setCollapsed(' collapsed') : setCollapsed('');
   }, [collapse]);
 
   return (
@@ -24,8 +40,7 @@ const Accordion = ({ data, collapse }) => {
       {data.map((item, i) => (
         <div key={i}>
           <div
-            key={i}
-            className={`Accordion ${collapsed}`}
+            className={`Accordion${collapsed}`}
             onClick={() => toggleAccordion(i)}
           >
             <div className="Accordion__Title">
