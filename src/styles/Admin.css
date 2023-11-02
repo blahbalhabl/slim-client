@@ -74,6 +74,10 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .Admin {
+    margin-right: 0;
+  }
+
   .Admin__Container {
     grid-template-columns: auto;
   }
