@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 import Accordion from './Accordion';
-import { sidebarAccordion, sidebarAccordion2 } from '../utils/sidebarAccordion';
+import { sidebarAccordion } from '../utils/sidebarAccordion';
 import { roles } from '../utils/userRoles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '../utils/Icons';
@@ -44,9 +44,6 @@ const Sidebar = () => {
           <FontAwesomeIcon icon={icons.chart} />
           {!collapsed ? <p>Dashboard</p> : <span>Dashboard</span>}
         </Link>
-        {auth.role === role.adn && (
-          <Accordion data={sidebarAccordion} collapse={collapsed} />
-        )}
         {auth.role === role.spr && (
           <Link
             className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.sign) ? 'active' : ''}`}
@@ -56,9 +53,9 @@ const Sidebar = () => {
             {!collapsed ? <p>Users</p> : <span>Users</span>}
           </Link>
         )}
+        <Accordion data={sidebarAccordion} collapse={collapsed} userRole={auth.role}/>
         {(auth.role === role.spr || auth.role === role.adn) && (
           <>
-            <Accordion data={sidebarAccordion2} collapse={collapsed} />
             <Link
               className={`Sidebar__Button ${collapsed ? 'collapsed' : ''} ${isActive(links.mem) ? 'active' : ''}`}
               to={links.mem}

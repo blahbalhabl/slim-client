@@ -20,3 +20,12 @@
 .BreadCrumbs > li {
     margin-right: 10px;
 }
+
+.BreadCrumbs__Content {
+    margin-left: 10px;
+}
+
+.BreadCrumbs__List {
+    display: flex;
+    gap: 10px;
+}

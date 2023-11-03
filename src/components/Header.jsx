@@ -7,7 +7,7 @@ import Tooltip from "./Tooltip";
 import Accordion from './Accordion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icons } from '../utils/Icons'
-import { sidebarAccordion, sidebarAccordion2 } from '../utils/sidebarAccordion';
+import { sidebarAccordion } from '../utils/sidebarAccordion';
 import { roles } from '../utils/userRoles';
 import logo from '../assets/site-logo.svg';
 import "../styles/Header.css";
@@ -158,7 +158,7 @@ const Header = () => {
         {(auth.role === role.spr || auth.role === role.adn) && (
           <>
             <div className="MobileNav__Accordion">
-              <Accordion data={sidebarAccordion2} />
+            <Accordion data={sidebarAccordion} userRole={auth.role}/>
             </div>
             <Link
               className={`MobileNav__Button ${isActive(links.mem) ? 'active' : ''}`}

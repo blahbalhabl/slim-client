@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { roles } from '../utils/userRoles';
+import Loader from './Loader';
 import { TextField } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { icons } from '../utils/Icons';
 import '../styles/Calendar.css'
 
 const Calendar = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const role = roles.role;
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({}); // For setting new schedules
+  const [isLoading, setIsLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState('');
   const [proceedings, setProceedings] = useState([]);
   const [addSched, setAddSched] = useState(false);
@@ -41,6 +46,7 @@ const Calendar = () => {
   };
 
   const formatDate = (date) => {
+    const newDate = new Date(date);
     const options = { 
       weekday: 'short', 
       year: 'numeric', 
@@ -49,12 +55,12 @@ const Calendar = () => {
       hour: '2-digit',
       minute: '2-digit',
     };
-    const formattedDate = date.toLocaleDateString(undefined, options);
+    const formattedDate = newDate.toLocaleDateString(undefined, options);
     return formattedDate;
   };
 
   const isOngoing = (proceeding) => {
-    const date = new Date(proceeding.proceedings)
+    const date = new Date(proceeding)
     const currentDate = new Date();
     if (date > currentDate) {
       return "Upcoming";
@@ -65,9 +71,11 @@ const Calendar = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getProceedings()
       .then((data) => {
         setProceedings(data);
+        setIsLoading(false);
       })
   }, []);
 
@@ -85,6 +93,12 @@ const Calendar = () => {
     // Clear the interval on unmount to avoid memory leaks
     return () => clearInterval(intervalId);
   }, []);
+
+  if(isLoading) {
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <div className='Calendar'>
@@ -145,10 +159,16 @@ const Calendar = () => {
               </span>
               {proceedings.map((proceeding, i) => (
                 <div key={i} className="Calendar__Content">
-                  <p>{proceeding.title}</p>
-                  <p>{formatDate(new Date(proceeding.proceedings))}</p>
-                  <p>{proceeding.status.toUpperCase()}</p>
-                  <p>{isOngoing(proceeding)}</p>
+                  <div>
+                    <p>{proceeding.title}</p>
+                    {/* <p>{formatDate(proceeding.proceedings)}</p> */}
+                    <p style={{fontWeight: 'bold'}}>{formatDate(proceeding.proceedings)}</p>
+                    <p>{proceeding.status.toUpperCase()}</p>
+                    <p>{isOngoing(proceeding.proceedings)}</p>
+                  </div>
+                  <Link to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}`} className='Calendar__Link'>
+                      <FontAwesomeIcon icon={icons.share}/>
+                  </Link>
                 </div>
               ))}
             </div>
