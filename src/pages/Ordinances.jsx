@@ -74,7 +74,6 @@ const Ordinances = () => {
       const memRes = await axiosPrivate.get('/sanggunian-members');
       const ordinances = res.data;
       const members = memRes.data;
-      console.log(res);
       return {
         ordinances: ordinances,
         members: members,
@@ -125,7 +124,7 @@ const Ordinances = () => {
   const handleOrdinanceClick = async (ordinance) => {
     try {
       setSelectedOrdinance(ordinance);
-      const minutes = await axiosPrivate.get(`/minutes/${ordinance._id}`);
+      const minutes = await axiosPrivate.get(`/minutes/${ordinance._id}?level=${auth.level}`);
       setMinutes(minutes.data);
       
       if (minutes.data.length === 0) {
@@ -169,9 +168,8 @@ const Ordinances = () => {
         minuteData.append('speaker', inputs.speaker);
         minuteData.append('series', series);
         minuteData.append('type', 'minutes');
-        minuteData.append('level', auth.level);
         minuteData.append('file', file);
-        const res = await axiosPrivate.post(`/upload-minutes?type=minutes&ordinanceId=${id}`, minuteData, {
+        const res = await axiosPrivate.post(`/upload-minutes?type=minutes&ordinanceId=${id}&level=${auth.level}&status=pending`, minuteData, {
           headers: {'Content-Type': 'multipart/form-data'}
         })
   
@@ -192,13 +190,13 @@ const Ordinances = () => {
       setDateChanged(false);
 
       const updateData = new FormData();
-      updateData.append('level', auth.level);
-      updateData.append('number', selectedOrdinance.number);
-      updateData.append('series', selectedOrdinance.series);
-      updateData.append('title', selectedOrdinance.title);
-      updateData.append('status', selectedOrdinance.status);
-      updateData.append('author', selectedOrdinance.author);
-      updateData.append('proceedings', selectedOrdinance.proceedings);
+      const ordinance = selectedOrdinance;
+
+      for (const [key, value] of Object.entries(ordinance)) {
+        if (value) {
+          updateData.append(key, value);
+        }
+      };
       updateData.append('file', file);
 
       const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
