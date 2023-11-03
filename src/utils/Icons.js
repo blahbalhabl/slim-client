@@ -29,7 +29,8 @@ import { faPencil,
   faShieldHalved,
   faMagnifyingGlass,
   faEllipsis,
-  faChevronLeft, } from '@fortawesome/free-solid-svg-icons';
+  faChevronLeft,
+  faShare, } from '@fortawesome/free-solid-svg-icons';
 
 export const icons = {
   reports: faScroll,
@@ -64,4 +65,5 @@ export const icons = {
   shield: faShieldHalved,
   search: faMagnifyingGlass,
   ellipsis: faEllipsis,
+  share: faShare,
 };

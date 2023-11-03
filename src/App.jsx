@@ -18,6 +18,7 @@ import Ordinances from "./pages/Ordinances"
 import Profile from "./pages/Profile"
 import Members from "./pages/Members"
 import Attendance from "./pages/Attendance"
+import AttendanceEntry from "./pages/AttendanceEntry"
 import { roles } from "./utils/userRoles"
 
 import './App.css'
@@ -48,6 +49,7 @@ const level = roles.level;
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/sanggunian-members" element={< Members />} />
               <Route path="/attendance" element={<Attendance />}/>
+              <Route path="/attendance/:id/:date" element={<AttendanceEntry/>}/>
             </Route>
 
             {/* Private Admin Routes*/}
