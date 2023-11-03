@@ -1,14 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth'
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { roles } from '../utils/userRoles';
 import { TextField } from '@mui/material';
 import '../styles/Calendar.css'
 
 const Calendar = () => {
   const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   const role = roles.role;
+  const [inputs, setInputs] = useState({});
+  const [currentDate, setCurrentDate] = useState('');
+  const [proceedings, setProceedings] = useState([]);
   const [addSched, setAddSched] = useState(false);
   const [cancel, setCancel] = useState('');
+
+  const getProceedings = async () => {
+    try {
+      const proceedings = await axiosPrivate.get(`/proceedings?level=${auth.level}`);
+      return proceedings.data;
+    } catch(err) {
+      console.error(err); //SetServerMessage
+    };
+  };
 
   const addSchedule = () => {
     setAddSched(!addSched);
@@ -26,10 +40,56 @@ const Calendar = () => {
     });
   };
 
+  const formatDate = (date) => {
+    const options = { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    const formattedDate = date.toLocaleDateString(undefined, options);
+    return formattedDate;
+  };
+
+  const isOngoing = (proceeding) => {
+    const date = new Date(proceeding.proceedings)
+    const currentDate = new Date();
+    if (date > currentDate) {
+      return "Upcoming";
+    } else if (date < currentDate) {
+      return "Passed";
+    }
+    return "Ongoing";
+  };
+
+  useEffect(() => {
+    getProceedings()
+      .then((data) => {
+        setProceedings(data);
+      })
+  }, []);
+
+  useEffect(() => {
+    // Function to get the current date
+    const getCurrentDate = () => {
+      const today = new Date();
+      const formattedDate = formatDate(today);
+      setCurrentDate(formattedDate);
+    };
+    getCurrentDate();
+    // isOngoing();
+    // You can also set up an interval to update the date in real-time
+    const intervalId = setInterval(getCurrentDate, 1000); // Update every second
+    // Clear the interval on unmount to avoid memory leaks
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div className='Calendar'>
       <div className="Calendar__Header">
-        <h1>Calendar</h1>
+        <h3>{currentDate}</h3>
         {auth?.role === role.adn && (
           <button
             className={`Calendar__Header__Button${cancel}`}
@@ -77,13 +137,22 @@ const Calendar = () => {
           </div>
         )}
         <div className="Calendar__Content__Container">
-          {/* Map all Schedules in the database here */}
-          <div className="Calendar__Content">
-            <h3>Title</h3>
-            <p>Agenda</p>
-            <p>Date & Time</p>
-            <p>Status</p>
-          </div>
+          {/* Map all proceedings in the database here */}
+          {proceedings && (
+            <div className='Calendar__Content__Parent'>
+              <span>
+                <p className='Calendar__Proceedings'>Proceedings</p>
+              </span>
+              {proceedings.map((proceeding, i) => (
+                <div key={i} className="Calendar__Content">
+                  <p>{proceeding.title}</p>
+                  <p>{formatDate(new Date(proceeding.proceedings))}</p>
+                  <p>{proceeding.status.toUpperCase()}</p>
+                  <p>{isOngoing(proceeding)}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

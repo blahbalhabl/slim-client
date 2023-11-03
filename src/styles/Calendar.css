@@ -77,14 +77,21 @@
 }
 
 .Calendar__Content__Container {
-
+ background-color: transparent;
 }
 
 .Calendar__Content {
-  background-color: red;
+  background-color: var(--orange-color);
   border-radius: 10px;
   padding: 20px;
   transition: all 200ms;
+  margin: 10px 0px 10px 0px;
+}
+
+.Calendar__Proceedings {
+  text-align: center;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
 }
 
 @media only screen and (max-width: 1200px) {
