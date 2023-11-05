@@ -4,6 +4,7 @@
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  height: max-content;
 }
 
 .Ordinances__Container {
@@ -20,6 +21,14 @@
 .Ordinances__Link {
   cursor: pointer;
   user-select: none;
+}
+
+.Ordinances__Link:nth-of-type(2n) {
+  background-color: rgb(245, 245, 245);
+}
+
+.Ordinances__Data tr:last-child {
+  height: 15px;
 }
 
 .Ordinances__Link:hover {
@@ -220,10 +229,11 @@ cursor: pointer;
 .Ordinances__Cancel__Button {
   color: var(--highlight-color);
   margin: 5px;
+  background-color: transparent;
   padding: 5px;
-  background-color: white;
   font-size: 1.1rem;
-  border: 1px solid var(--highlight-color);
+  font-weight: 600;
+  border: 2px solid var(--highlight-color);
   border-radius: 5px;
   cursor: pointer;
 }
@@ -286,4 +296,110 @@ cursor: pointer;
 .Ordinances__Cancel__Button:hover,
 .Ordinances__Edit__Button:hover {
   transform: scale(1.1);
+}
+
+.Ordinances__Delete__Modal {
+  width: 100%;
+}
+
+.Ordinances__Delete__Modal__Container {
+  display: flex;
+}
+
+.Ordinances__Delete__Modal__Input {
+  width: 100%;
+}
+
+.Ordinances__Delete__Modal__Button {
+
+}
+
+
+@media only screen and (max-width: 800px) {
+  .Ordinances__Top__Header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .Ordinances {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .Ordinances__Link > td {
+    display: grid;
+    grid-template-columns: 15ch auto;
+    padding: 0.5rem 1rem;
+  }
+
+  .Ordinances__Header > th {
+    display: none;
+  }
+
+  .Ordinances__Link > td::before {
+    content: attr(data-cell) ': ';
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  /* .Ordinances__Link > td:last-child::before {
+    content: none;
+  } */
+
+  .Ordinances__Legend {
+    flex-direction: column;
+    padding: 10px;
+    align-items: start;
+  }
+
+  .Ordinances__Details {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .Ordinances__Details__Form {
+    flex-direction: column;
+  }
+
+  .Ordinances__Details__Content {
+    align-items: flex-end;
+  }
+
+  .Ordinances__Button__Group {
+    display: flex;
+    width: 100%;
+  }
+
+  .Ordinances__Cancel__Button {
+    width: 100%;
+  }
+  
+  .Ordinances__Update__Button {
+    width: 100%;
+  }
+
+  .Ordinances__Minutes__Buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .Ordinances__Center {
+    text-align: left;
+  }
+
+  .Ordinances__Download {
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+    color: white;
+    background-color: var(--highlight-color);
+  }
+
+  .Ordinances__Details__Proceedings {
+    text-align: center;
+  }
+
+  .Ordinances__Proceedings {
+    text-align: center;
+  }
 }

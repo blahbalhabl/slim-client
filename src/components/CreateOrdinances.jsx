@@ -8,7 +8,7 @@ import '../styles/CreateOrdinances.css'
 const CreateOrdinances = () => {
   const role = roles.role;
   const level = roles.level;
-  const { auth } = useAuth();
+  const { auth, setReload } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [message, setMessage] = useState();
   const [uploading, setUploading] = useState(false);
@@ -53,8 +53,11 @@ const CreateOrdinances = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    uploadFile();
-    setUploading(false);
+    uploadFile()
+      .then(() => {
+        setReload(true);
+        setUploading(false);
+      })
   };
 
   const uploadFile = async () => {

@@ -122,7 +122,7 @@ const Members = () => {
               <th>End Term</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='Members__Data'>
             {members.map((member, i) => {
               return (
                 <tr key={i}>

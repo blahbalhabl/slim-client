@@ -45,3 +45,9 @@
 .Modal__Close__Button:hover {
   transform: scale(1.2);
 }
+
+@media only screen and (max-width: 800px) {
+  .Modal__Container {
+    width: 85%;
+  }
+}

@@ -76,3 +76,13 @@
   border: 1px solid green;
   background-color: lightgreen;
 }
+
+@media only screen and (max-width: 800px) {
+  .CreateOrdinances > h1 {
+    font-size: 1.5rem;
+  }
+
+  .CreateOrdinances__Button {
+    font-size: 1rem;
+  }
+}
