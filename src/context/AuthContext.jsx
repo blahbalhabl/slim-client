@@ -4,15 +4,18 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
 
-  const [auth, setAuth] = useState();
-  const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem('persist')) || true);
+  const [auth, setAuth] = useState(null);
+  const [reload, setReload] = useState(false);
+  const [persist, setPersist] = useState(localStorage.getItem('persist') || true);
+
   
   const contextData = {
     setAuth:setAuth,
     setPersist: setPersist,
+    setReload: setReload,
     auth: auth,
     persist: persist,
+    reload: reload,
   };
 
   return (

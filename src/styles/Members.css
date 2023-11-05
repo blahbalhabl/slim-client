@@ -57,4 +57,9 @@
 
 .Members__Table {
   width: 100%;
+  border-collapse: collapse;
+}
+
+.Members__Data > tr:nth-of-type(2n) {
+  background-color: rgb(245, 245, 245);
 }

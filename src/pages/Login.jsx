@@ -77,7 +77,7 @@ const Login = () => {
       };
     } catch (err) {
       // Handle Error response statuses accccordingly.
-      switch(err.response.status) {
+      switch(err?.response?.status) {
         case 400:
           setEmailError(true)
           break;

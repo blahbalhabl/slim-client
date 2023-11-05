@@ -117,7 +117,7 @@ const Calendar = () => {
         )}
       </div>
       <div className="Calendar__Container">
-        {addSched && (
+        {addSched ? (
           <div className='Calendar__Add__Schedule'>
             <form onSubmit={submitSchedule}>
               <TextField
@@ -149,7 +149,10 @@ const Calendar = () => {
               </button>
             </form>
           </div>
-        )}
+        ) : (
+          <div className='Calendar__Null'>
+            <label>No Upcoming Events</label>
+          </div>)}
         <div className="Calendar__Content__Container">
           {/* Map all proceedings in the database here */}
           {proceedings && (

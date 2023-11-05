@@ -8,12 +8,12 @@ import Modal from '../components/Modal';
 import BreadCrumbs from '../components/BreadCrumbs';
 import SearchBar from '../components/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Pagination } from '@mui/material';
+import { Pagination, TextField } from '@mui/material';
 import { icons } from '../utils/Icons'
 import '../styles/Ordinances.css'
 
 const Ordinances = () => {
-  const { auth } = useAuth();
+  const { auth, reload, setReload } = useAuth();
   const { status } = useParams();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
@@ -34,6 +34,8 @@ const Ordinances = () => {
   const [selectedOrdinance, setSelectedOrdinance] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [isDateChanged, setDateChanged] = useState(false);
+  const [delInputs, setDelInputs] = useState({});
+  const [otp, setOtp] = useState(false);
   const [inputs, setInputs] = useState({
     date: "",
     agenda: "",
@@ -57,6 +59,13 @@ const Ordinances = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputs((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleDelChange = (e) => {
+    const { name, value } = e.target;
+    setDelInputs((prev) => {
       return { ...prev, [name]: value };
     });
   };
@@ -212,11 +221,25 @@ const Ordinances = () => {
     }
   };
 
+  const handleCheckPass = async () => {
+    try {
+      const deletePass = delInputs.deletepassword;
+      const res = await axiosPrivate.post(`/check-pass`, {deletePass}, {
+        headers: {'Content-Type': 'application/json'}
+      })
+      if(res.status === 204) {
+        setMessage('Correct Password');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleDeleteOrdinance = async (e, filename, series) => {
     try {
       e.preventDefault();
       // Authenticate User using password, or with google authenticator
-      setDelModalOpen(true);
+      setDelModalOpen(true)
       // const res = await axiosPrivate.delete(`/delete-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`);
       // if (res.status === 200) {
       //   setMessage(res.data.message);
@@ -253,11 +276,12 @@ const Ordinances = () => {
     .catch((err) => {
       setLoading(false);
     });
+    setReload(false);
 
     return () => {
       isMounted = false;
     }
-  },[ status, message ]); 
+  },[ status, message, reload ]); 
 
   useEffect(() => {
     if (message) {
@@ -281,7 +305,7 @@ const Ordinances = () => {
     <div className="Ordinances">
       <BreadCrumbs items={breadcrumbs} />
       <div className="Ordinances__Card">
-        <CreateOrdinances sendRequest={sendRequest}/>
+        <CreateOrdinances sendRequest={sendRequest} />
       </div>
       <div className="Ordinances__Container">
         <div className="Ordinances__Top__Header">
@@ -318,59 +342,62 @@ const Ordinances = () => {
               <th></th>
             </tr>
           </thead>
+          <tbody className='Ordinances__Data'>
           { ordinances.length > 0 ? (
-              ordinances.map((ordinance, i) => (
-                (ordinance.status === status || status === 'all' && ordinance.accessLevel === auth.level) ? (
-                  <tbody key={i}>
-                  <tr
-                    className='Ordinances__Link'
-                    style={
-                      {color: 
-                        ordinance.status === 'draft' 
-                        ? 'orange' 
-                        : ordinance.status === 'enacted'
-                        ? 'green'
-                        : ordinance.status === 'approved'
-                        ? 'blue'
-                        : ordinance.status === 'amended'
-                        ? 'red' : 'black'
-                      }
+            ordinances.map((ordinance, i) => (
+              (ordinance.status === status || status === 'all' && ordinance.accessLevel === auth.level) && (
+                <tr
+                  key={i}
+                  className='Ordinances__Link'
+                  style={
+                    {color: 
+                      ordinance.status === 'draft' 
+                      ? 'orange' 
+                      : ordinance.status === 'enacted'
+                      ? 'green'
+                      : ordinance.status === 'approved'
+                      ? 'blue'
+                      : ordinance.status === 'amended'
+                      ? 'red' : 'black'
                     }
-                    key={i}>
-                    <td>
-                      { ordinance.mimetype === 'application/pdf' && (<FontAwesomeIcon icon={icons.pdf}/>)}
-                    </td>
-                    <td 
-                      className='Ordinances__Number' onClick={() => handleOrdinanceClick(ordinance)}
-                    >
-                        <p>ORDINANCE NO {ordinance.number}, Series of {ordinance.series} {ordinance.title.toUpperCase()}</p>
-                    </td>
-                    <td>
-                      <p>{ordinance.status.toUpperCase()}</p>
-                    </td>
-                    <td 
-                      className='Ordinances__Date'>
-                        {new Date(ordinance.createdAt).toLocaleString()}
-                    </td>
-                    <td>
-                      { ordinance.size } k
-                    </td>
-                    <td className='Ordinances__Center'>
-                      <FontAwesomeIcon 
-                        className='Ordinances__Download'
-                        onClick={() => handleDownload(ordinance.file, ordinance.series)}
-                        icon={icons.download} />
-                    </td>
-                  </tr>
-                  </tbody>
-                ) : null
-              ))
-            ) : ( <tbody>
-                    <tr>
-                      <td>No {status} Ordinances</td>
-                    </tr>
-                  </tbody> )
-          }
+                  }>
+                  <td data-cell='type'>
+                    { ordinance.mimetype === 'application/pdf' && (<FontAwesomeIcon icon={icons.pdf}/>)}
+                  </td>
+                  <td
+                    data-cell='number' 
+                    className='Ordinances__Number' onClick={() => handleOrdinanceClick(ordinance)}
+                  >
+                      <p>ORDINANCE NO {ordinance.number}, Series of {ordinance.series} {ordinance.title.toUpperCase()}</p>
+                  </td>
+                  <td data-cell='status'>
+                    <p>{ordinance.status.toUpperCase()}</p>
+                  </td>
+                  <td
+                    data-cell='date'
+                    className='Ordinances__Date'>
+                      {new Date(ordinance.createdAt).toLocaleString()}
+                  </td>
+                  <td data-cell='size'>
+                    { ordinance.size } k
+                  </td>
+                  <td
+                    data-cell='download' 
+                    className='Ordinances__Center'>
+                    <FontAwesomeIcon 
+                      className='Ordinances__Download'
+                      onClick={() => handleDownload(ordinance.file, ordinance.series)}
+                      icon={icons.download} />
+                  </td>
+                </tr>
+              )))
+            ) : (
+              <tr>
+                <td>No {status} Ordinances</td>
+              </tr>
+            )}
+            <tr></tr>
+          </tbody>
         </table>
         <div className='Ordinances__Pagination'>
           <Pagination 
@@ -483,7 +510,7 @@ const Ordinances = () => {
                   </button>
                 </div>
                 {!isEditing && (
-                  <div>
+                  <div className='Ordinances__Button__Group'>
                     <button
                       className='Ordinances__Cancel__Button'
                       onClick={(e) => {e.preventDefault(); setIsEditing(!isEditing)}}>
@@ -576,8 +603,9 @@ const Ordinances = () => {
                     />
                   </label>
                   <label htmlFor="description">Description:
-                    <input 
-                      type="textarea"
+                    <textarea
+                      rows="20" 
+                      cols="100"
                       name='description'
                       id='description'
                       onChange={handleChange}
@@ -637,16 +665,33 @@ const Ordinances = () => {
         </Modal>
       )}
       <Modal isOpen={delModalOpen} closeModal={closeDelModal}>
-        <h3>Warning! You cannot undo this action! </h3>
-        <label htmlFor="password">Enter Password:</label>
-        <input type="password" />
-        {auth.otp && (
-          <div>
-            <label htmlFor="otp">Google Authenticator:</label>
-            <input type="text" />
+        <div className="Ordinances__Delete__Modal">
+          <h3>Warning! You cannot undo this action! </h3>
+          <div className='Ordinances__Delete__Modal__Container'>
+            <TextField
+              className='Ordinances__Delete__Modal__Input'
+              name='deletepassword'
+              label="Enter Password"
+              type='password'
+              variant="outlined" 
+              onChange={handleDelChange}/>
+            <button 
+              className='Ordinances__Delete__Modal__Button'
+              onClick={handleCheckPass}>
+              <FontAwesomeIcon icon={icons.right}/>
+            </button>
           </div>
-        )}
-        
+          
+          {(auth.otp && delInputs?.deletepassword) && (
+            <TextField
+              className='Ordinances__Delete__Modal__Input'
+              name='deleteotp'
+              label="Enter OTP"
+              type='number'
+              variant="outlined"
+              onChange={handleDelChange}/>
+          )}
+        </div>
       </Modal>
     </div>
   );

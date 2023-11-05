@@ -108,6 +108,10 @@
   padding-bottom: 10px;
 }
 
+.Calendar__Null {
+  text-align: center;
+}
+
 @media only screen and (max-width: 1200px) {
   .Calendar {
     max-width: 100%;
