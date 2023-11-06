@@ -22,12 +22,7 @@ const Signup = () => {
   const [isInputEditing, setInputEditing] = useState(false);
   const [users, setUsers] = useState([]);
   const [serverMessage, setServerMessage] = useState('');
-  const [inputs, setInputs] = useState({
-    email: "",
-    username: "",
-    role: "",
-    level: "",
-  });
+  const [inputs, setInputs] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = (user) => {
     setIsModalOpen(true);
@@ -122,6 +117,7 @@ const Signup = () => {
 const handleUpdateUser = async (e, user) => {
   try {
     e.preventDefault()
+    console.log(user)
     const res = await axiosPrivate.put('/update-user', {id: user._id, inputs}, {
       headers: {'Content-Type': 'application/json'}
     })

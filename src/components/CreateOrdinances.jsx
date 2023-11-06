@@ -108,7 +108,9 @@ const CreateOrdinances = () => {
   return (
     <div className="CreateOrdinances">
       <h1>List of Ordinances</h1>
-      <button className="CreateOrdinances__Button" onClick={openModal}>Create New Ordinance</button>
+      {auth.level !== level.dlg && (
+        <button className="CreateOrdinances__Button" onClick={openModal}>Create New Ordinance</button>
+      )}
       <Modal 
         isOpen={isModalOpen} 
         closeModal={closeModal}

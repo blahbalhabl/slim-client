@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Pagination, TextField } from '@mui/material';
 import { icons } from '../utils/Icons'
 import '../styles/Ordinances.css'
+import { roles } from '../utils/userRoles';
 
 const Ordinances = () => {
   const { auth, reload, setReload } = useAuth();
@@ -42,6 +43,8 @@ const Ordinances = () => {
     description: "",
     speaker: "",
   });
+
+  const level = roles.level;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -92,9 +95,9 @@ const Ordinances = () => {
     }
   }
 
-  const handleDownload = async (filename, series) => {
+  const handleDownload = async (accessLevel, filename, series) => {
     try {
-      const response = await axiosPrivate.get(`/download/${filename}?type=ordinances&level=${auth.level}&series=${series}`, {
+      const response = await axiosPrivate.get(`/download/${filename}?type=ordinances&level=${auth.level}&series=${series}&acl=${accessLevel}`, {
         responseType: 'blob', // Set the response type to 'blob' to handle binary data
       });
       // Create a blob object from the binary data
@@ -140,7 +143,7 @@ const Ordinances = () => {
         setMinutes(null);
       };
 
-      const response = await axiosPrivate.get(`/download/${ordinance.file}?type=ordinances&level=${auth.level}&series=${ordinance.series}`, {
+      const response = await axiosPrivate.get(`/view/${ordinance.file}?type=ordinances&level=${auth.level}&series=${ordinance.series}&acl=${ordinance.accessLevel}`, {
         responseType: 'blob',
       });
       const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -258,6 +261,21 @@ const Ordinances = () => {
       })
   };
 
+  const formatDate = (date) => {
+    const newDate = new Date(date);
+    const options = {
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    };
+    const formattedDate = newDate.toLocaleString(undefined, options);
+    return formattedDate;
+  };
+
   useEffect(() => {
     document.title = `SLIM | ${status} Ordinances`;
     let isMounted = true;
@@ -345,7 +363,9 @@ const Ordinances = () => {
           <tbody className='Ordinances__Data'>
           { ordinances.length > 0 ? (
             ordinances.map((ordinance, i) => (
-              (ordinance.status === status || status === 'all' && ordinance.accessLevel === auth.level) && (
+              ((ordinance.status === status || status === 'all') 
+                || (ordinance.accessLevel === auth.level) 
+                || (ordinances.accessLevel === level.dlg)) && (
                 <tr
                   key={i}
                   className='Ordinances__Link'
@@ -376,7 +396,7 @@ const Ordinances = () => {
                   <td
                     data-cell='date'
                     className='Ordinances__Date'>
-                      {new Date(ordinance.createdAt).toLocaleString()}
+                      {formatDate(ordinance.createdAt)}
                   </td>
                   <td data-cell='size'>
                     { ordinance.size } k
@@ -386,7 +406,7 @@ const Ordinances = () => {
                     className='Ordinances__Center'>
                     <FontAwesomeIcon 
                       className='Ordinances__Download'
-                      onClick={() => handleDownload(ordinance.file, ordinance.series)}
+                      onClick={() => handleDownload(ordinance.accessLevel, ordinance.file, ordinance.series)}
                       icon={icons.download} />
                   </td>
                 </tr>
@@ -497,18 +517,20 @@ const Ordinances = () => {
                 )}
               </div>
               <div className="Ordinances__Details__Content">
-                <div>
-                  <button 
-                    className="Ordinances__Edit__Button" 
-                    onClick={(e) => {e.preventDefault(); setIsEditing(!isEditing)}}>
-                      <FontAwesomeIcon icon={icons.pencil} />
-                  </button>
-                  <button 
-                    className='Ordinances__Delete__Button' 
-                    onClick={(e) => handleDeleteOrdinance(e, selectedOrdinance.file, selectedOrdinance.series)}>
-                      <FontAwesomeIcon icon={icons.trash}/>
-                  </button>
-                </div>
+                {auth.level !== level.dlg && (
+                  <div>
+                    <button 
+                      className="Ordinances__Edit__Button" 
+                      onClick={(e) => {e.preventDefault(); setIsEditing(!isEditing)}}>
+                        <FontAwesomeIcon icon={icons.pencil} />
+                    </button>
+                    <button 
+                      className='Ordinances__Delete__Button' 
+                      onClick={(e) => handleDeleteOrdinance(e, selectedOrdinance.file, selectedOrdinance.series)}>
+                        <FontAwesomeIcon icon={icons.trash}/>
+                    </button>
+                  </div>
+                )}
                 {!isEditing && (
                   <div className='Ordinances__Button__Group'>
                     <button
@@ -548,7 +570,7 @@ const Ordinances = () => {
               <div className='Ordinances__Proceedings'>
                 <h3>Proceedings</h3>
                 <p>Proceedings of the Sangguniang Bayan of the Municipality of Bacolor, Province of Pampanga, held at the Session Hall on 
-                  <strong> {new Date(selectedOrdinance.proceedings).toLocaleString(undefined, {hour12: true})}</strong>
+                  <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
                 </p>
               </div>
             </div>
@@ -571,11 +593,13 @@ const Ordinances = () => {
             <div className="Ordinances__Minutes__Container">
               <h3>Minutes of the Meeting for {selectedOrdinance.title.toUpperCase()}</h3>
               <div className='Ordinances__Minutes__Buttons'>
-                <button
-                  className='Ordinances__Minutes__Add'
-                  onClick={() => setAddMinutes(!addMinutes)}>
-                    Add Minutes of the Meeting
-                </button>
+                {auth.level !== level.dlg && (
+                  <button
+                    className='Ordinances__Minutes__Add'
+                    onClick={() => setAddMinutes(!addMinutes)}>
+                      Add Minutes of the Meeting
+                  </button>
+                )}
                 { addMinutes && (
                 <div>
                   <label htmlFor="date-time">Date:
@@ -629,7 +653,7 @@ const Ordinances = () => {
                         className='Ordinances__Minutes__List'
                         key={i}
                         onClick={() => handleSelectMinutes(minute)}>
-                          {new Date(minute.date).toLocaleString(undefined, {hour12: true})}
+                          {formatDate(minute.date)}
                       </li>
                       ))) : 
                       ( <li>No Minutes</li> )
@@ -640,7 +664,7 @@ const Ordinances = () => {
               {selectedItem && minutes && (
                 <div>
                   <div>
-                    <p>Date: {new Date(selectedItem.date).toLocaleString(undefined, {hour12: true})}</p>
+                    <p>Date: {formatDate(selectedItem.date)}</p>
                     <p>Agenda: {selectedItem.agenda}</p>
                     <p>Description: {selectedItem.description}</p>
                     <p>Speaker: {selectedItem.speaker}</p>
