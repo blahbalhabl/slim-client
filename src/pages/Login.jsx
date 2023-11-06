@@ -134,9 +134,13 @@ const Login = () => {
             </span>
           </span>
           { otp && (
-            <label htmlFor="otp">Google Authenticator OTP
+            <label 
+              htmlFor="otp"
+              className="Login__OTP__Container"
+              >Google Authenticator OTP
               <OtpInput
               id="otp"
+              className="Login__OTP__Input"
               inputStyle="Login__OTP"
               inputType="number"
               value={otpValue}
