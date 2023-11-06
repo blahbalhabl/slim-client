@@ -63,3 +63,21 @@
 .Members__Data > tr:nth-of-type(2n) {
   background-color: rgb(245, 245, 245);
 }
+
+@media only screen and (max-width: 800px) {
+  .Members__Table > thead > tr > th {
+    display: none;
+  }
+
+  .Members__Data > tr {
+    display: grid;
+    grid-template-columns: 15ch 1;
+    padding: 0.5rem 1rem;
+  }
+
+  .Members__Data > tr > td::before {
+    content: attr(data-cell) ': ';
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+}
