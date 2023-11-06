@@ -164,6 +164,11 @@
     width: auto;
   }
 
+  .Profile__Avatar {
+    width: 80%;
+    height: 80%;
+  }
+
   .Profile__Card__Right__Button {
     width: 100%;
   }

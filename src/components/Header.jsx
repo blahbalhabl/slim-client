@@ -134,13 +134,21 @@ const Header = () => {
     <div className={`MobileNav${collapsed ? ' collapsed' : ''}`}>
       <div className="MobileNav__Links">
         {/* Render All Navigational Links here */}
-        <Link
-          className={`MobileNav__Button ${isActive(links.dash) ? 'active' : ''}`}
-          to={links.dash}
-        >
-          <FontAwesomeIcon icon={icons.chart} />
-          <p>Dashboard</p>
-        </Link>
+        <div className="MobileNav__Header">
+          <Link
+            className={`MobileNav__Button`}
+            to={links.dash}
+          >
+            <FontAwesomeIcon icon={icons.chart} />
+            <p>Dashboard</p>
+          </Link>
+          <button 
+            onClick={toggleMobileNav}
+            className="MobileNav__Dropdown__Button"
+          >
+            <FontAwesomeIcon icon={icons.down} />
+          </button>
+        </div>
         {auth.role === role.adn && (
           <div className="MobileNav__Accordion">
             <Accordion data={sidebarAccordion} />
@@ -148,7 +156,7 @@ const Header = () => {
         )}
         {auth.role === role.spr && (
         <Link
-          className={`MobileNav__Button ${isActive(links.sign) ? 'active' : ''}`}
+          className={`MobileNav__Button`}
           to={links.sign}
         >
           <FontAwesomeIcon icon={icons.user} />
@@ -161,7 +169,7 @@ const Header = () => {
             <Accordion data={sidebarAccordion} userRole={auth.role}/>
             </div>
             <Link
-              className={`MobileNav__Button ${isActive(links.mem) ? 'active' : ''}`}
+              className={`MobileNav__Button`}
               to={links.mem}
             >
               <FontAwesomeIcon icon={icons.user} />
@@ -170,12 +178,6 @@ const Header = () => {
           </>
         )}
       </div>
-      <button 
-        onClick={toggleMobileNav}
-        className="MobileNav__Dropdown__Button"
-      >
-        <FontAwesomeIcon icon={icons.down} />
-      </button>
     </div>
     )}
     </>

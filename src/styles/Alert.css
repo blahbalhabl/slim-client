@@ -10,10 +10,9 @@
   width: max-content;
   height: max-content;
   margin: 20px;
-  padding: 10px; 
-  color: black;
+  padding: 10px;
   border-radius: 5px;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  /* box-shadow: 3px 3px 3px #b6b5b5; */
 }
 
 .Alert.Success {
@@ -23,7 +22,7 @@
 
 .Alert.Error {
   color: red;
-  background-color: lightcoral;
+  background-color: rgba(240, 127, 127, .5);
 }
 
 .Alert.Warning {
@@ -43,3 +42,14 @@
   font-size: .8rem;
   font-weight: 300;
 }
+
+/* @media only screen and (max-width: 600px) {
+  .Alert {
+    top: 10%;
+    left: 0;
+    flex-grow: 1;
+    box-sizing: border-box;
+    width: auto;
+    margin: 10px auto;
+  }
+} */
