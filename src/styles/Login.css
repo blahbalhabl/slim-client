@@ -50,10 +50,6 @@
   /* margin: 0; */
 }
 
-.Login__Container > input:focus {
-  outline: none;
-}
-
 .Login__Button {
   border: none;
   margin-top: 20px;
@@ -114,6 +110,21 @@
   .Login__Container {
     width: 75vw;
     box-shadow: none;
+  }
+
+  .Login__OTP__Container {
+    text-align: center;
+    width: 100%;
+  }
+
+  .Login__OTP__Input {
+    width: 100%;
+  }
+
+  .Login__OTP {
+    font-size: 1rem;
+    margin-left: 5px;
+    text-align: center;
   }
 }
 

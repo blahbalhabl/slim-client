@@ -17,6 +17,9 @@ const AttendanceEntry = () => {
       year: 'numeric', 
       month: 'short', 
       day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     };
     const formattedDate = newDate.toLocaleDateString(undefined, options);
     return formattedDate;
@@ -45,7 +48,7 @@ const AttendanceEntry = () => {
       {proceeding && (
         <div className="AttendanceEntry__Header">
           <p>Title: {proceeding.title}</p>
-          <p>Attendance: {formatDate(date) }</p>
+          <p>Attendance: {formatDate(proceeding.createdAt) }</p>
         </div>
       )}
     </div>
