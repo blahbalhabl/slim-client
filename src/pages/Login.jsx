@@ -13,6 +13,7 @@ const Login = () => {
   const [otp, setOtp] = useState();
   const [visible, setVisible] = useState(false);
   const [otpValue, setOtpValue] = useState('');
+  const [severity, setSeverity] = useState();
   const [emailError, setEmailError] = useState(false);
   const [passError, setPassError] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
@@ -59,6 +60,7 @@ const Login = () => {
           break;
         default:
           setServerMessage(data.message);
+          setSeverity(res.status);
       };
       // If user uses OTP show OTP input box
       if (otp) {
@@ -73,16 +75,21 @@ const Login = () => {
           return data;
         } else {
           setServerMessage(data.message);
+          setSeverity(res.status);
         };
       };
     } catch (err) {
       // Handle Error response statuses accccordingly.
       switch(err?.response?.status) {
         case 400:
-          setEmailError(true)
+          setEmailError(true);
           break;
         case 401:
           setPassError(true);
+          break;
+        case 402:
+          setServerMessage(err.response.data.message);
+          setSeverity(err.response.status);
           break;
         default:
           null;
@@ -137,16 +144,16 @@ const Login = () => {
             <label 
               htmlFor="otp"
               className="Login__OTP__Container"
-              >Google Authenticator OTP
+            >
+              Google Authenticator OTP
               <OtpInput
-              id="otp"
-              className="Login__OTP__Input"
-              inputStyle="Login__OTP"
-              inputType="number"
-              value={otpValue}
-              onChange={setOtpValue}
-              numInputs={6}
-              renderInput={(props) => <input {...props} />}
+                id="otp"
+                inputStyle="Login__OTP"
+                inputType="number"
+                value={otpValue}
+                onChange={setOtpValue}
+                numInputs={6}
+                renderInput={(props) => <input {...props} />}
               />
             </label>
           )}
@@ -162,7 +169,7 @@ const Login = () => {
           </div>
         </div>
       </form>
-      <Alert message={serverMessage} onClose={() => setServerMessage('')}/>
+      <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   );
 };
