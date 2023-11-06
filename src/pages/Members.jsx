@@ -126,16 +126,16 @@ const Members = () => {
             {members.map((member, i) => {
               return (
                 <tr key={i}>
-                  <td>
+                  <td data-cell='name'>
                     <p>{member.name}</p>
                   </td>
-                  <td>
+                  <td data-cell='position'>
                     <p>{member.position}</p>
                   </td>
-                  <td>
+                  <td data-cell='start Term'>
                     <p>{formatDate(member.startTerm)}</p>
                   </td>
-                  <td>
+                  <td data-cell='end Term'>
                     <p>{formatDate(member.endTerm)}</p>
                   </td>
                 </tr>

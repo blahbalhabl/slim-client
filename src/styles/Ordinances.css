@@ -342,10 +342,6 @@ cursor: pointer;
     text-transform: capitalize;
   }
 
-  /* .Ordinances__Link > td:last-child::before {
-    content: none;
-  } */
-
   .Ordinances__Legend {
     flex-direction: column;
     padding: 10px;
