@@ -1,14 +1,13 @@
 .Sidebar {
   display: flex;
   flex-direction: column;
-  position: relative;
   align-items: center;
   padding: 10px 0px 10px 0px;
   background-color: var(--secondary-color);
   width: 15vw;
   height: auto;
   color: var(--tertiary-color);
-  transition: ease-in-out 0.2s;
+  transition: width ease-in-out 0.2s;
 }
 
 .Sidebar__Buttons {

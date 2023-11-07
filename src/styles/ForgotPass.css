@@ -1,11 +1,10 @@
 .ForgotPass {
   display: flex;
-  
   align-items: center;
   justify-content: center;
   flex-grow: 1;
   height: 100%;
-  background-color: gainsboro;
+  background-color: rgb(249, 249, 249);
 }
 
 .ForgotPass__Main {
@@ -18,7 +17,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 15px;
-  box-shadow: 1px 3px 5px gray;
+  outline: 1px solid gainsboro;
 }
 
 .ForgotPass__Container {
