@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  height: max-content;
+  height: auto;
 }
 
 .Ordinances__Container {
@@ -12,47 +12,121 @@
   flex-direction: column;
   justify-content: left;
   width: 100%;
+  height: auto;
 }
 
 .Ordinances__Top__Header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid gainsboro;
+}
+
+.Ordinances__Top__Header > h3 {
+  width: max-content;
+}
+
+.Ordinances__Header {
+  background-color: rgb(240, 240, 240);
 }
 
 .Ordinances__Link {
   cursor: pointer;
   user-select: none;
+  color: rgb(9, 9, 11);
 }
 
 .Ordinances__Link:nth-of-type(2n) {
-  background-color: rgb(245, 245, 245);
-}
-
-.Ordinances__Data tr:last-child {
-  height: 15px;
+  background-color: rgb(249, 249, 249);
 }
 
 .Ordinances__Link:hover {
   background-color: gainsboro;
-  border: none;
 }
 
-.Ordinances__Link:hover td {
-  border: none;
+.Ordinances__Status {
+  color: black;
+  font-weight: 500;
+}
+
+.Ordinances__Status.Draft {
+  color: orange;
+}
+
+.Ordinances__Status.Enacted {
+  color: green;
+}
+
+.Ordinances__Status.Approved {
+  color: blue;
+}
+
+.Ordinances__Status.Vetoed {
+  color: red;
+}
+
+.Ordinances__Status.Pending {
+  color: orange;
+}
+
+.Ordinances__Status.Amended {
+  color: green;
+}
+
+.Ordinances__Status > p {
+  padding: 2px 5px;
+  width: min-content;
+  border-radius: 5px;
+}
+
+.Ordinances__Status.Draft > p {
+  background-color: rgba(255, 166, 0, .1);
+  outline: 1px solid rgba(255, 166, 0, .6);
+}
+
+.Ordinances__Status.Enacted > p {
+  background-color: rgba(0, 128, 0, .1);
+  outline: 1px solid rgba(0, 128, 0, .6);
+}
+
+.Ordinances__Status.Approved > p {
+  background-color: rgba(0, 0, 255, .1);
+  outline: 1px solid rgba(0, 0, 255, .6);
+}
+
+.Ordinances__Status.Vetoed > p {
+  background-color: rgba(255, 0, 0, .1);
+  outline: 1px solid rgba(255, 0, 0, .6);
+}
+
+.Ordinances__Status.Amended > p {
+  background-color: rgba(0, 128, 0, .1);
+  outline: 1px solid rgba(0, 128, 0, .6);
+}
+
+.Ordinances__Status.Pending > p {
+  background-color: rgba(255, 166, 0, 0.1);
+  outline: 1px solid rgba(255, 166, 0, .6);
 }
 
 .Ordinances__Content {
-  padding: 10px;
-  flex-grow: 1;
   background-color: white;
   border-radius: 15px;
+  outline: 1px solid gainsboro;
+  height: auto;
+  flex-grow: 1;
+}
+
+.Ordinances__Table {
   border-collapse: collapse;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  width: 100%;
 }
 
 td, th {
   text-align: left;
-  border: none;
-  padding: 10px;
+  padding: 15px;
+  border-bottom: 1px solid gainsboro;
 }
 
 .Ordinances__Center {
@@ -65,14 +139,13 @@ td, th {
 
 .Ordinances__Card {
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   background-color: white;
   width: 100%;
   height: 100px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-radius: 15px;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  outline: 1px solid gainsboro;
 }
 
 .Ordinances__Legend {
@@ -82,7 +155,7 @@ td, th {
   border-radius: 15px;
   margin: 10px 0px 10px 0px;
   padding: 20px;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  outline: 1px solid gainsboro;
 }
 
 .Ordinances__Legend > div {
@@ -98,10 +171,12 @@ td, th {
 }
 
 .Ordinances__Pagination {
-  margin-top: 20px;
+  margin: 15px 0px 15px 0px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: none;
 }
 
 .Ordinances__Details {
@@ -330,6 +405,7 @@ cursor: pointer;
     display: grid;
     grid-template-columns: 15ch auto;
     padding: 0.5rem 1rem;
+    border-bottom: none;
   }
 
   .Ordinances__Header > th {

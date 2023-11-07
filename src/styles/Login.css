@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   padding: 10px;
-  background-color: gainsboro;
+  background-color: rgb(249, 249, 249);
 }
 
 .Login__Container {
@@ -19,7 +19,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 15px;
-  box-shadow: 1px 3px 5px gray;
+  border: 1px solid gainsboro
 }
 
 .Login__Input {

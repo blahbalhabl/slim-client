@@ -276,6 +276,25 @@ const Ordinances = () => {
     return formattedDate;
   };
 
+  const ordStatus = (ordinance) => {
+    switch (ordinance) {
+      case 'draft':
+        return ' Draft';
+      case 'enacted':
+        return ' Enacted';
+      case 'approved':
+        return ' Approved';
+      case 'amended':
+        return ' Amended';
+      case 'vetoed':
+        return ' Vetoed';
+      case 'pending':
+        return ' Pending';
+      default:
+        return ' Black';
+    }
+  };
+
   useEffect(() => {
     document.title = `SLIM | ${status} Ordinances`;
     let isMounted = true;
@@ -320,17 +339,14 @@ const Ordinances = () => {
   }
 
   return (
+    <>
     <div className="Ordinances">
       <BreadCrumbs items={breadcrumbs} />
       <div className="Ordinances__Card">
         <CreateOrdinances sendRequest={sendRequest} />
       </div>
       <div className="Ordinances__Container">
-        <div className="Ordinances__Top__Header">
-          <h3>{status.toUpperCase()} ORDINANCES</h3>
-          <SearchBar data={ordinances} fn={setOrdinances} />
-        </div>
-        <div className="Ordinances__Legend">
+        {/* <div className="Ordinances__Legend">
           <h4>Legend:</h4>
           <div>
             <div style={{backgroundColor: 'orange'}}></div>
@@ -348,87 +364,86 @@ const Ordinances = () => {
             <div style={{backgroundColor: 'red'}}></div>
             <p>Amended</p>
           </div>
-        </div>
-        <table className="Ordinances__Content">
-          <thead>
-            <tr className="Ordinances__Header">
-              <th>Type</th>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Size</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody className='Ordinances__Data'>
-          { ordinances.length > 0 ? (
-            ordinances.map((ordinance, i) => (
-              ((ordinance.status === status || status === 'all') 
-                || (ordinance.accessLevel === auth.level) 
-                || (ordinances.accessLevel === level.dlg)) && (
-                <tr
-                  key={i}
-                  className='Ordinances__Link'
-                  style={
-                    {color: 
-                      ordinance.status === 'draft' 
-                      ? 'orange' 
-                      : ordinance.status === 'enacted'
-                      ? 'green'
-                      : ordinance.status === 'approved'
-                      ? 'blue'
-                      : ordinance.status === 'amended'
-                      ? 'red' : 'black'
-                    }
-                  }>
-                  <td data-cell='type'>
-                    { ordinance.mimetype === 'application/pdf' && (<FontAwesomeIcon icon={icons.pdf}/>)}
-                  </td>
-                  <td
-                    data-cell='number' 
-                    className='Ordinances__Number' onClick={() => handleOrdinanceClick(ordinance)}
-                  >
-                      <p>ORDINANCE NO {ordinance.number}, Series of {ordinance.series} {ordinance.title.toUpperCase()}</p>
-                  </td>
-                  <td data-cell='status'>
-                    <p>{ordinance.status.toUpperCase()}</p>
-                  </td>
-                  <td
-                    data-cell='date'
-                    className='Ordinances__Date'>
-                      {formatDate(ordinance.createdAt)}
-                  </td>
-                  <td data-cell='size'>
-                    { ordinance.size } k
-                  </td>
-                  <td
-                    data-cell='download' 
-                    className='Ordinances__Center'>
-                    <FontAwesomeIcon 
-                      className='Ordinances__Download'
-                      onClick={() => handleDownload(ordinance.accessLevel, ordinance.file, ordinance.series)}
-                      icon={icons.download} />
-                  </td>
-                </tr>
-              )))
-            ) : (
-              <tr>
-                <td>No {status} Ordinances</td>
+        </div> */}
+        <div className="Ordinances__Content">
+          <div className="Ordinances__Top__Header">
+            <h3>{status.toUpperCase()} ORDINANCES</h3>
+            <SearchBar data={ordinances} fn={setOrdinances} />
+          </div>
+          <table className='Ordinances__Table'>
+            <thead>
+              <tr className="Ordinances__Header">
+                <th>Type</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Size</th>
+                <th></th>
               </tr>
-            )}
-            <tr></tr>
-          </tbody>
-        </table>
-        <div className='Ordinances__Pagination'>
-          <Pagination 
-            count={10} //Dyanmically change
-            variant="outlined" 
-            color='primary'
-            onChange={(e, value) => handlePageChange(e, value)}
-          />
+            </thead>
+            <tbody className='Ordinances__Data'>
+            { ordinances.length > 0 ? (
+              ordinances.map((ordinance, i) => (
+                ((ordinance.status === status || status === 'all') 
+                  || (ordinance.accessLevel === auth.level) 
+                  || (ordinances.accessLevel === level.dlg)) && (
+                  <tr
+                    key={i}
+                    className='Ordinances__Link'
+                    >
+                    <td data-cell='type'
+                      className={`Ordinances__Status${ordStatus(ordinance.status)}`}>
+                      { ordinance.mimetype === 'application/pdf' && (<FontAwesomeIcon icon={icons.pdf}/>)}
+                    </td>
+                    <td
+                      data-cell='number' 
+                      className='Ordinances__Number' onClick={() => handleOrdinanceClick(ordinance)}
+                    >
+                        <p>ORDINANCE NO {ordinance.number}, Series of {ordinance.series} {ordinance.title.toUpperCase()}</p>
+                    </td>
+                    <td 
+                      data-cell='status' 
+                      className={`Ordinances__Status${ordStatus(ordinance.status)}`}
+                      >
+                      <p>{ordinance.status.toUpperCase()}</p>
+                    </td>
+                    <td
+                      data-cell='date'
+                      className='Ordinances__Date'>
+                        {formatDate(ordinance.createdAt)}
+                    </td>
+                    <td data-cell='size'>
+                      { ordinance.size } k
+                    </td>
+                    <td
+                      data-cell='download' 
+                      className={`Ordinances__Center Ordinances__Status${ordStatus(ordinance.status)}`}>
+                      <FontAwesomeIcon 
+                        className='Ordinances__Download'
+                        onClick={() => handleDownload(ordinance.accessLevel, ordinance.file, ordinance.series)}
+                        icon={icons.download} />
+                    </td>
+                  </tr>
+                )))
+              ) : (
+                <tr>
+                  <td>No {status} Ordinances</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className='Ordinances__Pagination'>
+            <Pagination 
+              count={10} //Dyanmically change
+              variant="outlined" 
+              color='primary'
+              onChange={(e, value) => handlePageChange(e, value)}
+            />
+          </div>
         </div>
       </div>
-      {selectedOrdinance && (
+    </div>
+    {selectedOrdinance && (
         <Modal isOpen={isModalOpen} closeModal={closeModal}>
           <div className="Ordinances__Details">
           <h2>ORDINANCE DETAILS</h2>
@@ -717,7 +732,7 @@ const Ordinances = () => {
           )}
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 

@@ -5,8 +5,10 @@
   font-family: 'Roboto';
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  height: max-content;
   width: 100vw;
+  overflow-y: auto;
 }
 
 .App__Content {
@@ -14,11 +16,14 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
-  background-color: #f1f3fa
+  background-color: rgb(249, 249, 249);
 }
 
 @media only screen and (max-width: 800px) {
   .App {
+    height: max-content;
+  }
+  .App__Content {
     height: max-content;
   }
 }

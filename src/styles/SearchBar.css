@@ -1,22 +1,13 @@
 .Search {
-  display: flex;
-  justify-content: flex-end;
-	width: 100%;
 	height: 2rem;
-  margin-top: 10px;
-  margin-bottom: 20px;
 }
 
 .Search__Inputbox {
-  width: 25%;
+  width: 100%;
 }
 
 @media only screen and (max-width: 800px) {
   .Search {
-    justify-content: center;
-  }
-
-  .Search__Inputbox {
     width: 100%;
   }
 }
