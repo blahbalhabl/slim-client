@@ -52,8 +52,10 @@
 
 .Sidebar__Button.collapsed:hover > span {
   position: absolute;
-  left: 110%;
+  left: 60px;
   display: block;
+  width:  min-content;
+  white-space: wrap;
 }
 
 .Sidebar__Top {
