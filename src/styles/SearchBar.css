@@ -3,11 +3,12 @@
 }
 
 .Search__Inputbox {
-  width: 100%;
+  width: 300px;
 }
 
 @media only screen and (max-width: 800px) {
-  .Search {
+  .Search,
+  .Search__Inputbox {
     width: 100%;
   }
 }

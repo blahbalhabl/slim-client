@@ -109,7 +109,7 @@
 
   .Login__Container {
     width: 75vw;
-    box-shadow: none;
+    border: none;
   }
 
   .Login__OTP__Container {
