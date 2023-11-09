@@ -42,7 +42,7 @@
   height: 100%;
   background-color: white;
   border-radius: 15px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  outline: 1px solid gainsboro;
 }
 
 .Modal__Members__Container {
@@ -61,7 +61,16 @@
 }
 
 .Members__Data > tr:nth-of-type(2n) {
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(249, 249, 249);
+}
+
+.Members__Data > tr > td, th {
+  text-align: left;
+  padding: 15px;
+}
+
+.Members__Data > tr {
+  border-bottom: 1px solid gainsboro;
 }
 
 @media only screen and (max-width: 800px) {
@@ -72,7 +81,11 @@
   .Members__Data > tr {
     display: grid;
     grid-template-columns: 15ch 1;
-    padding: 0.5rem 1rem;
+    padding: 0rem 1rem;
+  }
+
+  .Members__Data > tr > td {
+    border-bottom: none;
   }
 
   .Members__Data > tr > td::before {

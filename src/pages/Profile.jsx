@@ -239,10 +239,10 @@ const UserProfile = () => {
               
             </div>
             <div className="Profile__Card__Info">
-              {/* <p>{browserName}</p>
+              <p>{browserName}</p>
               <p>{browserVersion}</p>
               <p>{osName}</p>
-              <p>{osVersion}</p> */}
+              <p>{osVersion}</p>
             </div>
           </div>
           <div className="Profile__Card__Right">

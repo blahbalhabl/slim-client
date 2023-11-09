@@ -51,13 +51,11 @@ const CreateOrdinances = () => {
     setFile(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    uploadFile()
-      .then(() => {
-        setReload(true);
-        setUploading(false);
-      })
+    await uploadFile()
+      .then(() => setReload(true))
+    setUploading(false);
   };
 
   const uploadFile = async () => {

@@ -8,7 +8,13 @@ import Modal from '../components/Modal';
 import BreadCrumbs from '../components/BreadCrumbs';
 import SearchBar from '../components/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Pagination, TextField } from '@mui/material';
+import { 
+  Pagination, 
+  TextField, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Select } from '@mui/material';
 import { icons } from '../utils/Icons'
 import '../styles/Ordinances.css'
 import { roles } from '../utils/userRoles';
@@ -36,6 +42,9 @@ const Ordinances = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [isDateChanged, setDateChanged] = useState(false);
   const [delInputs, setDelInputs] = useState({});
+  const [series, setSeries] = useState(null);
+  const [currentSeries, setCurrentSeries] = useState(null);
+  const [currentPage, setCurrentPage] = useState(null);
   const [otp, setOtp] = useState(false);
   const [inputs, setInputs] = useState({
     date: "",
@@ -75,25 +84,33 @@ const Ordinances = () => {
 
   const handleFileChange = (e) => {
     e.preventDefault();
-    console.log(e.target.files[0]);
     const file = e.target.files[0];
     setFile(file);
   };
 
-  const sendRequest = async (page) => {
+  const sendRequest = async (page, series) => {
     try {
-      const res = await axiosPrivate.get(`/ordinances?type=ordinances&level=${auth.level}&status=${status}&page=${page}`);
-      const memRes = await axiosPrivate.get('/sanggunian-members');
-      const ordinances = res.data;
-      const members = memRes.data;
-      return {
-        ordinances: ordinances,
-        members: members,
+      let ordinances, url;
+      
+      if (series) {
+        url = `/ordinances?type=ordinances&status=${status}&page=${page}&series=${series}`;
+      } else {
+        url = `/ordinances?type=ordinances&status=${status}&page=${page}`
       }
+
+      ordinances = await axiosPrivate.get(url);
+      const members = await axiosPrivate.get('/sanggunian-members');
+
+      return {
+        ordinances: ordinances.data.ordinances,
+        members: members.data,
+        series: ordinances.data.series,
+      };
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      throw err;
     }
-  }
+  };  
 
   const handleDownload = async (accessLevel, filename, series) => {
     try {
@@ -255,10 +272,21 @@ const Ordinances = () => {
   };
 
   const handlePageChange = (e, value) => {
-    sendRequest(value)
+    setCurrentPage(value);
+    sendRequest(value, currentSeries)
       .then(({ordinances}) => {
         setOrdinances(ordinances);
+        console.log(ordinances)
       })
+  };
+
+  const handleSeriesChange = (e) => {
+    const series = e.target.value;
+    setCurrentSeries(series);
+    sendRequest(undefined, series)
+      .then(({ordinances}) => {
+        setOrdinances(ordinances);
+      });
   };
 
   const formatDate = (date) => {
@@ -295,29 +323,27 @@ const Ordinances = () => {
     }
   };
 
+  console.log(reload)
+
   useEffect(() => {
     document.title = `SLIM | ${status} Ordinances`;
-    let isMounted = true;
-    setLoading(true)
+    setLoading(true);
     sendRequest()
-    .then(({
-      ordinances,
-      members,
-    }) => {
-      if ( isMounted ) {
+      .then(({
+        ordinances,
+        members,
+        series,
+      }) => {
         setOrdinances(ordinances);
         setMembers(members);
-      }
-      setLoading(false);
-    })
-    .catch((err) => {
-      setLoading(false);
-    });
+        setSeries(series);
+        setCurrentSeries(series.slice(-1)[0]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
     setReload(false);
-
-    return () => {
-      isMounted = false;
-    }
   },[ status, message, reload ]); 
 
   useEffect(() => {
@@ -346,7 +372,7 @@ const Ordinances = () => {
         <CreateOrdinances sendRequest={sendRequest} />
       </div>
       <div className="Ordinances__Container">
-        {/* <div className="Ordinances__Legend">
+        <div className="Ordinances__Legend">
           <h4>Legend:</h4>
           <div>
             <div style={{backgroundColor: 'orange'}}></div>
@@ -364,10 +390,33 @@ const Ordinances = () => {
             <div style={{backgroundColor: 'red'}}></div>
             <p>Amended</p>
           </div>
-        </div> */}
+        </div>
         <div className="Ordinances__Content">
           <div className="Ordinances__Top__Header">
-            <h3>{status.toUpperCase()} ORDINANCES</h3>
+            <span className='Ordinances__Type__Container'>
+              <h3>{status.toUpperCase()} ORDINANCES</h3>
+              <div className='Ordinances__Series'>
+                <FormControl fullWidth>
+                  <InputLabel id="ordinance-id">Series</InputLabel>
+                  <Select
+                    labelId="ordinance-id"
+                    id="ordinance-id"
+                    label="Series"
+                    value={currentSeries}
+                    size='small'
+                    onChange={(e) => handleSeriesChange(e)}
+                  >
+                    {series && series.map((item, i) => (
+                      <MenuItem 
+                        key={i} 
+                        value={item}>
+                          {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </span>
             <SearchBar data={ordinances} fn={setOrdinances} />
           </div>
           <table className='Ordinances__Table'>
@@ -382,7 +431,7 @@ const Ordinances = () => {
               </tr>
             </thead>
             <tbody className='Ordinances__Data'>
-            { ordinances.length > 0 ? (
+            { ordinances && ordinances.length > 0 ? (
               ordinances.map((ordinance, i) => (
                 ((ordinance.status === status || status === 'all') 
                   || (ordinance.accessLevel === auth.level) 
@@ -566,8 +615,7 @@ const Ordinances = () => {
             <div className="Ordinances__Details__Proceedings">
               <label htmlFor="proceeding">Next Proceeding Schedule: 
                 <input
-                  className={`Ordinances__Details__Title__Input editing`}
-                  style={{fontSize: '1rem'}}
+                  className='Ordinances__Details__Proceedings__Input'
                   type="datetime-local"
                   name='proceeding'
                   id='proceeding'

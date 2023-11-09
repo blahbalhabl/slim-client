@@ -105,6 +105,9 @@
 @media only screen and (max-width: 600px) {
   .Login {
     background-color: white;
+    margin-top: 0;
+    padding-top: 100px;
+    align-items: start;
   }
 
   .Login__Container {

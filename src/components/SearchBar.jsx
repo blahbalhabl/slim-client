@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextField } from "@mui/material";
-import { icons } from "../utils/Icons";
-import "../styles/SearchBar.css";
 import { axiosPrivate } from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import "../styles/SearchBar.css";
 
 const SearchBar = ({ data, fn }) => {
   const { auth } = useAuth();
   const [search, setSearch] = useState("");
-  const [filtered, setFiltered] = useState();
-  const [ordinances, setOrdinances] = useState();
+  const [filtered, setFiltered] = useState(null);
+  const [ordinances, setOrdinances] = useState(null);
   const [unfiltered, setUnfiltered] = useState(data); // Initialize with 10 ordinances
 
   const getOrdinances = async () => {
@@ -24,12 +22,13 @@ const SearchBar = ({ data, fn }) => {
   };
 
   const handleChange = (e) => {
-    const searchTerm = e.target.value;
+    const searchTerm = e.target.value.toLowerCase();
     setSearch(searchTerm);
     const filteredItems = ordinances.filter(
       (data) => 
-        data.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        data.number.includes(searchTerm)
+        data.title.toLowerCase().includes(searchTerm) ||
+        data.number.includes(searchTerm) ||
+        data.status.toLowerCase().includes(searchTerm)
     )
     setFiltered(filteredItems);
   };
