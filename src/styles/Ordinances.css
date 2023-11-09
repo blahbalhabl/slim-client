@@ -23,8 +23,17 @@
   border-bottom: 1px solid gainsboro;
 }
 
-.Ordinances__Top__Header > h3 {
-  width: max-content;
+.Ordinances__Type__Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.Ordinances__Series {
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 100px;
 }
 
 .Ordinances__Header {
@@ -35,6 +44,11 @@
   cursor: pointer;
   user-select: none;
   color: rgb(9, 9, 11);
+}
+
+.Ordinances__Link > td:nth-child(1), 
+.Ordinances__Link > td:last-child {
+  font-size: 1.2rem;
 }
 
 .Ordinances__Link:nth-of-type(2n) {
@@ -124,7 +138,7 @@
   width: 100%;
 }
 
-td, th {
+.Ordinances__Data > tr > td, th {
   text-align: left;
   padding: 15px;
   border-bottom: 1px solid gainsboro;
@@ -154,7 +168,7 @@ td, th {
   align-items: center;
   background-color: white;
   border-radius: 15px;
-  margin: 10px 0px 10px 0px;
+  margin: 0px 0px 10px 0px;
   padding: 20px;
   outline: 1px solid gainsboro;
 }
@@ -224,6 +238,15 @@ td, th {
   font-size: 1.3rem;
 }
 
+.Ordinances__Details__Proceedings__Input {
+  border-radius: 5px;
+  font-size: 1rem;
+  border: none;
+  outline: 1px solid gray;
+  padding: 5px;
+  margin-left: 10px;
+}
+
 .Ordinances__Details__Content {
   display: flex;
   flex-direction: column;
@@ -238,9 +261,10 @@ td, th {
   /* flex-grow: 1; */
   margin-top: 10px;
   margin-bottom: 10px;
-  background-color: gainsboro;
+  background-color: var(--whitesmoke-color);
   padding: 20px;
   border-radius: 15px;
+  border: 1px solid gainsboro;
 }
 
 .Ordinances__PDFViewer__Frame {
@@ -275,11 +299,12 @@ td, th {
 }
 
 .Ordinances__Details__Proceedings {
-  background-color: var(--primary-color);
+  background-color: var(--whitesmoke-color);
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 10px;
-  color: white;
+  color: black;
+  border: 1px solid gainsboro;
 }
 
 .Ordinances__Edit__Button{
@@ -411,6 +436,16 @@ cursor: pointer;
 
   .Ordinances__Header > th {
     display: none;
+  }
+
+  .Ordinances__Type__Container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .Ordinances__Series {
+    margin-left: 0;
+    width: 100%;
   }
 
   .Ordinances__Link > td::before {

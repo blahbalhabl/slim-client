@@ -8,9 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [reload, setReload] = useState(false);
   const [persist, setPersist] = useState(localStorage.getItem('persist') || true);
 
-  
+  console.log(reload);
+
   const contextData = {
-    setAuth:setAuth,
+    setAuth: setAuth,
     setPersist: setPersist,
     setReload: setReload,
     auth: auth,

@@ -23,7 +23,7 @@ import { roles } from "./utils/userRoles"
 
 import './App.css'
 
-function App() {
+const App = () => {
 const role = roles.role;
 const level = roles.level;
 
@@ -53,7 +53,7 @@ const level = roles.level;
             </Route>
 
             {/* Private Admin Routes*/}
-            <Route element={<RequireAuth allowedRoles={[role.adn]} />}>
+            <Route element={<RequireAuth allowedRoles={[role.adn, role.usr]} />}>
               <Route path="/records/ordinances/:status" element={<Ordinances />} />
             </Route>
 

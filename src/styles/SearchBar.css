@@ -1,5 +1,5 @@
 .Search {
-	height: 2rem;
+	height: max-content;
 }
 
 .Search__Inputbox {

@@ -123,8 +123,7 @@ const Members = () => {
             </tr>
           </thead>
           <tbody className='Members__Data'>
-            {members.map((member, i) => {
-              return (
+            {members.map((member, i) => (
                 <tr key={i}>
                   <td data-cell='name'>
                     <p>{member.name}</p>
@@ -140,7 +139,7 @@ const Members = () => {
                   </td>
                 </tr>
               )
-            })}
+            )}
           </tbody>
         </table>
       </div>
