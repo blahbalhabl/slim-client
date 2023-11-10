@@ -59,7 +59,11 @@ const Ordinances = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {setIsModalOpen(false); setDropdown(false)}
   const [delModalOpen, setDelModalOpen] = useState(false);
-  const openDelModal = () => setDelModalOpen(true);
+  const openDelModal = (e) => 
+    {
+      e.preventDefault();
+      setDelModalOpen(true)
+    }
   const closeDelModal = () => setDelModalOpen(false);
   const pathnames = location.pathname.split('/').filter((item) => item !== '');
 
@@ -114,7 +118,7 @@ const Ordinances = () => {
 
   const handleDownload = async (accessLevel, filename, series) => {
     try {
-      const response = await axiosPrivate.get(`/download/${filename}?type=ordinances&level=${auth.level}&series=${series}&acl=${accessLevel}`, {
+      const response = await axiosPrivate.get(`/download/${filename}?type=ordinances&series=${series}&acl=${accessLevel}`, {
         responseType: 'blob', // Set the response type to 'blob' to handle binary data
       });
       // Create a blob object from the binary data
@@ -142,7 +146,7 @@ const Ordinances = () => {
     try {
       e.preventDefault();
       const proceedings = selectedOrdinance.proceedings;
-      const res = await axiosPrivate.post(`/update-proceedings/${filename}?level=${auth.level}`, {proceedings}, {
+      const res = await axiosPrivate.post(`/update-proceedings/${filename}`, {proceedings}, {
         headers: {'Content-Type': 'application/json'}
       });
     } catch (err) {
@@ -153,14 +157,14 @@ const Ordinances = () => {
   const handleOrdinanceClick = async (ordinance) => {
     try {
       setSelectedOrdinance(ordinance);
-      const minutes = await axiosPrivate.get(`/minutes/${ordinance._id}?level=${auth.level}`);
+      const minutes = await axiosPrivate.get(`/minutes/${ordinance._id}`);
       setMinutes(minutes.data);
       
       if (minutes.data.length === 0) {
         setMinutes(null);
       };
 
-      const response = await axiosPrivate.get(`/view/${ordinance.file}?type=ordinances&level=${auth.level}&series=${ordinance.series}&acl=${ordinance.accessLevel}`, {
+      const response = await axiosPrivate.get(`/view/${ordinance.file}?type=ordinances&series=${ordinance.series}&acl=${ordinance.accessLevel}`, {
         responseType: 'blob',
       });
       const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -176,7 +180,7 @@ const Ordinances = () => {
   const handleSelectMinutes = async (minute) => {
     try {
       setSelectedItem(minute);
-      const minResponse = await axiosPrivate.get(`/download/${minute.file}?type=minutes&level=${auth.level}&series=${selectedOrdinance.series}`, {
+      const minResponse = await axiosPrivate.get(`/download/${minute.file}?type=minutes&series=${selectedOrdinance.series}`, {
         responseType: 'blob',
       });
       const blobMin = new Blob([minResponse.data], { type: 'application/pdf' });
@@ -198,7 +202,7 @@ const Ordinances = () => {
         minuteData.append('series', series);
         minuteData.append('type', 'minutes');
         minuteData.append('file', file);
-        const res = await axiosPrivate.post(`/upload-minutes?type=minutes&ordinanceId=${id}&level=${auth.level}&status=pending`, minuteData, {
+        const res = await axiosPrivate.post(`/upload-minutes?type=minutes&ordinanceId=${id}`, minuteData, {
           headers: {'Content-Type': 'multipart/form-data'}
         })
   
@@ -228,7 +232,7 @@ const Ordinances = () => {
       };
       updateData.append('file', file);
 
-      const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`, updateData, {
+      const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&series=${series}`, updateData, {
         headers: {'Content-Type': 'multipart/form-data'}
       });
       if(res.status === 200) {
@@ -241,31 +245,23 @@ const Ordinances = () => {
     }
   };
 
-  const handleCheckPass = async () => {
+  const handleDeleteOrdinance = async (e) => {
+    e.preventDefault();
     try {
+      // Authenticate User using password, or with google authenticator
       const deletePass = delInputs.deletepassword;
       const res = await axiosPrivate.post(`/check-pass`, {deletePass}, {
         headers: {'Content-Type': 'application/json'}
       })
-      if(res.status === 204) {
-        setMessage('Correct Password');
+      if(res.status === 200) {
+        // setMessage(res.data.message);
+        const res = await axiosPrivate.delete(`/delete-ordinance/${selectedOrdinance.file}?type=ordinances&series=${selectedOrdinance.series}`)
+          .then(() => {
+            setReload(true);
+            closeModal();
+            closeDelModal();
+          })
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleDeleteOrdinance = async (e, filename, series) => {
-    try {
-      e.preventDefault();
-      // Authenticate User using password, or with google authenticator
-      setDelModalOpen(true)
-      // const res = await axiosPrivate.delete(`/delete-ordinance/${filename}?type=ordinances&level=${auth.level}&series=${series}`);
-      // if (res.status === 200) {
-      //   setMessage(res.data.message);
-      // } else {
-      //   setMessage('Error on Deleting Ordinance');
-      // }
     } catch (err) {
       console.error(err);
     }
@@ -276,7 +272,6 @@ const Ordinances = () => {
     sendRequest(value, currentSeries)
       .then(({ordinances}) => {
         setOrdinances(ordinances);
-        console.log(ordinances)
       })
   };
 
@@ -323,8 +318,6 @@ const Ordinances = () => {
     }
   };
 
-  console.log(reload)
-
   useEffect(() => {
     document.title = `SLIM | ${status} Ordinances`;
     setLoading(true);
@@ -344,7 +337,7 @@ const Ordinances = () => {
         setLoading(false);
       });
     setReload(false);
-  },[ status, message, reload ]); 
+  },[ status, message, reload, ]); 
 
   useEffect(() => {
     if (message) {
@@ -589,8 +582,9 @@ const Ordinances = () => {
                         <FontAwesomeIcon icon={icons.pencil} />
                     </button>
                     <button 
-                      className='Ordinances__Delete__Button' 
-                      onClick={(e) => handleDeleteOrdinance(e, selectedOrdinance.file, selectedOrdinance.series)}>
+                      className='Ordinances__Delete__Button'
+                      onClick={(e) => openDelModal(e)}
+                      >
                         <FontAwesomeIcon icon={icons.trash}/>
                     </button>
                   </div>
@@ -764,7 +758,7 @@ const Ordinances = () => {
               onChange={handleDelChange}/>
             <button 
               className='Ordinances__Delete__Modal__Button'
-              onClick={handleCheckPass}>
+              onClick={(e) => handleDeleteOrdinance(e)}>
               <FontAwesomeIcon icon={icons.right}/>
             </button>
           </div>

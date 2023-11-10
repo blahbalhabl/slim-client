@@ -27,7 +27,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .Ordinances__Series {
@@ -412,7 +411,7 @@ cursor: pointer;
 }
 
 .Ordinances__Delete__Modal__Button {
-
+  background-color: var(--error-color);
 }
 
 
@@ -427,9 +426,13 @@ cursor: pointer;
     width: 100%;
   }
 
+  .Ordinances__Link {
+    border-bottom: none;
+  }
+
   .Ordinances__Link > td {
     display: grid;
-    grid-template-columns: 15ch auto;
+    grid-template-columns: 12ch auto;
     padding: 0.5rem 1rem;
     border-bottom: none;
   }
@@ -439,6 +442,7 @@ cursor: pointer;
   }
 
   .Ordinances__Type__Container {
+    margin-bottom: 10px;
     flex-direction: column;
     width: 100%;
   }
@@ -449,10 +453,23 @@ cursor: pointer;
   }
 
   .Ordinances__Link > td::before {
-    content: attr(data-cell) ': ';
+    content: attr(data-cell) ':';
     font-weight: 700;
     text-transform: capitalize;
   }
+
+  .Ordinances__Data > tr > td, th {
+    border-bottom: none;
+  }
+
+  .Ordinances__Data > tr {
+    border-bottom: 1px solid gainsboro;
+  }
+
+  .Ordinances__Link > td:nth-child(1), 
+  .Ordinances__Link > td:last-child {
+  font-size: 1rem;
+}
 
   .Ordinances__Legend {
     flex-direction: column;
@@ -498,7 +515,7 @@ cursor: pointer;
   .Ordinances__Download {
     border-radius: 5px;
     padding: 5px;
-    width: 100%;
+    width: 95%;
     color: white;
     background-color: var(--highlight-color);
   }
