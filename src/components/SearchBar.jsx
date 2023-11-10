@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { axiosPrivate } from "../api/axios";
-import useAuth from "../hooks/useAuth";
 import "../styles/SearchBar.css";
 
 const SearchBar = ({ data, fn }) => {
-  const { auth } = useAuth();
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState(null);
   const [ordinances, setOrdinances] = useState(null);
@@ -13,7 +11,7 @@ const SearchBar = ({ data, fn }) => {
 
   const getOrdinances = async () => {
     try {
-      const ordinances = await axiosPrivate.get(`/search-ordinances?level=${auth.level}`);
+      const ordinances = await axiosPrivate.get(`/search-ordinances`);
 
       return ordinances.data;
     } catch (err) {
