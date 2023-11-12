@@ -8,7 +8,7 @@ const role = roles.role
 export const sidebarAccordion = [
   {
     title: 'Reports',
-    roles: [role.adn], // Roles that can access this item
+    roles: [role.adn, role.usr], // Roles that can access this item
     contents: [
       {
         title: (
@@ -62,7 +62,7 @@ export const sidebarAccordion = [
   },
   {
     title: 'Calendar',
-    roles: [role.adn, role.spr], // Roles that can access this item
+    roles: [role.adn], // Roles that can access this item
     contents: [
       {
         title: (

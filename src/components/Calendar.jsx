@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { roles } from '../utils/userRoles';
@@ -11,6 +11,7 @@ import '../styles/Calendar.css'
 
 const Calendar = () => {
   const { auth } = useAuth();
+  const nav = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const role = roles.role;
   const [inputs, setInputs] = useState({}); // For setting new schedules
@@ -59,6 +60,15 @@ const Calendar = () => {
     return formattedDate;
   };
 
+  const formatTime = (date) => {
+    const newDate = new Date(date);
+    const hours = newDate.getHours();
+    const minutes = newDate.getMinutes();
+
+    const formattedTime = new Date(0, 0, 0, hours, minutes).toLocaleTimeString();
+    return formattedTime;
+  };
+
   const isOngoing = (proceeding) => {
     const date = new Date(proceeding)
     const currentDate = new Date();
@@ -104,7 +114,7 @@ const Calendar = () => {
     <div className='Calendar'>
       <div className="Calendar__Header">
         <h3>{currentDate}</h3>
-        {auth?.role === role.adn && (
+        {/* {auth?.role === role.adn && (
           <button
             className={`Calendar__Header__Button${cancel}`}
             onClick={addSchedule}>
@@ -114,7 +124,7 @@ const Calendar = () => {
                 <p>Cancel</p>
               )}
           </button>
-        )}
+        )} */}
       </div>
       <div className="Calendar__Container">
         {addSched && (
@@ -158,7 +168,10 @@ const Calendar = () => {
                 <p className='Calendar__Proceedings'>Proceedings</p>
               </span>
               {proceedings.map((proceeding, i) => (
-                <div key={i} className="Calendar__Content">
+                <div
+                  key={i} 
+                  className="Calendar__Content"
+                  onClick={() => nav(`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
                   <div>
                     <p>{proceeding.title}</p>
                     {/* <p>{formatDate(proceeding.proceedings)}</p> */}
@@ -166,7 +179,9 @@ const Calendar = () => {
                     <p>{proceeding.status.toUpperCase()}</p>
                     <p>{isOngoing(proceeding.proceedings)}</p>
                   </div>
-                  <Link to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}`} className='Calendar__Link'>
+                  <Link 
+                    to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
+                    className='Calendar__Link'>
                       <FontAwesomeIcon icon={icons.share}/>
                   </Link>
                 </div>

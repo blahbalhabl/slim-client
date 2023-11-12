@@ -1,9 +1,28 @@
+import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '../utils/Icons';
 import '../styles/Modal.css'
 
 const Modal = ({ isOpen, closeModal, children }) => {
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('active-modal');
+    } else {
+      document.body.classList.remove('active-modal');
+    }
+
+    // Clean up the styles on component unmount
+    return () => {
+      document.body.classList.remove('active-modal');
+    };
+  }, [isOpen]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  console.log(document.body)
+
   return (
     <div className="Modal">
       <div className="Modal__Container">

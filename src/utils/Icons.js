@@ -30,7 +30,8 @@ import { faPencil,
   faMagnifyingGlass,
   faEllipsis,
   faChevronLeft,
-  faShare, } from '@fortawesome/free-solid-svg-icons';
+  faShare,
+  faChevronRight, } from '@fortawesome/free-solid-svg-icons';
 
 export const icons = {
   reports: faScroll,
@@ -51,6 +52,7 @@ export const icons = {
   right: faCaretRight,
   down: faSortDown,
   chevLeft: faChevronLeft,
+  chevRight: faChevronRight,
   sad: faFaceSadTear,
   burger: faBars,
   download: faFileArrowDown,

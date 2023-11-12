@@ -22,12 +22,14 @@ const Accordion = ({ data, collapse, userRole }) => {
     setSelected(i);
   };
 
-  const isActive = (link) => {
-    if (location.pathname.includes(link)) {
-      return ' active';
+  const isActive = (i) => {
+    if (i === 0 && location.pathname.includes(links.rec)) {
+      return ' active color';
+    } else if (i === 1 && location.pathname.includes(links.cal)) {
+      return ' active color';
     } else {
       return '';
-    }
+    };
   };
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const Accordion = ({ data, collapse, userRole }) => {
           {item.roles.includes(userRole) && (
             <div>
               <div
-                className={`Accordion${collapsed}${isActive(links.rec)}`}
+                className={`Accordion${collapsed}${isActive(i)}`}
                 onClick={() => toggleAccordion(i)}
               >
                 <div className="Accordion__Title">

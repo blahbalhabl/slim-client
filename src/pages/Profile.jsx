@@ -189,9 +189,9 @@ const UserProfile = () => {
           <div className="Profile__Avatar" onMouseEnter={handleAvatarUpdate}
             onMouseLeave={handleAvatarLeave}>
             {user.avatar ? (
-              <>
+              <div>
                 <img className="Profile__Avatar__Img" src={imageSrc} />
-              </>
+              </div>
             ) : (
               <FontAwesomeIcon className="Profile__Avatar__Img" icon={icons.user} />
             )}

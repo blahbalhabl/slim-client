@@ -2,7 +2,14 @@ import Modal from './Modal';
 import { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import Alert from './Alert';
 import { roles } from '../utils/userRoles';
+import { 
+  TextField,
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Select } from '@mui/material';
 import '../styles/CreateOrdinances.css'
 
 const CreateOrdinances = () => {
@@ -10,15 +17,19 @@ const CreateOrdinances = () => {
   const level = roles.level;
   const { auth, setReload } = useAuth();
   const axiosPrivate = useAxiosPrivate();
-  const [message, setMessage] = useState();
-  const [uploading, setUploading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [members, setMembers ] = useState(null);
+  const [severity, setSeverity] = useState(null);
+  const [serverMessage, setServerMessage] = useState(null);
+  const [coAuthor, setCoAuthor] = useState(false);
+  const [fileName, setFileName] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+  const [inputErr, setInputErr] = useState({
+    series: false,
+    number: false,
+  });
   const [inputs, setInputs] = useState({
-    number: "",
-    series: "",
-    title: "",
-    author: "",
+    author: '',
+    coAuthor: '',
   });
   const [file, setFile] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +57,7 @@ const CreateOrdinances = () => {
 
   const handleFileChange = (e) => {
     e.preventDefault();
-    console.log(e.target.files[0]);
+    setFileName(e.target.files[0].name);
     const file = e.target.files[0];
     setFile(file);
   };
@@ -54,8 +65,6 @@ const CreateOrdinances = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await uploadFile()
-      .then(() => setReload(true))
-    setUploading(false);
   };
 
   const uploadFile = async () => {
@@ -67,20 +76,46 @@ const CreateOrdinances = () => {
       formData.append('status', 'draft');
       formData.append('level', auth.level);
       formData.append('author', inputs.author);
+      formData.append('coAuthor', inputs.coAuthor);
       formData.append('file', file);
       const res = await axiosPrivate.post('/upload/ordinance/draft?type=ordinances', formData, {
         headers: {'Content-Type': 'multipart/form-data'}
-      })
+      }).then(() => {
+          setServerMessage(res.data.message);
+          setSeverity(res.status);
+        })
+        .finally(() => setReload(true));
 
-      if (res.status === 200 || 401) {
-        setMessage(res.data.message);
-      } else {
-        setMessage('Error on Uploading Ordinance')
-      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
+
+  const addCoAuthor = (e) => {
+    e.preventDefault();
+    setCoAuthor(!coAuthor);
+  
+    if (!coAuthor) {
+      setInputs((inputs) => ({ ...inputs, coAuthor: '' }));
+    }
+  };
+
+  useEffect(() => {
+    const currDate = new Date();
+    const year = currDate.getFullYear();
+    setInputErr((prevInputErr) => ({
+      ...prevInputErr,
+      number: inputs.number >= 100,
+      series: inputs.series > year,
+    }));
+    const isAnyInputEmpty = (
+      Object.keys(inputs)
+        .filter((key) => key !== 'coAuthor')
+        .some((key) => inputs[key] === '') ||
+      !file
+    );
+    setDisabled(isAnyInputEmpty);
+  }, [inputs, file]);
 
   useEffect(() => {
     getAuthors()
@@ -89,102 +124,134 @@ const CreateOrdinances = () => {
     })
   }, []);
 
-  useEffect(() => {
-    if (message) {
-      setShowAlert(true);
-
-      // Hide the alert after 3 seconds (adjust the time as needed)
-      const timer = setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-
-      // Clear the timer when the component unmounts
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-
   return (
     <div className="CreateOrdinances">
       <h1>List of Ordinances</h1>
-      {auth.level !== level.dlg && (
-        <button className="CreateOrdinances__Button" onClick={openModal}>Create New Ordinance</button>
+      {(auth.level !== level.dlg && auth.role === role.adn) && (
+        <button className="CreateOrdinances__Button" onClick={openModal}>New Ordinance</button>
       )}
       <Modal 
         isOpen={isModalOpen} 
         closeModal={closeModal}
       >
         <div className='CreateOrdinances__Container'>
-          <h3>Submit a Draft {auth.level === level.lgu ? 'Municipal' : 'Barangay' } Level Ordinance</h3>
+          <h3>{auth.level === level.lgu ? 'Municipal' : 'Barangay' } Level Ordinance</h3>
             <form onSubmit={handleSubmit}>
               <div className='CreateOrdinances__Title'>
-                <label htmlFor="ordinance-number">Number:</label>
-                <input 
+                <TextField
+                  error={inputErr.number}
                   className='CreateOrdinances__Input'
-                  type="number"
                   name='number'
-                  id='ordinance-number'
-                  placeholder="e.g. '01'"
+                  label="Number"
+                  margin='dense'
+                  type='number'
+                  required
+                  helperText={inputErr.number && `e.g. 01`}
                   onChange={handleChange}
-                />
-                <label htmlFor="ordinance-series">Series:</label>
-                <input 
+                  variant="outlined" />
+                <TextField
+                  error={inputErr.series}
                   className='CreateOrdinances__Input'
-                  type="number"
-                  name='series'
-                  id='ordinance-series'
-                  placeholder="e.g. '2021'"
+                  name='series' 
+                  label="Series"
+                  type='number'
+                  margin='dense'
+                  required
+                  helperText={inputErr.series && `e.g. 2021`}
                   onChange={handleChange}
-                />
-                <label htmlFor="ordinance-title">Title:</label>
-                <input 
+                  variant="outlined" />
+                <TextField
                   className='CreateOrdinances__Input'
-                  type="text"
-                  name='title'
-                  id='ordinance-title'
-                  placeholder="e.g. 'First Amendment'"
+                  name='title' 
+                  label="Title"
+                  margin='dense'
+                  required
                   onChange={handleChange}
-                />
-                <label htmlFor="ordinance-title">Author:</label>
-                <select 
-                  name="author" 
-                  id="author"
-                  className='CreateOrdinances__Input'
-                  onChange={handleChange}>
-                   {members && members.map((member, i) => (
-                    <option
-                      key={i}
-                      value={member.name}
+                  variant="outlined" />
+                <div className='CreateOrdinances__Select'>
+                  <FormControl fullWidth>
+                  <InputLabel id="author-id">Author</InputLabel>
+                  <Select
+                    labelId="author-id"
+                    name='author'
+                    id="author-id"
+                    label="Author"
+                    margin='dense'
+                    required
+                    value={inputs.author}
+                    onChange={handleChange}
+                  >
+                    {members && members.map((member, i) => (
+                      <MenuItem
+                        key={i}
+                        value={member.name}
+                      >
+                        {member.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  </FormControl>
+                  <button
+                    className='CreateOrdinances__Author'
+                    disabled={inputs.author === ''}
+                    onClick={(e) => addCoAuthor(e)}>
+                      {coAuthor ? '-' : '+'}
+                  </button>
+                </div>
+                {/* dynamically add input for co-author if applicable */}
+                {coAuthor && (
+                  <div className='CreateOrdinances__Select'>
+                    <FormControl fullWidth>
+                    <InputLabel id="co-author-id">Co-Author</InputLabel>
+                    <Select
+                      labelId="co-author-id"
+                      name='coAuthor'
+                      id="co-author-id"
+                      label="Co-Author"
+                      margin='dense'
+                      value={inputs.coAuthor}
+                      onChange={handleChange}
                     >
-                      {member.name}
-                    </option>
-                  ))}
-                </select>
+                      { members && members.filter((member) => member.name !== inputs.author).map((member, i) => (
+                        <MenuItem key={i} value={member.name}>
+                          {member.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    </FormControl>
+                    <span>
+                      -
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="CreateOrdinances__Content">
-                { uploading === true ? (
-                  <>
-                    <label htmlFor="file">File:
-                      <input
-                        className='CreateOrdinances__File'
-                        type="file"
-                        name='file'
-                        id='file'
-                        onChange={handleFileChange}
-                      />
-                    </label>
-                  </>) : (
-                    <button 
-                      className='CreateOrdinances__Button' 
-                      onClick={() => setUploading(true)} >
-                        Submit the PDF Ordinance File
-                    </button>
-                  ) }
+                <label 
+                  className='CreateOrdinances__File__Button' 
+                  htmlFor="file"
+                >
+                  Upload PDF File{fileName && (`:  ${fileName}`)}
+                  <input
+                    hidden
+                    className='CreateOrdinances__File'
+                    type="file"
+                    name='file'
+                    id='file'
+                    onChange={handleFileChange}
+                  />
+                </label>
               </div>
-              <button className='CreateOrdinances__Button' type='submit'>Submit</button>
+              <button 
+                className={`CreateOrdinances__Submit__Button`} 
+                onClick={handleSubmit}
+                style={{ backgroundColor: disabled ? '#CCCCCC' : 'red' }}
+                disabled={disabled}>
+                  Upload
+              </button>
             </form>
-            {showAlert && <div className="CreateOrdinances__Alert">{message}</div>}
         </div>
       </Modal>
+      <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   )
 }

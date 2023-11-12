@@ -1,3 +1,11 @@
+body.active-modal {
+  overflow-y: hidden;
+}
+
+body {
+  overflow-y: auto;
+}
+
 .Modal {
   display: flex;
   justify-content: center;
@@ -26,7 +34,7 @@
   align-items: flex-end;
   padding: 20px;
   height: max-content;
-  width: auto;
+  width: max-content;
   background-color: white;
   border-radius: 15px;
   z-index: 1000;

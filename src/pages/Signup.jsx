@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { 
+  TextField, 
+  FormControl,
+  InputLabel, 
+  MenuItem, 
+  Select } from "@mui/material";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
 import Loader from "../components/Loader";
@@ -22,7 +28,10 @@ const Signup = () => {
   const [isInputEditing, setInputEditing] = useState(false);
   const [users, setUsers] = useState([]);
   const [serverMessage, setServerMessage] = useState('');
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    role: '',
+    level: '',
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = (user) => {
     setIsModalOpen(true);
@@ -162,6 +171,7 @@ const handleUpdateUser = async (e, user) => {
               className="Signup__Users__Table__Input"
               onChange={handleChange}
               >
+                <option value=''>Select Level</option>
               {levels.map(([key, value]) => (
                 <option key={key} value={value}>
                   {value}
@@ -192,6 +202,7 @@ const handleUpdateUser = async (e, user) => {
                 className="Signup__Users__Table__Input"
                 onChange={handleChange}
                 >
+                  <option value=''>Select Role</option>
                   {role.map(([key, value]) => (
                     <option 
                       key={key} 
@@ -248,6 +259,8 @@ const handleUpdateUser = async (e, user) => {
 
   if(isLoading) return (<Loader />);
 
+  console.log(inputs)
+
   return (
     <div className="Signup">
       <div className="Signup__Users">
@@ -268,7 +281,7 @@ const handleUpdateUser = async (e, user) => {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="Signup__Users__Body">
             {renderUsers()}
           </tbody>
         </table>
@@ -278,50 +291,56 @@ const handleUpdateUser = async (e, user) => {
         <form onSubmit={handleSubmit}> 
           <div className="Signup__Container">
             <h4>Create New Account</h4>
-            <label htmlFor="email">Email:
-              <input
-                className="Signup__Input"
-                type="email"
-                name="email"
-                value={inputs.email}
-                onChange={handleChange}
-                placeholder="eg. xxxxxxxx@gmail.com" 
-                required
-                />
-            </label>
-            <label htmlFor="username">Name:
-              <input
-                className="Signup__Input"
-                type="text"
-                name="username"
-                value={inputs.username}
-                onChange={handleChange}
-                placeholder="eg. John Doe L. Smith"
-                required
-              />
-            </label>
-            <label htmlFor="role">Access Level:</label>
-            <select
-              className="Signup__Input__Select"
-              name="role" 
-              id="role"
-              onChange={handleChange}>
-                <option value="">Select Access Level</option>
-                <option value="Admin">Admin</option>
-                <option value="Superadmin">Superadmin</option>
-                <option value="User">User</option>
-            </select>
-            <label htmlFor="level">Divison Level:</label>
-            <select
-              className="Signup__Input__Select"
-              name="level" 
-              id="level"
-              onChange={handleChange}>
-                <option value="">Select Level</option>
-                <option value="BARANGAY">Barangay</option>
-                <option value="DILG">DILG</option>
-                <option value="LGU">LGU</option>
-            </select>
+            <TextField
+              className="Signup__Input"
+              name="email"
+              label='Email'
+              margin="normal"
+              onChange={handleChange}
+              variant="outlined"
+              required/>
+            <TextField
+              className="Signup__Input"
+              name="username"
+              label='Full Name'
+              margin="normal"
+              onChange={handleChange}
+              variant="outlined"
+              required/>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="accessLevel-id">Access Level</InputLabel>
+                <Select
+                  labelId="accessLevel-id"
+                  name='role'
+                  id="role-id"
+                  label="Access Level"
+                  margin='dense'
+                  value={inputs.role}
+                  required
+                  onChange={handleChange}
+                >
+                  <MenuItem value='Admin'>Admin</MenuItem>
+                  <MenuItem value='Superadmin'>SuperAdmin</MenuItem>
+                  <MenuItem value='User'>User</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="level-id">Division Level</InputLabel>
+                <Select
+                  labelId="level-id"
+                  name='level'
+                  id="level-id"
+                  label="Division Level"
+                  margin='dense'
+                  value={inputs.level}
+                  required
+                  onChange={handleChange}
+                >
+                  <MenuItem value='BARANGAY'>Barangay</MenuItem>
+                  <MenuItem value='DILG'>DILG</MenuItem>
+                  <MenuItem value='LGU'>LGU</MenuItem>
+                </Select>
+              </FormControl>
             <div className="Signup__Button__Container">
               <button className="Signup__Button"
                 type="submit" 

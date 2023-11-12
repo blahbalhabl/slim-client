@@ -1,14 +1,23 @@
 .Search {
 	height: max-content;
+  display: flex;
 }
 
 .Search__Inputbox {
   width: 300px;
 }
 
+.Search__Icon {
+  margin-right: 10px;
+}
+
 @media only screen and (max-width: 800px) {
   .Search,
   .Search__Inputbox {
     width: 100%;
+  }
+
+  .Search > span {
+    display: none;
   }
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { axiosPrivate } from "../api/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { icons } from "../utils/Icons";
 import "../styles/SearchBar.css";
 
 const SearchBar = ({ data, fn }) => {
@@ -49,7 +51,14 @@ const SearchBar = ({ data, fn }) => {
   return (
     <div className="Search">
       <TextField
-       label="Search"
+       label={
+        <>
+          <FontAwesomeIcon 
+            className="Search__Icon" 
+            icon={icons.search} />
+          Search
+        </>
+      }
        name="search"
        className="Search__Inputbox"
        size="small"

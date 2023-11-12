@@ -54,11 +54,12 @@ const Ordinances = () => {
   });
 
   const level = roles.level;
+  const role = roles.role;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [delModalOpen, setDelModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {setIsModalOpen(false); setDropdown(false)}
-  const [delModalOpen, setDelModalOpen] = useState(false);
   const openDelModal = (e) => 
     {
       e.preventDefault();
@@ -479,6 +480,7 @@ const Ordinances = () => {
               count={10} //Dyanmically change
               variant="outlined" 
               color='primary'
+              value={currentPage}
               onChange={(e, value) => handlePageChange(e, value)}
             />
           </div>
@@ -550,7 +552,9 @@ const Ordinances = () => {
                     onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, author: e.target.value })}
                     disabled={isEditing}
                   >
-                    {members.map((member, i) => (
+                    {members
+                      .filter((member) => member.name !== selectedOrdinance.coAuthor)
+                      .map((member, i) => (
                       <option
                         key={i}
                         value={member.name}
@@ -560,6 +564,29 @@ const Ordinances = () => {
                     ))}
                   </select>
                 </label>
+                {selectedOrdinance.coAuthor && (
+                  <label htmlFor="author">Co-Author:
+                    <select
+                      className={`Ordinances__Details__Title__Input ${isEditing ? '' : 'editing'}`}
+                      name='author'
+                      id='author'
+                      value={selectedOrdinance.coAuthor}
+                      onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, coAuthor: e.target.value })}
+                      disabled={isEditing}
+                    >
+                      {members
+                        .filter((member) => member.name !== selectedOrdinance.author)
+                        .map((member, i) => (
+                        <option
+                          key={i}
+                          value={member.name}
+                        >
+                          {member.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
               </div>
               <div>
                 {!isEditing && (
@@ -574,7 +601,7 @@ const Ordinances = () => {
                 )}
               </div>
               <div className="Ordinances__Details__Content">
-                {auth.level !== level.dlg && (
+                {(auth.level !== level.dlg) && (auth.role === role.adn) && (
                   <div>
                     <button 
                       className="Ordinances__Edit__Button" 
@@ -605,7 +632,9 @@ const Ordinances = () => {
                 )}
              </div>
             </form>
-            { selectedOrdinance.status === 'draft' || selectedOrdinance.status === 'pending' ? (
+            { (selectedOrdinance.status === 'draft' || selectedOrdinance.status === 'pending') &&
+              (auth.level !== level.dlg && auth.role === role.adn)
+             ? (
             <div className="Ordinances__Details__Proceedings">
               <label htmlFor="proceeding">Next Proceeding Schedule: 
                 <input
@@ -650,14 +679,16 @@ const Ordinances = () => {
             <div className="Ordinances__Minutes__Container">
               <h3>Minutes of the Meeting for {selectedOrdinance.title.toUpperCase()}</h3>
               <div className='Ordinances__Minutes__Buttons'>
-                {auth.level !== level.dlg && (
+                { (auth.level !== level.dlg) && 
+                  (auth.level !== level.dlg && auth.role === role.adn) && (
                   <button
                     className='Ordinances__Minutes__Add'
                     onClick={() => setAddMinutes(!addMinutes)}>
                       Add Minutes of the Meeting
                   </button>
                 )}
-                { addMinutes && (
+                { (auth.level !== level.dlg && auth.role === role.adn) &&
+                  addMinutes && (
                 <div>
                   <label htmlFor="date-time">Date:
                     <input

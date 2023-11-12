@@ -36,8 +36,6 @@ const Header = () => {
     setCollapsed(!collapsed);
   };
 
-  const isActive = (link) => location.pathname === link;
-
   const signOut = async () => {
     await logout();
     navigate('/login');
@@ -118,7 +116,13 @@ const Header = () => {
               <img
                 onClick={() => navigate(`/profile/${auth.id}`)}
                 className="Header__Avatar" src={imageSrc}  />
-            ) : (<FontAwesomeIcon icon={icons.user} />)}
+            ) : (
+              <span
+                className="Header__Avatar"
+                onClick={() => navigate(`/profile/${auth.id}`)}>
+                  <FontAwesomeIcon icon={icons.user} />
+              </span>
+              )}
             <p>
               {auth.name.toUpperCase()}
             </p>

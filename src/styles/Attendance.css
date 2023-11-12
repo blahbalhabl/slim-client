@@ -2,3 +2,12 @@
   padding: 20px;
   flex-grow: 1;
 }
+
+.Attendance__Content__Container {
+  flex-grow: 1;
+}
+
+.Attendance__Proceedings {
+  background-color: red;
+  margin: 10px 0 10px 0;
+}

@@ -10,14 +10,17 @@
 
 .Members__Header {
   flex-grow: 1;
-  padding: 20px;
-  background-color: var(--secondary-color);
+  padding: 20px 20px 20px 0px;
   border-radius: 15px;
   height: max-content;
-  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.Members__Header > h1 {
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .Members__Header__Button {

@@ -5,9 +5,10 @@
 }
 .Signup__Create__Account {
   margin: 5px;
-  color: white;
+  /* color: white; */
   width: 35%;
-  background-color: var(--secondary-color);
+  background-color: white;
+  outline: 1px solid gainsboro;
   border-radius: 15px;
   box-shadow: 0px 1px 3px 0px #b6b5b5;
 }
@@ -24,16 +25,16 @@
 }
 
 .Signup__Input {
-  margin: 5px 0px 5px 0px;
-  height: 50px;
+  /* margin: 5px 0px 5px 0px;
+  height: 50px; */
   width: 100%;
-  background-color: white;
+  /* background-color: white;
   border: 2px solid var(--highlight-color);
   border-radius: 10px;
   padding: 5px;
   outline: none;
   box-sizing: border-box;
-  font-size: 1rem;
+  font-size: 1rem; */
 }
 
 .Signup__Input__Select {
@@ -91,7 +92,7 @@
   flex-grow: 1;
   background-color: white;
   border-radius: 15px;
-  box-shadow: 0px 1px 3px 0px #b6b5b5;
+  outline: 1px solid gainsboro;
 }
 
 .Signup__Users__Title {
@@ -129,7 +130,13 @@
   width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
-  background-color: whitesmoke;
+  /* background-color: whitesmoke; */
+  outline: 1px solid gainsboro;
+  padding: 10px;
+}
+
+.Signup__Users__Body > td {
+  padding: 10px;
 }
 
 .Signup__Users__Table__Button {

@@ -17,8 +17,8 @@
     list-style: none;
 }
 
-.BreadCrumbs > li {
-    margin-right: 10px;
+.BreadCrumbs > ul > li:hover {
+    text-decoration: underline;
 }
 
 .BreadCrumbs__Content {
@@ -28,4 +28,9 @@
 .BreadCrumbs__List {
     display: flex;
     gap: 10px;
+    font-size: 1rem;
+}
+
+.BreadCrumbs__List > label {
+    text-transform: capitalize;
 }
