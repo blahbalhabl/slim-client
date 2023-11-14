@@ -15,14 +15,14 @@ const Members = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [members, setMembers] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isInputEditing, setInputEditing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [inputs, setInputs] = useState({
-    email: '',
     name: '',
     position: '',
-    branch: auth.level,
     startTerm: '',
     endTerm: '',
   });
@@ -42,17 +42,17 @@ const Members = () => {
     }
   };
 
-  const handleNewMember = async () => {
-    try {
-      await axiosPrivate.post('/new-member', inputs, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const handleNewMember = async () => {
+  //   try {
+  //     await axiosPrivate.post('/new-member', inputs, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,45 +71,64 @@ const Members = () => {
     return formattedDate;
   };
 
-  console.log()
+  const handleEditing = (e, user, action) => {
+    e.preventDefault();
+    if( action === 'edit') {
+      user === isInputEditing ? setInputEditing(!isInputEditing) : setInputEditing(user);
+    } else {
+    user === isEditing ? (
+      setIsEditing(!isEditing), 
+      setInputEditing(!isInputEditing),
+      setInputs({
+        name: '',
+        position: '',
+        startTerm: '',
+        endTerm: '',
+      })
+      ) : setIsEditing(user);
+    }
+  };
+
+  console.log(isEditing)
+  console.log(isInputEditing)
 
   useEffect(() => {
     document.title = 'SLIM | Sanggunian Members';
     sendRequest();
   }, []);
 
-  useEffect(() => {
-    const calculateDefaultEndTerm = () => {
-      const { startTerm } = inputs;
-      if (startTerm) {
-        const startDate = new Date(startTerm);
-        const endDate = new Date(startDate);
-        endDate.setFullYear(startDate.getFullYear() + 6); // Add 6 years
-        const formattedEndDate = endDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-        setInputs((prev) => ({
-          ...prev,
-          endTerm: formattedEndDate,
-        }));
-      }
-    };
+  // useEffect(() => {
+  //   const calculateDefaultEndTerm = () => {
+  //     const { startTerm } = inputs;
+  //     if (startTerm) {
+  //       const startDate = new Date(startTerm);
+  //       const endDate = new Date(startDate);
+  //       endDate.setFullYear(startDate.getFullYear() + 6); // Add 6 years
+  //       const formattedEndDate = endDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  //       setInputs((prev) => ({
+  //         ...prev,
+  //         endTerm: formattedEndDate,
+  //       }));
+  //     }
+  //   };
 
-    calculateDefaultEndTerm();
-  }, [inputs.startTerm])
-  
+  //   calculateDefaultEndTerm();
+  // }, [inputs.startTerm])
+
   return (
     <div className='Members'>
       <BreadCrumbs items={breadcrumbs} />
       <div className="Members__Header">
         <h1>Sanggunian Members</h1>
         <div>
-          {(auth.role === role.spr) && (
+          {/* {(auth.role === role.spr) && (
             <button
               className='Members__Header__Button'
               onClick={openModal}
             > 
               <FontAwesomeIcon icon={icons.plus}/> New
             </button>
-          )}
+          )} */}
         </div>
       </div>
       <div className='Members__Card__Container'>
@@ -120,6 +139,7 @@ const Members = () => {
               <th>Position</th>
               <th>Start Term</th>
               <th>End Term</th>
+              <th></th>
             </tr>
           </thead>
           <tbody className='Members__Data'>
@@ -137,14 +157,17 @@ const Members = () => {
                   <td data-cell='end Term'>
                     <p>{formatDate(member.endTerm)}</p>
                   </td>
+                  <td onClick={(e) => handleEditing(e, member, 'actions')}>
+                    <FontAwesomeIcon icon={icons.ellipsis} />
+                  </td>
                 </tr>
               )
             )}
           </tbody>
         </table>
       </div>
-      <Modal isOpen={isModalOpen} closeModal={closeModal}>
-        {/* Handle Here all Logic and Inputs for new Sanggunian Bayan Member */}
+      {/* <Modal isOpen={isModalOpen} closeModal={closeModal}>
+        // Handle Here all Logic and Inputs for new Sanggunian Bayan Member
         <div className="Modal__Members__Container">
           <label htmlFor="email"> Email
             <input 
@@ -198,7 +221,7 @@ const Members = () => {
             </button>
           </label>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   )
 }

@@ -66,9 +66,9 @@ export const sidebarAccordion = [
     contents: [
       {
         title: (
-          <Link className='Sidebar__Button' to={'/attendance'}>
+          <Link className='Sidebar__Button' to={'/proceedings'}>
             <FontAwesomeIcon icon={icons.horn} />
-            <p>Attendance</p>
+            <p>Proceedings</p>
           </Link>
         ),
       },

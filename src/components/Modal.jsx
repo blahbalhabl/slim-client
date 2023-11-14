@@ -21,8 +21,6 @@ const Modal = ({ isOpen, closeModal, children }) => {
     return null;
   }
 
-  console.log(document.body)
-
   return (
     <div className="Modal">
       <div className="Modal__Container">

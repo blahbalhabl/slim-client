@@ -53,6 +53,8 @@ const Ordinances = () => {
     speaker: "",
   });
 
+  const [proceedingDate, setProceedingDate] = useState({});
+
   const level = roles.level;
   const role = roles.role;
 
@@ -139,15 +141,19 @@ const Ordinances = () => {
   };
 
   const handleProceedingChange = (e) => {
-    setSelectedOrdinance({ ...selectedOrdinance, proceedings: e.target.value });
+    const { name, value } = e.target;
+
+    setProceedingDate((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     setDateChanged(true); 
   };
 
   const handleChangeProceedingDate = async (e, filename) => {
     try {
       e.preventDefault();
-      const proceedings = selectedOrdinance.proceedings;
-      const res = await axiosPrivate.post(`/update-proceedings/${filename}`, {proceedings}, {
+      const res = await axiosPrivate.post(`/update-proceedings/${filename}`, proceedingDate, {
         headers: {'Content-Type': 'application/json'}
       });
     } catch (err) {
@@ -642,10 +648,17 @@ const Ordinances = () => {
                   type="datetime-local"
                   name='proceeding'
                   id='proceeding'
-                  value={selectedOrdinance.proceedings}
+                  value={proceedingDate.proceeding || ''}
                   onChange={handleProceedingChange}
                 />
               </label>
+              <span>to</span>
+              <input 
+                className='Ordinances__Details__Proceedings__Input'
+                type="datetime-local"
+                name='endTime'
+                value={proceedingDate.endTime || ''}
+                onChange={handleProceedingChange}/>
               {isDateChanged && (
                 <button onClick={(e) => handleChangeProceedingDate(e, selectedOrdinance.file)}>Update</button>
               )}
@@ -656,7 +669,9 @@ const Ordinances = () => {
               <div className='Ordinances__Proceedings'>
                 <h3>Proceedings</h3>
                 <p>Proceedings of the Sangguniang Bayan of the Municipality of Bacolor, Province of Pampanga, held at the Session Hall on 
-                  <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
+                <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
+                to
+                <strong>{formatDate(selectedOrdinance?.endTime).split(',')[3]}</strong>
                 </p>
               </div>
             </div>
@@ -698,31 +713,29 @@ const Ordinances = () => {
                       onChange={handleChange}
                     />
                   </label>
-                  <label htmlFor="agenda">Agenda:
-                    <input 
-                      type="text"
-                      name='agenda'
-                      id='agenda'
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label htmlFor="speaker">Speaker:
-                    <input 
-                      type="text"
-                      name='speaker'
-                      id='speaker'
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label htmlFor="description">Description:
-                    <textarea
-                      rows="20" 
-                      cols="100"
-                      name='description'
-                      id='description'
-                      onChange={handleChange}
-                    />
-                  </label>
+                  <TextField
+                    name='agenda'
+                    label="Agenda"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <TextField
+                    name='speaker'
+                    label="Speaker"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <TextField
+                    name='description'
+                    label="Agenda"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <textarea
+                    rows="20"
+                    placeholder='Desription'
+                    cols="100"
+                    name='description'
+                    id='description'
+                    onChange={handleChange}
+                  />
                   <input type="file" onChange={handleFileChange}/>
                   <button className='Ordinances__Upload__button'onClick={(e) => handleUploadMinutes(e, selectedOrdinance._id, selectedOrdinance.series)}>Upload</button>
                   {showAlert && <div className="CreateOrdinances__Alert">{message}</div>}

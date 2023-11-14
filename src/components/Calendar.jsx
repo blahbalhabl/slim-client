@@ -23,8 +23,15 @@ const Calendar = () => {
 
   const getProceedings = async () => {
     try {
-      const proceedings = await axiosPrivate.get(`/proceedings?level=${auth.level}`);
-      return proceedings.data;
+      const date =  new Date();
+      const proceedings = await axiosPrivate.get(`/proceedings`);
+      const newProceedings = proceedings.data.filter((proceeding, i) => {
+        const endTime = new Date(proceeding?.endTime);
+        console.log('end-time', endTime);
+        return endTime >= date;
+      });
+      
+      return newProceedings;
     } catch(err) {
       console.error(err); //SetServerMessage
     };
@@ -69,15 +76,15 @@ const Calendar = () => {
     return formattedTime;
   };
 
-  const isOngoing = (proceeding) => {
+  const isOngoing = (proceeding, endTime) => {
     const date = new Date(proceeding)
+    const end = new Date(endTime);
     const currentDate = new Date();
     if (date > currentDate) {
       return "Upcoming";
-    } else if (date < currentDate) {
-      return "Passed";
+    } else if (currentDate >= date && date <= end) {
+      return "Ongoing";
     }
-    return "Ongoing";
   };
 
   useEffect(() => {
@@ -170,14 +177,14 @@ const Calendar = () => {
               {proceedings.map((proceeding, i) => (
                 <div
                   key={i} 
-                  className="Calendar__Content"
+                  className={`Calendar__Content ${isOngoing(proceeding.proceedings, proceeding.endTime)}`}
                   onClick={() => nav(`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
                   <div>
                     <p>{proceeding.title}</p>
                     {/* <p>{formatDate(proceeding.proceedings)}</p> */}
                     <p style={{fontWeight: 'bold'}}>{formatDate(proceeding.proceedings)}</p>
                     <p>{proceeding.status.toUpperCase()}</p>
-                    <p>{isOngoing(proceeding.proceedings)}</p>
+                    <p>{isOngoing(proceeding.proceedings, proceeding.endTime)}</p>
                   </div>
                   <Link 
                     to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 

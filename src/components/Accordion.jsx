@@ -12,7 +12,7 @@ const Accordion = ({ data, collapse, userRole }) => {
 
   const links = {
     rec: '/records',
-    cal: '/attendance',
+    cal: '/proceedings',
   };
 
   const toggleAccordion = (i) => {

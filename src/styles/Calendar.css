@@ -96,6 +96,20 @@
   cursor: pointer;
 }
 
+.Calendar__Content.Upcoming {
+  background-color: rgba(255, 165, 0, 0.7);
+  border: 1px solid orange;
+}
+
+.Calendar__Content.Ongoing {
+  background-color: rgba(0, 128, 0, 0.7);
+  border: 1px solid green;
+}
+
+.Calendar__Content:hover {
+  border-radius: 20px;
+}
+
 .Calendar__Link {
   font-size: 1.2rem;
   padding: 10px;
@@ -104,7 +118,7 @@
 }
 
 .Calendar__Link:hover {
-  background-color: orangered;
+  transform: scale(1.2);
 }
 
 .Calendar__Proceedings {
