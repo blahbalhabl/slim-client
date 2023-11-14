@@ -8,6 +8,7 @@
   height: auto;
   color: var(--tertiary-color);
   transition: width ease-in-out 0.2s;
+  z-index: 10;
 }
 
 .Sidebar__Buttons {

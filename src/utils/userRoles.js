@@ -14,7 +14,10 @@ export const roles = {
     vmy: 'Vice Mayor',
     cns: 'Councilor',
     sec: 'Secretary',
+  },
+  positionBrgy: {
     brg: 'Barangay Captain',
+    sec: 'Secretary',
     kgd: 'Kagawad',
   },
 };

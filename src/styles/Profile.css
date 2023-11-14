@@ -37,6 +37,10 @@
   height: 300px;
   width: 300px;
   border-radius: 500px;
+  overflow: hidden;
+  background-color: transparent;
+  outline: 1px solid gainsboro;
+  z-index: 0;
 }
 
 .Profile__Avatar__Img {
@@ -44,7 +48,7 @@
   width: 100%;
   border-radius: 500px;
   user-select: none;
-  z-index: 10;
+  z-index: 0;
 }
 
 .Profile__Avatar__Change {

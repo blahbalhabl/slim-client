@@ -43,18 +43,24 @@ const level = roles.level;
             {/* Public routes with Persistent Login */}
             <Route path="/unauthorized" element={<Unauthorized />} />
             
-            {/* Private All Roles Route */}
+            {/* Private All Roles Routes */}
             <Route element={<RequireAuth allowedRoles={[role.adn, role.spr, role.usr]}/>}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/sanggunian-members" element={< Members />} />
-              <Route path="/attendance" element={<Attendance />}/>
-              <Route path="/attendance/:id/:date" element={<AttendanceEntry/>}/>
             </Route>
 
-            {/* Private Admin Routes*/}
+            {/* Private Admin and SuperAdmin Routes */}
+            
+            {/* Private Admin and User Routes*/}
             <Route element={<RequireAuth allowedRoles={[role.adn, role.usr]} />}>
               <Route path="/records/ordinances/:status" element={<Ordinances />} />
+            </Route>
+
+            {/* Private Admin Routes */}
+            <Route element={<RequireAuth allowedRoles={[role.adn]} />}>
+              <Route path="/proceedings" element={<Attendance />}/>
+              <Route path="/proceedings/:id/:date" element={<AttendanceEntry/>}/>
             </Route>
 
             {/* Private Superadmin Routes */}

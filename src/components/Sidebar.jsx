@@ -66,7 +66,7 @@ const Sidebar = () => {
           </Link>
         )}
         <Accordion data={sidebarAccordion} collapse={collapsed} userRole={auth.role}/>
-        {(auth.role === role.spr || auth.role === role.adn) && (
+        {auth?.role && (
           <>
             <Link
               className={`Sidebar__Button${collapsed}${isActive(links.mem)}`}

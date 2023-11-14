@@ -2,3 +2,27 @@
   padding: 20px;
   flex-grow: 1;
 }
+
+.Attendance h1 {
+  padding: 20px 20px 20px 0;
+}
+
+.Attendance__Content__Container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  flex-grow: 1;
+  gap: 20px;
+}
+
+.Attendance__Card {
+  outline: 1px solid gainsboro;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.Attendance__Proceedings {
+  background-color: gainsboro;
+  margin: 10px 0 10px 0;
+  border-radius: 10px;
+  padding: 10px;
+}

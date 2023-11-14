@@ -8,7 +8,7 @@
     cursor: pointer;
 }
 
-.Accordion.active {
+.Accordion.active.color {
     background-color: var(--highlight-color);
 }
 
@@ -51,7 +51,7 @@
     transition: max-height 0.3s ease-in-out;
 }
 
-.Accordion__Content.active  {
+.Accordion__Content.active {
     /* padding-left: 5px; */
     border-left: 5px solid var(--highlight-color);
     max-height: 400px;

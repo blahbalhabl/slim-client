@@ -23,7 +23,10 @@ const Dashboard = () => {
             <p>Welcome back, {auth.name}, {auth.role.toLowerCase()}</p>
           )}
         </div>
-          { auth && auth?.role === role.adn 
+        <div className="Dashboard__Title">
+          Dashboard
+        </div>
+          { auth && (auth?.role === role.adn) || (auth?.role === role.usr) 
             ? <Admin />
             : auth && auth?.role === role.spr
             ? <SuperAdmin />

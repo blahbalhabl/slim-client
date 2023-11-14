@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { 
+  TextField, 
+  FormControl,
+  InputLabel, 
+  MenuItem, 
+  Select,
+  Switch } from "@mui/material";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
 import Loader from "../components/Loader";
@@ -12,6 +19,11 @@ import '../styles/Signup.css'
 const Signup = () => {
   const role = Object.entries(roles.role);
   const levels = Object.entries(roles.level);
+  const level = Object.values(roles.level);
+  const division = Object.values(roles.role);
+  const positions = Object.values(roles.position);
+  const brgyPositions = roles.positionBrgy;
+
   const { auth } = useAuth();
 
   const axiosPrivate = useAxiosPrivate();
@@ -21,8 +33,14 @@ const Signup = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isInputEditing, setInputEditing] = useState(false);
   const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [isMember, setIsMember] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    role: '',
+    level: '',
+    position: '',
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = (user) => {
     setIsModalOpen(true);
@@ -43,6 +61,20 @@ const Signup = () => {
     setIsLoading(true); 
   }
 
+  const handleDeleteUser = (e, user, action) => {
+    openModal();
+    setUser(user);
+  };
+
+  const deleteUser = async () => {
+    try {
+      console.log(user._id);
+      await axiosPrivate.delete(`/delete-user?id=${user?._id}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const userSignup = async () => {
     try {
       const userData = {
@@ -50,6 +82,7 @@ const Signup = () => {
         username: inputs.username,
         role: inputs.role,
         level: inputs.level,
+        isMember: isMember,
       };
 
       const res = await axiosPrivate.post('/signup', userData, {
@@ -80,6 +113,23 @@ const Signup = () => {
         }).catch((err) => {
           console.log('Error sending email:', err);
         });
+        // Check if the user is a member and make an additional request
+        if (isMember) {
+          const memberData = {
+            email: inputs.email,
+            name: inputs.username,
+            position: inputs.position,
+            branch: inputs.level,
+            startTerm: inputs.startTerm,
+            endTerm: inputs.endTerm,
+          };
+
+          await axiosPrivate.post('/new-member', memberData, {
+            headers: { 'Content-Type': 'application/json' },
+          }).catch((err) => {
+            console.log('Error creating new member:', err);
+          });
+        }
       }
     } catch (err) {
       console.log('Error:', err);
@@ -97,6 +147,16 @@ const Signup = () => {
    }
   };
 
+  // const getMembers = async () => {
+  //   try {
+  //     const members = await axiosPrivate.get('/sanggunian-members');
+  //     const data = await members.data;
+  //     return data;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   const handleEditing = (e, user, action) => {
     e.preventDefault()
     if( action === 'edit') {
@@ -109,6 +169,7 @@ const Signup = () => {
         username: '',
         role: '',
         level: '',
+        position: '',
       })
       ) : setIsEditing(user);
     }
@@ -125,7 +186,7 @@ const handleUpdateUser = async (e, user) => {
   } catch (err) {
     console.error(err);
   }
-}
+};
 
   const renderUsers = () => {
     return users.map((user, i) => {
@@ -162,6 +223,7 @@ const handleUpdateUser = async (e, user) => {
               className="Signup__Users__Table__Input"
               onChange={handleChange}
               >
+                <option value=''>Select Level</option>
               {levels.map(([key, value]) => (
                 <option key={key} value={value}>
                   {value}
@@ -192,6 +254,7 @@ const handleUpdateUser = async (e, user) => {
                 className="Signup__Users__Table__Input"
                 onChange={handleChange}
                 >
+                  <option value=''>Select Role</option>
                   {role.map(([key, value]) => (
                     <option 
                       key={key} 
@@ -214,6 +277,7 @@ const handleUpdateUser = async (e, user) => {
                   Edit
                 </button>
                 <button
+                  onClick={(e) => handleDeleteUser(e, user, 'delete')}
                 >
                   Delete
                 </button>
@@ -242,9 +306,9 @@ const handleUpdateUser = async (e, user) => {
   useEffect(() => {
     document.title = 'SLIM | Users';
     sendRequest()
-    .then((data) => setUsers(data));
+      .then((data) => setUsers(data));
     setIsLoading(false);
-  }, [isLoading, serverMessage])
+  }, [isLoading, serverMessage]);
 
   if(isLoading) return (<Loader />);
 
@@ -268,7 +332,7 @@ const handleUpdateUser = async (e, user) => {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="Signup__Users__Body">
             {renderUsers()}
           </tbody>
         </table>
@@ -278,50 +342,97 @@ const handleUpdateUser = async (e, user) => {
         <form onSubmit={handleSubmit}> 
           <div className="Signup__Container">
             <h4>Create New Account</h4>
-            <label htmlFor="email">Email:
-              <input
-                className="Signup__Input"
-                type="email"
-                name="email"
-                value={inputs.email}
-                onChange={handleChange}
-                placeholder="eg. xxxxxxxx@gmail.com" 
+            <TextField
+              className="Signup__Input"
+              name="email"
+              label='Email'
+              margin="normal"
+              onChange={handleChange}
+              variant="outlined"
+              required/>
+            <TextField
+              className="Signup__Input"
+              name="username"
+              label='Full Name'
+              margin="normal"
+              onChange={handleChange}
+              variant="outlined"
+              required/>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="accessLevel-id">Access Level</InputLabel>
+              <Select
+                labelId="accessLevel-id"
+                name='role'
+                id="role-id"
+                label="Access Level"
+                margin='dense'
+                value={inputs.role}
                 required
-                />
-            </label>
-            <label htmlFor="username">Name:
-              <input
-                className="Signup__Input"
-                type="text"
-                name="username"
-                value={inputs.username}
                 onChange={handleChange}
-                placeholder="eg. John Doe L. Smith"
+              >
+                {division.map((rle, i) => (
+                  <MenuItem key={i} value={rle}>{rle}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="level-id">Division Level</InputLabel>
+              <Select
+                labelId="level-id"
+                name='level'
+                id="level-id"
+                label="Division Level"
+                margin='dense'
+                value={inputs.level}
                 required
-              />
-            </label>
-            <label htmlFor="role">Access Level:</label>
-            <select
-              className="Signup__Input__Select"
-              name="role" 
-              id="role"
-              onChange={handleChange}>
-                <option value="">Select Access Level</option>
-                <option value="Admin">Admin</option>
-                <option value="Superadmin">Superadmin</option>
-                <option value="User">User</option>
-            </select>
-            <label htmlFor="level">Divison Level:</label>
-            <select
-              className="Signup__Input__Select"
-              name="level" 
-              id="level"
-              onChange={handleChange}>
-                <option value="">Select Level</option>
-                <option value="BARANGAY">Barangay</option>
-                <option value="DILG">DILG</option>
-                <option value="LGU">LGU</option>
-            </select>
+                onChange={handleChange}
+              >
+                {level.map((lvl, i) => (
+                  <MenuItem key={i} value={lvl}>{lvl}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <span>
+              <Switch 
+                checked={isMember}
+                onChange={() => setIsMember(!isMember)}/>
+                <label>Sanggunian Member?</label>
+            </span>
+            {isMember && (
+              <div className="Signup__Member">
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="position-id">Position</InputLabel>
+                  <Select
+                    labelId="position-id"
+                    name='position'
+                    id="position-id"
+                    label="Position"
+                    margin='dense'
+                    value={inputs.position}
+                    onChange={handleChange}
+                  >
+                    {positions.map((pos, i) => (
+                      <MenuItem key={i} value={pos}>{pos}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div className="Signup__DateRange">
+                  <input
+                    className="Signup__DateRange__Input"
+                    type="date" 
+                    name='startTerm'
+                    onChange={handleChange}
+                  />
+                  <span>to</span>
+                  <input
+                    className="Signup__DateRange__Input"
+                    type="date" 
+                    name='endTerm'
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            )}
             <div className="Signup__Button__Container">
               <button className="Signup__Button"
                 type="submit" 
@@ -331,7 +442,11 @@ const handleUpdateUser = async (e, user) => {
                 className="Signup__Button__Cancel"
                 onClick={() => {
                   setCreateAccount(false);
-                  setInputs('');
+                  setInputs({
+                    role: '',
+                    level: '',
+                    position: '',
+                  });
                 }}
                 > Cancel
               </button>
@@ -351,13 +466,25 @@ const handleUpdateUser = async (e, user) => {
         closeModal={closeModal}
       >
         <div className="Modal__Container">
+          <h3>{`Confirm Delete User: ${user.username}?`}</h3>
+          <div className="Modal__Container__Details">
+            <button onClick={deleteUser}>Confirm</button>
+            <button onClick={closeModal}>Cancel</button>
+          </div>
+        </div>
+      </Modal>
+      {/* <Modal 
+        isOpen={isModalOpen} 
+        closeModal={closeModal}
+      >
+        <div className="Modal__Container">
           <h3>Confirm Action?</h3>
           <div className="Modal__Container__Details">
             <button>Confirm</button>
             <button>Cancel</button>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
       <Alert message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   );

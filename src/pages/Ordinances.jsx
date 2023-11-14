@@ -53,12 +53,15 @@ const Ordinances = () => {
     speaker: "",
   });
 
+  const [proceedingDate, setProceedingDate] = useState({});
+
   const level = roles.level;
+  const role = roles.role;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [delModalOpen, setDelModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {setIsModalOpen(false); setDropdown(false)}
-  const [delModalOpen, setDelModalOpen] = useState(false);
   const openDelModal = (e) => 
     {
       e.preventDefault();
@@ -138,15 +141,19 @@ const Ordinances = () => {
   };
 
   const handleProceedingChange = (e) => {
-    setSelectedOrdinance({ ...selectedOrdinance, proceedings: e.target.value });
+    const { name, value } = e.target;
+
+    setProceedingDate((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     setDateChanged(true); 
   };
 
   const handleChangeProceedingDate = async (e, filename) => {
     try {
       e.preventDefault();
-      const proceedings = selectedOrdinance.proceedings;
-      const res = await axiosPrivate.post(`/update-proceedings/${filename}`, {proceedings}, {
+      const res = await axiosPrivate.post(`/update-proceedings/${filename}`, proceedingDate, {
         headers: {'Content-Type': 'application/json'}
       });
     } catch (err) {
@@ -479,6 +486,7 @@ const Ordinances = () => {
               count={10} //Dyanmically change
               variant="outlined" 
               color='primary'
+              value={currentPage}
               onChange={(e, value) => handlePageChange(e, value)}
             />
           </div>
@@ -550,7 +558,9 @@ const Ordinances = () => {
                     onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, author: e.target.value })}
                     disabled={isEditing}
                   >
-                    {members.map((member, i) => (
+                    {members
+                      .filter((member) => member.name !== selectedOrdinance.coAuthor)
+                      .map((member, i) => (
                       <option
                         key={i}
                         value={member.name}
@@ -560,6 +570,29 @@ const Ordinances = () => {
                     ))}
                   </select>
                 </label>
+                {selectedOrdinance.coAuthor && (
+                  <label htmlFor="author">Co-Author:
+                    <select
+                      className={`Ordinances__Details__Title__Input ${isEditing ? '' : 'editing'}`}
+                      name='author'
+                      id='author'
+                      value={selectedOrdinance.coAuthor}
+                      onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, coAuthor: e.target.value })}
+                      disabled={isEditing}
+                    >
+                      {members
+                        .filter((member) => member.name !== selectedOrdinance.author)
+                        .map((member, i) => (
+                        <option
+                          key={i}
+                          value={member.name}
+                        >
+                          {member.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
               </div>
               <div>
                 {!isEditing && (
@@ -574,7 +607,7 @@ const Ordinances = () => {
                 )}
               </div>
               <div className="Ordinances__Details__Content">
-                {auth.level !== level.dlg && (
+                {(auth.level !== level.dlg) && (auth.role === role.adn) && (
                   <div>
                     <button 
                       className="Ordinances__Edit__Button" 
@@ -605,7 +638,9 @@ const Ordinances = () => {
                 )}
              </div>
             </form>
-            { selectedOrdinance.status === 'draft' || selectedOrdinance.status === 'pending' ? (
+            { (selectedOrdinance.status === 'draft' || selectedOrdinance.status === 'pending') &&
+              (auth.level !== level.dlg && auth.role === role.adn)
+             ? (
             <div className="Ordinances__Details__Proceedings">
               <label htmlFor="proceeding">Next Proceeding Schedule: 
                 <input
@@ -613,10 +648,17 @@ const Ordinances = () => {
                   type="datetime-local"
                   name='proceeding'
                   id='proceeding'
-                  value={selectedOrdinance.proceedings}
+                  value={proceedingDate.proceeding || ''}
                   onChange={handleProceedingChange}
                 />
               </label>
+              <span>to</span>
+              <input 
+                className='Ordinances__Details__Proceedings__Input'
+                type="datetime-local"
+                name='endTime'
+                value={proceedingDate.endTime || ''}
+                onChange={handleProceedingChange}/>
               {isDateChanged && (
                 <button onClick={(e) => handleChangeProceedingDate(e, selectedOrdinance.file)}>Update</button>
               )}
@@ -627,7 +669,9 @@ const Ordinances = () => {
               <div className='Ordinances__Proceedings'>
                 <h3>Proceedings</h3>
                 <p>Proceedings of the Sangguniang Bayan of the Municipality of Bacolor, Province of Pampanga, held at the Session Hall on 
-                  <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
+                <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
+                to
+                <strong>{formatDate(selectedOrdinance?.endTime).split(',')[3]}</strong>
                 </p>
               </div>
             </div>
@@ -650,14 +694,16 @@ const Ordinances = () => {
             <div className="Ordinances__Minutes__Container">
               <h3>Minutes of the Meeting for {selectedOrdinance.title.toUpperCase()}</h3>
               <div className='Ordinances__Minutes__Buttons'>
-                {auth.level !== level.dlg && (
+                { (auth.level !== level.dlg) && 
+                  (auth.level !== level.dlg && auth.role === role.adn) && (
                   <button
                     className='Ordinances__Minutes__Add'
                     onClick={() => setAddMinutes(!addMinutes)}>
                       Add Minutes of the Meeting
                   </button>
                 )}
-                { addMinutes && (
+                { (auth.level !== level.dlg && auth.role === role.adn) &&
+                  addMinutes && (
                 <div>
                   <label htmlFor="date-time">Date:
                     <input
@@ -667,31 +713,29 @@ const Ordinances = () => {
                       onChange={handleChange}
                     />
                   </label>
-                  <label htmlFor="agenda">Agenda:
-                    <input 
-                      type="text"
-                      name='agenda'
-                      id='agenda'
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label htmlFor="speaker">Speaker:
-                    <input 
-                      type="text"
-                      name='speaker'
-                      id='speaker'
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label htmlFor="description">Description:
-                    <textarea
-                      rows="20" 
-                      cols="100"
-                      name='description'
-                      id='description'
-                      onChange={handleChange}
-                    />
-                  </label>
+                  <TextField
+                    name='agenda'
+                    label="Agenda"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <TextField
+                    name='speaker'
+                    label="Speaker"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <TextField
+                    name='description'
+                    label="Agenda"
+                    variant="outlined" 
+                    onChange={handleChange}/>
+                  <textarea
+                    rows="20"
+                    placeholder='Desription'
+                    cols="100"
+                    name='description'
+                    id='description'
+                    onChange={handleChange}
+                  />
                   <input type="file" onChange={handleFileChange}/>
                   <button className='Ordinances__Upload__button'onClick={(e) => handleUploadMinutes(e, selectedOrdinance._id, selectedOrdinance.series)}>Upload</button>
                   {showAlert && <div className="CreateOrdinances__Alert">{message}</div>}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { roles } from '../utils/userRoles';
@@ -11,6 +11,7 @@ import '../styles/Calendar.css'
 
 const Calendar = () => {
   const { auth } = useAuth();
+  const nav = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const role = roles.role;
   const [inputs, setInputs] = useState({}); // For setting new schedules
@@ -22,8 +23,15 @@ const Calendar = () => {
 
   const getProceedings = async () => {
     try {
-      const proceedings = await axiosPrivate.get(`/proceedings?level=${auth.level}`);
-      return proceedings.data;
+      const date =  new Date();
+      const proceedings = await axiosPrivate.get(`/proceedings`);
+      const newProceedings = proceedings.data.filter((proceeding, i) => {
+        const endTime = new Date(proceeding?.endTime);
+        console.log('end-time', endTime);
+        return endTime >= date;
+      });
+      
+      return newProceedings;
     } catch(err) {
       console.error(err); //SetServerMessage
     };
@@ -59,15 +67,24 @@ const Calendar = () => {
     return formattedDate;
   };
 
-  const isOngoing = (proceeding) => {
+  const formatTime = (date) => {
+    const newDate = new Date(date);
+    const hours = newDate.getHours();
+    const minutes = newDate.getMinutes();
+
+    const formattedTime = new Date(0, 0, 0, hours, minutes).toLocaleTimeString();
+    return formattedTime;
+  };
+
+  const isOngoing = (proceeding, endTime) => {
     const date = new Date(proceeding)
+    const end = new Date(endTime);
     const currentDate = new Date();
     if (date > currentDate) {
       return "Upcoming";
-    } else if (date < currentDate) {
-      return "Passed";
+    } else if (currentDate >= date && date <= end) {
+      return "Ongoing";
     }
-    return "Ongoing";
   };
 
   useEffect(() => {
@@ -104,7 +121,7 @@ const Calendar = () => {
     <div className='Calendar'>
       <div className="Calendar__Header">
         <h3>{currentDate}</h3>
-        {auth?.role === role.adn && (
+        {/* {auth?.role === role.adn && (
           <button
             className={`Calendar__Header__Button${cancel}`}
             onClick={addSchedule}>
@@ -114,7 +131,7 @@ const Calendar = () => {
                 <p>Cancel</p>
               )}
           </button>
-        )}
+        )} */}
       </div>
       <div className="Calendar__Container">
         {addSched && (
@@ -158,15 +175,20 @@ const Calendar = () => {
                 <p className='Calendar__Proceedings'>Proceedings</p>
               </span>
               {proceedings.map((proceeding, i) => (
-                <div key={i} className="Calendar__Content">
+                <div
+                  key={i} 
+                  className={`Calendar__Content ${isOngoing(proceeding.proceedings, proceeding.endTime)}`}
+                  onClick={() => nav(`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
                   <div>
                     <p>{proceeding.title}</p>
                     {/* <p>{formatDate(proceeding.proceedings)}</p> */}
                     <p style={{fontWeight: 'bold'}}>{formatDate(proceeding.proceedings)}</p>
                     <p>{proceeding.status.toUpperCase()}</p>
-                    <p>{isOngoing(proceeding.proceedings)}</p>
+                    <p>{isOngoing(proceeding.proceedings, proceeding.endTime)}</p>
                   </div>
-                  <Link to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}`} className='Calendar__Link'>
+                  <Link 
+                    to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
+                    className='Calendar__Link'>
                       <FontAwesomeIcon icon={icons.share}/>
                   </Link>
                 </div>
