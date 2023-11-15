@@ -66,6 +66,7 @@
 }
 
 .Header__Logo {
+    cursor: pointer;
     height: 20px;
     width: 20px;
 }

@@ -105,7 +105,7 @@ const Header = () => {
     <>
     <div className="Header">
       <div className="Header__Title">
-        { logo ? <img className="Header_Logo" src={logo} style={{ width: '70px', height: '70px' }} /> : <FontAwesomeIcon icon={icons.user} />}
+        { logo ? <img onClick={() => navigate('/')} className="Header_Logo" src={logo} style={{ width: '70px', height: '70px' }} /> : <FontAwesomeIcon icon={icons.user} />}
         <h3>SLIM</h3>
         <h4>Sanggunian Legislative Information Management</h4>
       </div>

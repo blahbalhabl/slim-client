@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { roles } from '../utils/userRoles';
 import Loader from './Loader';
@@ -10,7 +9,6 @@ import { icons } from '../utils/Icons';
 import '../styles/Calendar.css'
 
 const Calendar = () => {
-  const { auth } = useAuth();
   const nav = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const role = roles.role;
@@ -27,7 +25,6 @@ const Calendar = () => {
       const proceedings = await axiosPrivate.get(`/proceedings`);
       const newProceedings = proceedings.data.filter((proceeding, i) => {
         const endTime = new Date(proceeding?.endTime);
-        console.log('end-time', endTime);
         return endTime >= date;
       });
       
@@ -174,11 +171,13 @@ const Calendar = () => {
               <span>
                 <p className='Calendar__Proceedings'>Proceedings</p>
               </span>
-              {proceedings.map((proceeding, i) => (
+              {proceedings
+                .sort((a, b) => new Date(b.proceedings) - new Date(a.proceedings))
+                .map((proceeding, i) => (
                 <div
                   key={i} 
                   className={`Calendar__Content ${isOngoing(proceeding.proceedings, proceeding.endTime)}`}
-                  onClick={() => nav(`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
+                  onClick={() => nav(`/proceedings/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
                   <div>
                     <p>{proceeding.title}</p>
                     {/* <p>{formatDate(proceeding.proceedings)}</p> */}
@@ -187,7 +186,7 @@ const Calendar = () => {
                     <p>{isOngoing(proceeding.proceedings, proceeding.endTime)}</p>
                   </div>
                   <Link 
-                    to={`/attendance/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
+                    to={`/proceedings/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
                     className='Calendar__Link'>
                       <FontAwesomeIcon icon={icons.share}/>
                   </Link>

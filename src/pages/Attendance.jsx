@@ -14,6 +14,7 @@ const Attendance = () => {
     upcoming: [],
   });
   const [pastProceedings, setPastProceedings] = useState([]);
+  const [ordinances, setOrdinances] = useState([]);
 
   const pathnames = location.pathname.split('/').filter((item) => item !== '');
   const breadcrumbs = pathnames.map((name, index) => ({
@@ -56,30 +57,44 @@ const Attendance = () => {
   };
 
   useEffect(() => {
+    const fetchDataForProceeding = async (proceedingId) => {
+      try {
+        const response = await axiosPrivate.get(`/ordinance?id=${proceedingId}`);
+        return response.data; // Assuming the response is an array of objects
+      } catch (error) {
+        console.error(`Error fetching data for proceeding ${proceedingId}:`, error);
+        return null; // or handle the error in a way that makes sense for your application
+      }
+    };
     getProceedings()
-      .then(({pastProceedings}) => {
-        setPastProceedings(pastProceedings);
+      .then(async ({ pastProceedings }) => {
+        setPastProceedings({ pastProceedings });
+        const fetchRequests = pastProceedings.map(proceeding => fetchDataForProceeding(proceeding.proceedingId));
+        
+        // Wait for all fetch requests to complete
+        const ordinanceDataArray = await Promise.all(fetchRequests);
+  
+        // ordinanceDataArray now contains the data fetched for each proceeding
+        setOrdinances(ordinanceDataArray);
       })
-
-      console.log(pastProceedings)
+      .catch(error => console.error('Error fetching past proceedings:', error));
   }, []);
 
   useEffect(() => {
     document.title = 'SLIM | Proceedings';
     setLoading(true);
-    getProceedings().then(({data}) => {
+    getProceedings().then(({ data }) => {
       // Filter and sort the data based on conditions
       const getCurrentDate = () => {
         const currentTime = new Date();
-    
+
         const currentProceedings = data.filter(item => {
           const endTime = new Date(item.endTime);
-          return currentTime >= new Date(item.proceedings) && currentTime <= endTime;
+          return (currentTime >= new Date(item.proceedings) && currentTime <= endTime)
         });
     
         const upcomingProceedings = data.filter(item => {
-          const endTime = new Date(item.endTime);
-          return currentTime < new Date(item.proceedings);
+          return (currentTime < new Date(item.proceedings));
         });
     
         setProceedings({
@@ -115,7 +130,7 @@ const Attendance = () => {
               <div
                 key={i}
                 className="Attendance__Proceedings"
-                onClick={() => nav(`${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
+                onClick={() => nav(`current/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
               >
                 <p>Ordinance No.{proceeding.number}, Series of {proceeding.series} {proceeding.title}</p>
                 <p>{formatDate(proceeding.proceedings)}</p>
@@ -134,7 +149,7 @@ const Attendance = () => {
               <div
                 key={i}
                 className="Attendance__Proceedings"
-                onClick={() => nav(`${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
+                onClick={() => nav(`upcoming/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
               >
                 <p>Ordinance No.{proceeding.number}, Series of {proceeding.series} {proceeding.title}</p>
                 <p>{formatDate(proceeding.proceedings)}</p>
@@ -148,19 +163,25 @@ const Attendance = () => {
         </div>
         <div className="Attendance__Card">
           <h2>Past Proceedings</h2>
-          {pastProceedings && pastProceedings.length > 0 ? (
-            pastProceedings.map((proceeding, i) => (
-              <div
-                key={i}
-                className="Attendance__Proceedings"
-                onClick={() => nav(`${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
-              >
-                <p>Ordinance No.{proceeding.number}, Series of {proceeding.series} {proceeding.title}</p>
-                <p>{formatDate(proceeding.proceedings)}</p>
-                <p>{formatDate(proceeding.endTime).split(',')[3]}</p>
-                <p>{proceeding?.status?.toUpperCase()}</p>
-              </div>
-            ))
+          {ordinances && ordinances.length > 0 ? (
+            ordinances
+              .map((ordinance, i) => ({
+                ordinance,
+                pastProceeding: pastProceedings.pastProceedings[i],
+              }))
+              .sort((a, b) => new Date(b.ordinance.proceedings) - new Date(a.ordinance.proceedings))
+              .map(({ ordinance, pastProceeding }, i) => (
+                <div
+                  key={i}
+                  className="Attendance__Proceedings"
+                  onClick={() => nav(`past/${ordinance._id}/${ordinance.proceedings.split('T')[0]}-${formatTime(ordinance.proceedings)}?prodId=${pastProceeding._id}`)}
+                >
+                  <p>Ordinance No.{ordinance.number}, Series of {ordinance.series} {ordinance.title}</p>
+                  <p>{formatDate(pastProceeding.startTime)}</p>
+                  <p>{formatDate(pastProceeding.endTime).split(',')[3]}</p>
+                  <p>{ordinance?.status?.toUpperCase()}</p>
+                </div>
+              ))
           ) : (
             <p>No Past Proceedings</p>
           )}

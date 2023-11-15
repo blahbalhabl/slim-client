@@ -219,9 +219,6 @@ const CreateOrdinances = () => {
                       ))}
                     </Select>
                     </FormControl>
-                    <span>
-                      -
-                    </span>
                   </div>
                 )}
               </div>
