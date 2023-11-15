@@ -60,7 +60,7 @@ const level = roles.level;
             {/* Private Admin Routes */}
             <Route element={<RequireAuth allowedRoles={[role.adn]} />}>
               <Route path="/proceedings" element={<Attendance />}/>
-              <Route path="/proceedings/:id/:date" element={<AttendanceEntry/>}/>
+              <Route path="/proceedings/:past/:id/:date" element={<AttendanceEntry/>}/>
             </Route>
 
             {/* Private Superadmin Routes */}

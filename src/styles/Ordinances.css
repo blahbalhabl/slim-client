@@ -179,7 +179,7 @@
 
 .Ordinances__Legend > div > div {
   margin: 3px;
-  height: 15px;
+  height: 1rem;
   width: 15px;
   border-radius: 5px;
 }
@@ -227,10 +227,12 @@
 
 .Ordinances__Details__Title__Input.editing {
   padding: 5px;
-  margin: 5px;
+  margin: 2px 5px;
   background-color: white;
   border-radius: 5px;
   color: black;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .Ordinances__Details__Title__Input.editing > option {
@@ -244,6 +246,18 @@
   outline: 1px solid gray;
   padding: 5px;
   margin-left: 10px;
+}
+
+.Ordinances__Details__Proceedings__Button {
+  border: none;
+  background-color: var(--highlight-color);
+  font-size: 1rem;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 2%;
+  width: 80px;
+  cursor: pointer;
 }
 
 .Ordinances__Details__Content {
@@ -273,6 +287,66 @@
 
 .Ordinances__PDFViewer__Frame.collapsed {
   height: 0px;
+}
+
+.Ordinances__Minutes__Data {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.Ordinances__Minutes__Details {
+  display: grid;
+  width: 80%;
+  gap: 10px;
+}
+
+.Ordinances__Minutes__Details span {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.Ordinances__Minutes__Date {
+  height: 40px;
+  font-size: 1rem;
+  width: auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.Ordinances__Minutes__TextArea {
+  width: 100%;
+}
+
+.Ordinances__Minute__File__Input {
+  background-color: var(--highlight-color);
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes {
+  border: none;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.Ordinances__Minutes.Edit {
+  color: orange;
+}
+
+.Ordinances__Minutes.Delete {
+  margin-left: 10px;
+  color: var(--error-color);
 }
 
 .Ordinances__Minutes__Frame {
@@ -309,21 +383,34 @@
 .Ordinances__Edit__Button{
 color: var(--orange-color);
 background-color: transparent;
-font-size: 1.3rem;
+font-size: 1rem;
 border: none;
 cursor: pointer;
 }
 
 .Ordinances__Delete__Button{
-  color: var(--error-color);
+  color: rgb(238, 1, 1);
   background-color: transparent;
-  font-size: 1.3rem;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
 }
 
-.Ordinances__Upload__button{
+.Ordinances__Upload__Button{
   background-color:var(--highlight-color);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  margin: 10px;
+  width: 30%;
+}
+
+.Ordinances__Upload__Button.true {
+  background-color: gray;
 }
 
 .Ordinances__Cancel__Button {
@@ -352,12 +439,88 @@ cursor: pointer;
 .Ordinances__Minutes__Buttons {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: auto;
+}
+
+.Ordinances__Minutes__Container {
+  border: 1px solid gray;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.Ordinances__Minutes__Container h3 {
+  margin-bottom: 10px;
+}
+
+.Ordinances__Minutes__Input__Container {
+  display: flex;
+  flex-direction: column;
+  outline: 1px solid gray;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.Ordinances__Minutes__Inputs {
+  display: flex;
+  width: 100%;
+}
+
+.Ordinances__Minutes__Input__Box {
+  color: black;
+  margin-left: 20px;
+  font-size: 1rem;
+}
+
+.Ordinances__Minutes__Card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  margin: 0 10px;
+}
+
+.Ordinances__TextArea {
+  height: 100%;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.Ordinances__TextArea:focus {
+  outline: 2px solid var(--highlight-color);
+  border: none;
+}
+
+.Ordinances__Minutes__Date__Input {
+  height: 56px;
+  border-radius: 3px;
+  width: auto;
+  border: none;
+  outline: 1px solid gainsboro;
+  padding: 0 15px;
+  background-color: transparent;
+}
+
+.Ordinances__File {
+  margin: 10px;
+  border-radius: 10px;
+  outline: 1px solid var(--highlight-color);
+  padding: 10px;
+  width: fit-content;
+}
+
+.Ordinances__File__Remove {
+  border: none;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--error-color);
+  cursor: pointer;
 }
 
 .Ordinances__Minutes__Add {
-  margin: 5px;
   background-color: var(--highlight-color);
+  min-width: 55px;
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -366,25 +529,8 @@ cursor: pointer;
   cursor: pointer;
 }
 
-.Ordinances__Minutes__Dropdown {
-  margin: 5px 5px 0px 5px;
-  background-color: var(--secondary-color);
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1rem;
-  color: white;
-  cursor: pointer;
-}
-
-.Ordinances__Minutes__Buttons > ul {
-  margin: 0px 5px 5px 5px;
-  border: 1px solid var(--secondary-color);
-  border-radius: 5px;
-  padding: 5px;
-  text-align: center;
-  list-style-type: none;
-  cursor: pointer;
+.Ordinances__Minutes__Group {
+  display: flex;
 }
 
 .Ordinances__Minutes__List:hover {
@@ -392,9 +538,12 @@ cursor: pointer;
 }
 
 .Ordinances__Delete__Button:hover,
-.Ordinances__Update__Button:hover,
-.Ordinances__Cancel__Button:hover,
 .Ordinances__Edit__Button:hover {
+  text-decoration: underline;
+}
+
+.Ordinances__Cancel__Button:hover,
+.Ordinances__Update__Button:hover {
   transform: scale(1.1);
 }
 
@@ -403,7 +552,9 @@ cursor: pointer;
 }
 
 .Ordinances__Delete__Modal__Container {
+  padding: 10px 0;
   display: flex;
+  flex-direction: column;
 }
 
 .Ordinances__Delete__Modal__Input {
@@ -411,6 +562,12 @@ cursor: pointer;
 }
 
 .Ordinances__Delete__Modal__Button {
+  margin-top: 10px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
   background-color: var(--error-color);
 }
 
@@ -520,11 +677,46 @@ cursor: pointer;
     background-color: var(--highlight-color);
   }
 
+  .Ordinances__Details h2 {
+    text-align: center;
+  }
   .Ordinances__Details__Proceedings {
     text-align: center;
   }
 
   .Ordinances__Proceedings {
     text-align: center;
+  }
+
+  .Ordinances__Minutes__Inputs {
+    flex-direction: column;
+    margin: none;
+    width: auto;
+  }
+
+  .Ordinances__Minutes__Card {
+    margin: 0;
+  }
+
+  .Ordinances__TextArea {
+    margin-top: 20px;
+  }
+
+  .Ordinances__Details__Title__Input.editing {
+    margin: 2px 0;
+  }
+
+  .Ordinances__Details__Proceedings__Input {
+    margin-left: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .Ordinances__Details__Proceedings__Button {
+    height: 40px;
+    font-size: 1.1rem;
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
   }
 }

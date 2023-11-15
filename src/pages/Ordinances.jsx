@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Form, useLocation, useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useAuth from '../hooks/useAuth';
 import CreateOrdinances from '../components/CreateOrdinances';
@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import Modal from '../components/Modal';
 import BreadCrumbs from '../components/BreadCrumbs';
 import SearchBar from '../components/SearchBar';
+import Alert from '../components/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   Pagination, 
@@ -24,12 +25,10 @@ const Ordinances = () => {
   const { status } = useParams();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
-  const [message, setMessage] = useState();
   const [loading, setLoading] = useState(true);
   const [ordinances, setOrdinances] = useState();
   const [members, setMembers] = useState();
   const [isEditing, setIsEditing] = useState(true);
-  const [dropDown, setDropdown] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
   const [minutesUrl, setMinutesUrl] = useState('');
@@ -39,13 +38,17 @@ const Ordinances = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [minCollapsed, setMinCollapsed] = useState(true);
   const [selectedOrdinance, setSelectedOrdinance] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
   const [isDateChanged, setDateChanged] = useState(false);
   const [delInputs, setDelInputs] = useState({});
   const [series, setSeries] = useState(null);
   const [currentSeries, setCurrentSeries] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
-  const [otp, setOtp] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [fileName, setFileName] = useState(null);
+  const [serverMessage, setServerMessage] = useState('');
+  const [severity, setSeverity] = useState(null);
+  const [proceedingDate, setProceedingDate] = useState({});
+  const [editingMinutes, setEditingMinutes] = useState(false);
   const [inputs, setInputs] = useState({
     date: "",
     agenda: "",
@@ -53,15 +56,18 @@ const Ordinances = () => {
     speaker: "",
   });
 
-  const [proceedingDate, setProceedingDate] = useState({});
-
   const level = roles.level;
   const role = roles.role;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [delModalOpen, setDelModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {setIsModalOpen(false); setDropdown(false)}
+  const closeModal = () => {
+    setIsModalOpen(false); 
+    setSelectedItem(null); 
+    setEditingMinutes(false); 
+    setFileName('');
+  }
   const openDelModal = (e) => 
     {
       e.preventDefault();
@@ -92,6 +98,7 @@ const Ordinances = () => {
   const handleFileChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
+    setFileName(e.target.files[0].name);
     setFile(file);
   };
 
@@ -212,14 +219,13 @@ const Ordinances = () => {
         const res = await axiosPrivate.post(`/upload-minutes?type=minutes&ordinanceId=${id}`, minuteData, {
           headers: {'Content-Type': 'multipart/form-data'}
         })
-  
-        if (res.status === 200 || 401) {
-          setMessage(res.data.message);
-        } else {
-          setMessage('Error on Uploading Ordinance')
-        }
+        setServerMessage(res.data.message);
+        setSeverity(res.status)
+        setReload(true);
+        closeModal();
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };
 
@@ -242,13 +248,13 @@ const Ordinances = () => {
       const res = await axiosPrivate.post(`/update-ordinance/${filename}?type=ordinances&series=${series}`, updateData, {
         headers: {'Content-Type': 'multipart/form-data'}
       });
-      if(res.status === 200) {
-        setMessage(res.data.message);
-      } else {
-        setMessage('Error on Updating Ordinance')
-      }
+      setServerMessage(res.data.message);
+      setSeverity(res.status)
+      setReload(true);
+      closeModal();
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status)
     }
   };
 
@@ -261,16 +267,18 @@ const Ordinances = () => {
         headers: {'Content-Type': 'application/json'}
       })
       if(res.status === 200) {
-        // setMessage(res.data.message);
         const res = await axiosPrivate.delete(`/delete-ordinance/${selectedOrdinance.file}?type=ordinances&series=${selectedOrdinance.series}`)
           .then(() => {
             setReload(true);
             closeModal();
             closeDelModal();
+            setServerMessage(res.data.message);
+            setSeverity(res.status);
           })
       }
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };
 
@@ -325,10 +333,57 @@ const Ordinances = () => {
     }
   };
 
+  const handleMinuteChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedItem((prevSelectedItem) => ({
+      ...prevSelectedItem,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateMinutes = async (e, filename, series, id) => {
+    try {
+      e.preventDefault();
+
+      const updateData = new FormData();
+      const minutes = selectedItem;
+
+      for (const [key, value] of Object.entries(minutes)) {
+        if (value) {
+          updateData.append(key, value);
+        }
+      };
+      updateData.append('file', file);
+
+      const res = await axiosPrivate.post(`/update-minutes?fileName=${filename}&type=minutes&series=${series}&id=${id}`, updateData);
+
+      setServerMessage(res.data.message);
+      setSeverity(res.status)
+      setReload(true);
+      closeModal();
+    } catch (err) {
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
+    }
+  };
+
+  // useEffect(() => {
+  //   // Retrieve the current page from local storage on component mount
+  //   const storedPage = localStorage.getItem('currentPage');
+  //   if (storedPage) {
+  //     setCurrentPage(parseInt(storedPage, 10));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   // Store the current page in local storage whenever it changes
+  //   localStorage.setItem('currentPage', currentPage?.toString());
+  // }, [currentPage]);
+
   useEffect(() => {
-    document.title = `SLIM | ${status} Ordinances`;
-    setLoading(true);
-    sendRequest()
+    const storedSeries = localStorage.getItem('currentSeries');
+
+    sendRequest(1, storedSeries || currentSeries)
       .then(({
         ordinances,
         members,
@@ -337,28 +392,52 @@ const Ordinances = () => {
         setOrdinances(ordinances);
         setMembers(members);
         setSeries(series);
-        setCurrentSeries(series.slice(-1)[0]);
+        setCurrentSeries(storedSeries || currentSeries || series.slice(-1)[0]);
+        // setCurrentPage(storedPage);
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+    setReload(false);
+  }, [ reload ]);
+
+  useEffect(() => {
+    document.title = `SLIM | ${status} Ordinances`;
+    setLoading(true);
+
+    // Check if there is a stored series value
+    const storedSeries = localStorage.getItem('currentSeries');
+    // const storedPage = localStorage.getItem('currentPage');
+
+    sendRequest(1, storedSeries || currentSeries)
+      .then(({
+        ordinances,
+        members,
+        series,
+      }) => {
+        setOrdinances(ordinances);
+        setMembers(members);
+        setSeries(series);
+        setCurrentSeries(storedSeries || currentSeries || series.slice(-1)[0]);
+        // setCurrentPage(storedPage);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
       });
     setReload(false);
-  },[ status, message, reload, ]); 
+  },[ status ]);
 
   useEffect(() => {
-    if (message) {
-      setShowAlert(true);
-
-      // Hide the alert after 3 seconds (adjust the time as needed)
-      const timer = setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-
-      // Clear the timer when the component unmounts
-      return () => clearTimeout(timer);
+    if (!initialLoad) {
+      // Save the current series value to localStorage when it changes
+      localStorage.setItem('currentSeries', currentSeries);
+      // localStorage.setItem('currentPage', currentPage);
+    } else {
+      // Set initialLoad to false after the first render
+      setInitialLoad(false);
     }
-  }, [message]);
+  }, [currentSeries, currentPage]);
 
   if (loading) {
     return <Loader />;
@@ -440,7 +519,9 @@ const Ordinances = () => {
                     key={i}
                     className='Ordinances__Link'
                     >
-                    <td data-cell='type'
+                    <td 
+                      data-cell='type'
+                      onClick={() => handleOrdinanceClick(ordinance)}
                       className={`Ordinances__Status${ordStatus(ordinance.status)}`}>
                       { ordinance.mimetype === 'application/pdf' && (<FontAwesomeIcon icon={icons.pdf}/>)}
                     </td>
@@ -453,15 +534,17 @@ const Ordinances = () => {
                     <td 
                       data-cell='status' 
                       className={`Ordinances__Status${ordStatus(ordinance.status)}`}
+                      onClick={() => handleOrdinanceClick(ordinance)}
                       >
                       <p>{ordinance.status.toUpperCase()}</p>
                     </td>
                     <td
                       data-cell='date'
-                      className='Ordinances__Date'>
+                      className='Ordinances__Date'
+                      onClick={() => handleOrdinanceClick(ordinance)}>
                         {formatDate(ordinance.createdAt)}
                     </td>
-                    <td data-cell='size'>
+                    <td data-cell='size' onClick={() => handleOrdinanceClick(ordinance)}>
                       { ordinance.size } k
                     </td>
                     <td
@@ -492,6 +575,7 @@ const Ordinances = () => {
           </div>
         </div>
       </div>
+      <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
     {selectedOrdinance && (
         <Modal isOpen={isModalOpen} closeModal={closeModal}>
@@ -537,16 +621,15 @@ const Ordinances = () => {
                     className={`Ordinances__Details__Title__Input ${isEditing ? '' : 'editing'}`}
                     name='status'
                     id='status'
-                    style={{width: '10rem'}}
                     value={selectedOrdinance.status}
                     onChange={(e) => setSelectedOrdinance({...selectedOrdinance, status: e.target.value})}
                     disabled={isEditing}>
-                      <option style={{color: 'orange'}} value="draft">Draft</option>
-                      <option style={{color: 'orange'}}value="pending">Pending</option>
-                      <option style={{color: 'green'}}value="enacted">Enacted</option>
-                      <option style={{color: 'blue'}}value="approved">Approved</option>
-                      <option style={{color: 'green'}}value="amended">Amended</option>
-                      <option style={{color: 'red'}}value="vetoed">Vetoed</option>
+                      <option value="draft">Draft</option>
+                      <option value="pending">Pending</option>
+                      <option value="enacted">Enacted</option>
+                      <option value="approved">Approved</option>
+                      <option value="amended">Amended</option>
+                      <option value="vetoed">Vetoed</option>
                   </select>
                 </label>
                 <label htmlFor="author">Author:
@@ -612,14 +695,16 @@ const Ordinances = () => {
                     <button 
                       className="Ordinances__Edit__Button" 
                       onClick={(e) => {e.preventDefault(); setIsEditing(!isEditing)}}>
-                        <FontAwesomeIcon icon={icons.pencil} />
+                        <FontAwesomeIcon icon={icons.pencil} /> Edit
                     </button>
-                    <button 
-                      className='Ordinances__Delete__Button'
-                      onClick={(e) => openDelModal(e)}
-                      >
-                        <FontAwesomeIcon icon={icons.trash}/>
-                    </button>
+                    {!isEditing && (
+                      <button 
+                        className='Ordinances__Delete__Button'
+                        onClick={(e) => openDelModal(e)}
+                        >
+                          <FontAwesomeIcon icon={icons.trash}/> Delete
+                      </button>
+                    )}
                   </div>
                 )}
                 {!isEditing && (
@@ -652,7 +737,7 @@ const Ordinances = () => {
                   onChange={handleProceedingChange}
                 />
               </label>
-              <span>to</span>
+              <span> to</span>
               <input 
                 className='Ordinances__Details__Proceedings__Input'
                 type="datetime-local"
@@ -660,7 +745,11 @@ const Ordinances = () => {
                 value={proceedingDate.endTime || ''}
                 onChange={handleProceedingChange}/>
               {isDateChanged && (
-                <button onClick={(e) => handleChangeProceedingDate(e, selectedOrdinance.file)}>Update</button>
+                <button
+                  className='Ordinances__Details__Proceedings__Button'
+                  onClick={(e) => handleChangeProceedingDate(e, selectedOrdinance.file)}
+                  >Update
+                </button>
               )}
             </div>
             ) : null }
@@ -669,9 +758,10 @@ const Ordinances = () => {
               <div className='Ordinances__Proceedings'>
                 <h3>Proceedings</h3>
                 <p>Proceedings of the Sangguniang Bayan of the Municipality of Bacolor, Province of Pampanga, held at the Session Hall on 
-                <strong> {formatDate(selectedOrdinance.proceedings)}</strong>
-                to
-                <strong>{formatDate(selectedOrdinance?.endTime).split(',')[3]}</strong>
+                <strong>
+                  {formatDate(selectedOrdinance.proceedings)} to
+                  {formatDate(selectedOrdinance?.endTime).split(',')[3]}
+                </strong>
                 </p>
               </div>
             </div>
@@ -681,7 +771,7 @@ const Ordinances = () => {
                 <div
                   className='Ordinances__PDFViewer__Button'
                   onClick={() => setCollapsed(!collapsed)}>
-                  <p>View Ordinance File</p>
+                  <p>Click to View Ordinance File</p>
                   {collapsed ? (<FontAwesomeIcon icon={icons.v}/>) : (<FontAwesomeIcon icon={icons.left}/>)}
                 </div>
                 <iframe
@@ -692,98 +782,231 @@ const Ordinances = () => {
               </div>
             </div>
             <div className="Ordinances__Minutes__Container">
-              <h3>Minutes of the Meeting for {selectedOrdinance.title.toUpperCase()}</h3>
+              <h3>Minutes of the Meetings for {selectedOrdinance.title}</h3>
               <div className='Ordinances__Minutes__Buttons'>
-                { (auth.level !== level.dlg) && 
-                  (auth.level !== level.dlg && auth.role === role.adn) && (
-                  <button
-                    className='Ordinances__Minutes__Add'
-                    onClick={() => setAddMinutes(!addMinutes)}>
-                      Add Minutes of the Meeting
-                  </button>
-                )}
+                <div className='Ordinances__Minutes__Group'>
+                    <FormControl fullWidth>
+                      <InputLabel id="minutes">Select Minutes</InputLabel>
+                      <Select
+                        labelId="minutes"
+                        id="demo-simple-select"
+                        label="Select Minutes"
+                        value={selectedItem?.date}
+                        onChange={handleChange}
+                      >
+                        {minutes ? 
+                          (minutes.map((minute, i) => (
+                          <MenuItem
+                            className='Ordinances__Minutes__List'
+                            key={i}
+                            value={minute}
+                            onClick={() => handleSelectMinutes(minute)}>
+                              {formatDate(minute.date)}
+                          </MenuItem>
+                          ))) : 
+                          ( <MenuItem>No Minutes</MenuItem> )
+                        }
+                      </Select>
+                    </FormControl>
+                    { (auth.level !== level.dlg) && 
+                      (auth.level !== level.dlg && auth.role === role.adn) && (
+                        <button
+                          className='Ordinances__Minutes__Add'
+                          onClick={() => setAddMinutes(!addMinutes)}>
+                          {!addMinutes ? (<FontAwesomeIcon icon={icons.plus} />) : (<FontAwesomeIcon icon={icons.burger} />)}
+                        </button>
+                    )}
+                  </div>
                 { (auth.level !== level.dlg && auth.role === role.adn) &&
                   addMinutes && (
-                <div>
-                  <label htmlFor="date-time">Date:
-                    <input
-                      type="datetime-local"
-                      name='date'
-                      id='date-time'
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <TextField
-                    name='agenda'
-                    label="Agenda"
-                    variant="outlined" 
-                    onChange={handleChange}/>
-                  <TextField
-                    name='speaker'
-                    label="Speaker"
-                    variant="outlined" 
-                    onChange={handleChange}/>
-                  <TextField
-                    name='description'
-                    label="Agenda"
-                    variant="outlined" 
-                    onChange={handleChange}/>
-                  <textarea
-                    rows="20"
-                    placeholder='Desription'
-                    cols="100"
-                    name='description'
-                    id='description'
-                    onChange={handleChange}
-                  />
-                  <input type="file" onChange={handleFileChange}/>
-                  <button className='Ordinances__Upload__button'onClick={(e) => handleUploadMinutes(e, selectedOrdinance._id, selectedOrdinance.series)}>Upload</button>
-                  {showAlert && <div className="CreateOrdinances__Alert">{message}</div>}
+                <div className='Ordinances__Minutes__Input__Container'>
+                  <div className='Ordinances__Minutes__Inputs'>
+                    <div className='Ordinances__Minutes__Card'>
+                      <label htmlFor="date">Date</label>
+                      <input
+                        className='Ordinances__Minutes__Date__Input'
+                        type="datetime-local"
+                        name='date'
+                        id='date'
+                        onChange={handleChange}
+                        required
+                      />
+                      <TextField
+                        name='agenda'
+                        label="Agenda"
+                        variant="outlined" 
+                        onChange={handleChange}
+                        required/>
+                      <TextField
+                        name='speaker'
+                        label="Speaker"
+                        variant="outlined" 
+                        onChange={handleChange}
+                        required/>
+                      <TextField
+                        name='description'
+                        label="Agenda"
+                        variant="outlined" 
+                        onChange={handleChange}
+                        required/>
+                    </div>
+                    <div className='Ordinances__Minutes__Card'>
+                      <textarea
+                        className='Ordinances__TextArea'
+                        rows={20}
+                        placeholder='Desription'
+                        name='description'
+                        id='description'
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className='Ordinances__File'>
+                    <label htmlFor="file">{fileName ? (`File:  ${fileName}`) : ('Select File')}
+                      <input hidden type="file" name='file' id='file' onChange={handleFileChange} required/>
+                    </label>
+                    {fileName ? (
+                          <button
+                            className='Ordinances__File__Remove'
+                            onClick={() => {
+                              document.getElementById('file').value = ''; // Clear file selection
+                              setFileName('') // Perform your additional removeFile logic
+                            }}>
+                              x
+                          </button>
+                        ) : (
+                          ''
+                        )}
+                  </div>
+                  <button 
+                    className={`Ordinances__Upload__Button ${!fileName}`}
+                    onClick={(e) => handleUploadMinutes(e, selectedOrdinance._id, selectedOrdinance.series)} 
+                    disabled={!fileName}>
+                      Upload
+                  </button>
                 </div>
               )}
-                <button
-                  className='Ordinances__Minutes__Dropdown'
-                  onClick={() => setDropdown(!dropDown)}>
-                    Select Meeting Date
-                </button>
-                {dropDown && (
-                  <ul>
-                    {minutes ? 
-                      (minutes.map((minute, i) => (
-                      <li
-                        className='Ordinances__Minutes__List'
-                        key={i}
-                        onClick={() => handleSelectMinutes(minute)}>
-                          {formatDate(minute.date)}
-                      </li>
-                      ))) : 
-                      ( <li>No Minutes</li> )
-                    }
-                  </ul>
-                )}
               </div>
               {selectedItem && minutes && (
                 <div>
-                  <div>
-                    <p>Date: {formatDate(selectedItem.date)}</p>
-                    <p>Agenda: {selectedItem.agenda}</p>
-                    <p>Description: {selectedItem.description}</p>
-                    <p>Speaker: {selectedItem.speaker}</p>
+                  <div className='Ordinances__Minutes__Data'>
+                    <div className='Ordinances__Minutes__Details'> 
+                      <span>
+                        <strong>Date:</strong> 
+                        { 
+                        !editingMinutes 
+                          ? (formatDate(selectedItem.date)) 
+                          : (<input 
+                              className='Ordinances__Minutes__Date'
+                              type="datetime-local"
+                              name='date'
+                              value={selectedItem.date.slice(0, 16)}
+                              onChange={handleMinuteChange}/>)
+                        }
+                      </span>
+                      <span>
+                        <strong>Agenda:</strong>
+                        {!editingMinutes 
+                          ? (selectedItem.agenda)
+                          : (
+                            <TextField
+                              fullWidth
+                              className='Ordinances__Minutes__Input__Box'
+                              id="agenda" 
+                              name='agenda' 
+                              value={selectedItem.agenda} 
+                              variant="standard" 
+                              onChange={handleMinuteChange}/>
+                          )
+                        }
+                      </span>
+                      <span>
+                        <strong>Speaker:</strong>
+                        {!editingMinutes
+                          ? (selectedItem.speaker)
+                          : ( 
+                            <TextField
+                              fullWidth
+                              id="speaker" 
+                              name='speaker' 
+                              value={selectedItem.speaker} 
+                              variant="standard" 
+                              onChange={handleMinuteChange}/>
+                            )
+                        }
+                      </span>
+                      <span>
+                        <strong>Description:</strong>
+                        {!editingMinutes 
+                        ? (selectedItem.description)
+                        : (<textarea
+                            className='Ordinances__Minutes__TextArea'
+                            columns={50}
+                            rows={10}
+                            name='description'
+                            value={selectedItem.description}
+                            onChange={handleMinuteChange}/>)
+                        }
+                      </span>
+                      {editingMinutes && (
+                        <span>
+                          <strong>Select File:</strong>
+                          <label 
+                            htmlFor="minute-file"
+                            className='Ordinances__Minute__File__Input'>
+                            Click Here
+                            <input type="file" id='minute-file' onChange={handleFileChange} hidden/>
+                          </label>
+                          {fileName && (<p>{fileName}</p>)}
+                          {fileName && (
+                            <button
+                              className='Ordinances__File__Remove'
+                              onClick={() => {
+                                document.getElementById('minute-file').value = ''; // Clear file selection
+                                setFileName('') // Perform your additional removeFile logic
+                              }}>
+                                x
+                            </button>
+                          )}
+                          <button onClick={(e) => handleUpdateMinutes(e, selectedItem.file, selectedItem.series, selectedItem._id)}>Update</button>
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <button
+                        className='Ordinances__Minutes Edit'
+                        onClick={() => setEditingMinutes(!editingMinutes)}
+                      >
+                        {!editingMinutes ? (
+                          <span><FontAwesomeIcon icon={icons.pencil} /> Edit</span>
+                        ) : (
+                          <span>Cancel</span>
+                        )}
+                      </button>
+                      {editingMinutes && (
+                        <button
+                          className='Ordinances__Minutes Delete'
+                          onClick={() => setEditingMinutes(!editingMinutes)}
+                        >
+                          <FontAwesomeIcon icon={icons.trash} /> Delete
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div className="Ordinances__Card__Container">
-                  <div
-                    className='Ordinances__PDFViewer__Button'
-                    onClick={() => setMinCollapsed(!minCollapsed)}>
-                    <p>View Minutes File</p>
-                    {minCollapsed ? (<FontAwesomeIcon icon={icons.v}/>) : (<FontAwesomeIcon icon={icons.left}/>)}
+                    <div
+                      className='Ordinances__PDFViewer__Button'
+                      onClick={() => setMinCollapsed(!minCollapsed)}>
+                      <p>Click to View Minutes File</p>
+                      {minCollapsed ? (<FontAwesomeIcon icon={icons.v}/>) : (<FontAwesomeIcon icon={icons.left}/>)}
+                    </div>
+                    <iframe
+                      className={`Ordinances__Minutes__Frame ${minCollapsed ? 'collapsed' : ''}`}
+                      title="PDF Viewer"
+                      src={minutesUrl} // Set the PDF file URL as the iframe source
+                    />
                   </div>
-                  <iframe
-                    className={`Ordinances__Minutes__Frame ${minCollapsed ? 'collapsed' : ''}`}
-                    title="PDF Viewer"
-                    src={minutesUrl} // Set the PDF file URL as the iframe source
-                  />
                 </div>
-              </div>
               )}
             </div>
           </div>
@@ -803,7 +1026,7 @@ const Ordinances = () => {
             <button 
               className='Ordinances__Delete__Modal__Button'
               onClick={(e) => handleDeleteOrdinance(e)}>
-              <FontAwesomeIcon icon={icons.right}/>
+              Delete
             </button>
           </div>
           

@@ -10,5 +10,39 @@
 .AttendanceEntry__Header {
   outline: 1px solid gainsboro;
   border-radius: 10px;
+  background-color: white;
   padding: 10px;
+}
+
+.AttendanceEntry__Table {
+  margin: 20px 0 20px 0;
+  background-color: white;
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  outline: 1px solid gainsboro;
+}
+
+.AttendanceEntry__Table th {
+  text-align: center;
+}
+
+.AttendanceEntry__Table td {
+  padding: 10px;
+}
+
+.AttendanceEntry__Button {
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 10px;
+  font-weight: 600;
+  color: white;
+}
+
+.AttendanceEntry__Button.false {
+  background-color: gray;
+  color: gainsboro;
 }
