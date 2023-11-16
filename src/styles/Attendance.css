@@ -26,3 +26,10 @@
   border-radius: 10px;
   padding: 10px;
 }
+
+@media only screen and (max-width: 800px) {
+  .Attendance__Content__Container {
+    display: flex;
+    flex-direction: column;
+  }
+}

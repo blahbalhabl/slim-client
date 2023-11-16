@@ -177,7 +177,7 @@ const Calendar = () => {
                 <div
                   key={i} 
                   className={`Calendar__Content ${isOngoing(proceeding.proceedings, proceeding.endTime)}`}
-                  onClick={() => nav(`/proceedings/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
+                  onClick={() => nav(`/proceedings/current/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}>
                   <div>
                     <p>{proceeding.title}</p>
                     {/* <p>{formatDate(proceeding.proceedings)}</p> */}
@@ -186,7 +186,7 @@ const Calendar = () => {
                     <p>{isOngoing(proceeding.proceedings, proceeding.endTime)}</p>
                   </div>
                   <Link 
-                    to={`/proceedings/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
+                    to={`/proceedings/current/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`} 
                     className='Calendar__Link'>
                       <FontAwesomeIcon icon={icons.share}/>
                   </Link>
