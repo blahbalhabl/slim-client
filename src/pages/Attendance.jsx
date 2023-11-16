@@ -149,7 +149,7 @@ const Attendance = () => {
               <div
                 key={i}
                 className="Attendance__Proceedings"
-                onClick={() => nav(`upcoming/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
+                onClick={() => nav(`current/${proceeding._id}/${proceeding.proceedings.split('T')[0]}-${formatTime(proceeding.proceedings)}`)}
               >
                 <p>Ordinance No.{proceeding.number}, Series of {proceeding.series} {proceeding.title}</p>
                 <p>{formatDate(proceeding.proceedings)}</p>
