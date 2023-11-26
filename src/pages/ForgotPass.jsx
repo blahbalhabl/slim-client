@@ -10,7 +10,6 @@ import '../styles/ForgotPass.css';
 const ForgotPass = () => {
   const navigate = useNavigate();
   const [send, setSend] = useState(false);
-  const [otp, setOtp] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
   const [viewConfirm, setViewConfirm] = useState(false);
   const [inputError, setInputError] = useState({
@@ -69,14 +68,21 @@ const ForgotPass = () => {
     };
   };
 
-  const verifyCode = () => {
-    if(inputs.otp === otp) {
-      // if OTP Code is correct. Invalidate the OTP code by setting it to null.
-      setOtp(null);
-      setVerify(true);
-      setInputError(false);
-    } else {
-      setInputError({otp: true})
+  const verifyCode = async () => {
+    try {
+      const res = await axios.get('/verify-otp', {
+        email: inputs.email,
+        otp: inputs.otp,
+      });
+
+      if(res.status === 200) {
+        setVerify(true);
+        setInputError(false);
+      } else {
+        setInputError({otp: true})
+      }
+    } catch (err) {
+      setInputError({otp: true});
     }
   };
 
@@ -85,25 +91,12 @@ const ForgotPass = () => {
       const res = await axios.post(`/forgot-password/${inputs.email}`);
       
       if(res.status === 200) {
-        setOtp(res.data.otp);
         setInputError(false);
         setSend(true);
-        // Set a timer to invalidate OTP after 5 minutes (300,000 milliseconds)
-        setTimeout(() => {
-          setOtp(null);
-        }, 300000);
 
         const emailData = {
           email: inputs.email,
           subject: `Forgot Password on SLIM`,
-          html: `
-            <h1>Verification Code:</h1> 
-            <h3>Verify this code if you requested the forgot password</h3>
-            </br>
-            </br>
-            <h2>${res.data.otp}</h2>
-            <p>This code will only be valid for 5 minutes</p>
-            <p>If you did not make this request please contact support.</p>`,
         };
 
         await axios.post('/forgot-email', emailData, {
@@ -116,10 +109,6 @@ const ForgotPass = () => {
         setInputError({email: true});
     }
   };
-
-  useEffect(() => {
-    
-  }, [inputs.password]);
 
   useEffect(() => {
     if (inputs.password !== inputs.confirmPassword) {
