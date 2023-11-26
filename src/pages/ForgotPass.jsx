@@ -70,9 +70,11 @@ const ForgotPass = () => {
 
   const verifyCode = async () => {
     try {
-      const res = await axios.get('/verify-otp', {
+      const res = await axios.post('/verify-otp', {
         email: inputs.email,
         otp: inputs.otp,
+      }, {
+        headers: {'Content-Type': 'application/json'}
       });
 
       if(res.status === 200) {
