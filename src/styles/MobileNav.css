@@ -9,7 +9,8 @@
     align-items: start;
     padding: 10px;
     height: max-content;
-    background-color: var(--secondary-color);
+    background-color: var(--whitesmoke-color);
+    border-bottom: 1px solid gainsboro;
     transition: ease-in-out 200ms;
   }
 
@@ -47,7 +48,7 @@
     color: black;
     text-decoration: none;
     user-select: none;
-    color: var(--tertiary-color);
+    color: var(--secondary-color);
     height: 20px;
     width: auto;
   }

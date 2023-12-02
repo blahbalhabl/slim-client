@@ -61,6 +61,7 @@ const Ordinances = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [delModalOpen, setDelModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false); 
@@ -74,6 +75,10 @@ const Ordinances = () => {
       setDelModalOpen(true)
     }
   const closeDelModal = () => setDelModalOpen(false);
+
+  const openUpdateModal = (e) => {e.preventDefault(); setUpdateModalOpen(true)};
+  const closeUpdateModal = () => setUpdateModalOpen(false);
+
   const pathnames = location.pathname.split('/').filter((item) => item !== '');
 
   const breadcrumbs = pathnames.map((name, index) => ({
@@ -113,16 +118,16 @@ const Ordinances = () => {
       }
 
       ordinances = await axiosPrivate.get(url);
-      const members = await axiosPrivate.get('/sanggunian-members');
-
+      const members = await axiosPrivate.get('/users');
       return {
         ordinances: ordinances.data.ordinances,
-        members: members.data,
+        members: members.data.users.filter((user) => user.isMember === true),
         series: ordinances.data.series,
       };
     } catch (err) {
-      console.log(err);
-      throw err;
+      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };  
 
@@ -143,7 +148,8 @@ const Ordinances = () => {
       // Clean up the URL created for the blob
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.log(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };
 
@@ -164,7 +170,8 @@ const Ordinances = () => {
         headers: {'Content-Type': 'application/json'}
       });
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   }
  
@@ -186,8 +193,9 @@ const Ordinances = () => {
       setPdfUrl(url);
       // Get Minutes of the meeting related to the clicked ordinance
       openModal();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+     setServerMessage(err.response.data.message);
+     setSeverity(err.response.status);
     }
   };
 
@@ -201,7 +209,8 @@ const Ordinances = () => {
       const urlMin = window.URL.createObjectURL(blobMin);
       setMinutesUrl(urlMin);
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };
 
@@ -223,6 +232,25 @@ const Ordinances = () => {
         setSeverity(res.status)
         setReload(true);
         closeModal();
+    } catch (err) {
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
+    }
+  };
+
+  // Confirm first on mayor to update the ordinance
+  const confirmUpdateOrdinance = async (e, filename, series) => {
+    try {
+      const confirmed =  await axiosPrivate.post('/confirm-update', {otp: inputs.otp},
+        {headers: {'Content-Type': 'application/json'}});
+
+      if(confirmed) {
+        handleUpdateOrdinance(e, filename, series);
+      } else {
+        setServerMessage('Invalid OTP');
+        setSeverity(400);
+      }
+
     } catch (err) {
       setServerMessage(err.response.data.message);
       setSeverity(err.response.status);
@@ -641,19 +669,20 @@ const Ordinances = () => {
                     onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, author: e.target.value })}
                     disabled={isEditing}
                   >
+                    <option value={selectedOrdinance.author}>{selectedOrdinance.author}</option>
                     {members
-                      .filter((member) => member.name !== selectedOrdinance.coAuthor)
+                      .filter((member) => (member.username !== selectedOrdinance.coAuthor) && (member.username !== selectedOrdinance.author))
                       .map((member, i) => (
                       <option
                         key={i}
-                        value={member.name}
+                        value={member.username}
                       >
-                        {member.name}
+                        {member.username}
                       </option>
                     ))}
                   </select>
                 </label>
-                {selectedOrdinance.coAuthor && (
+                {selectedOrdinance?.coAuthor && (
                   <label htmlFor="author">Co-Author:
                     <select
                       className={`Ordinances__Details__Title__Input ${isEditing ? '' : 'editing'}`}
@@ -663,14 +692,15 @@ const Ordinances = () => {
                       onChange={(e) =>setSelectedOrdinance({ ...selectedOrdinance, coAuthor: e.target.value })}
                       disabled={isEditing}
                     >
+                      <option value={selectedOrdinance.coAuthor}>{selectedOrdinance.coAuthor}</option>
                       {members
-                        .filter((member) => member.name !== selectedOrdinance.author)
+                        .filter((member) => (member.username !== selectedOrdinance.coAuthor) && (member.username !== selectedOrdinance.author))
                         .map((member, i) => (
                         <option
                           key={i}
-                          value={member.name}
+                          value={member.username}
                         >
-                          {member.name}
+                          {member.username}
                         </option>
                       ))}
                     </select>
@@ -716,7 +746,7 @@ const Ordinances = () => {
                     </button>
                     <button
                       className='Ordinances__Update__Button'
-                      onClick={(e) => handleUpdateOrdinance(e, selectedOrdinance.file, selectedOrdinance.series)}>
+                      onClick={(e) => openUpdateModal(e)}>
                         Update
                     </button>
                   </div>
@@ -1039,6 +1069,25 @@ const Ordinances = () => {
               variant="outlined"
               onChange={handleDelChange}/>
           )}
+        </div>
+      </Modal>
+      <Modal
+        isOpen={updateModalOpen}
+        closeModal={closeUpdateModal}>
+        <div className="Ordinances__Update__Modal">
+          <h3>Enter OTP</h3>
+          <TextField
+            className='Ordinances__Update__Modal__Input'
+            name='otp'
+            label="Enter OTP"
+            type='number'
+            variant="outlined"
+            onChange={handleChange}/>
+          <button 
+            className='Ordinances__Update__Modal__Button'
+            onClick={(e) => {confirmUpdateOrdinance(e, selectedOrdinance.file, selectedOrdinance.series); closeUpdateModal()}}>
+            Update
+          </button>
         </div>
       </Modal>
     </>

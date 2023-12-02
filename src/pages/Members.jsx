@@ -17,8 +17,8 @@ const Members = () => {
 
   const sendRequest = async () => {
     try {
-      const members = await axiosPrivate.get('/sanggunian-members');
-      setMembers(members.data);
+      const members = await axiosPrivate.get('/users');
+      setMembers(members.data.users.filter((user) => user?.isMember === true));
     } catch (err) {
       console.error(err);
     }
@@ -59,7 +59,7 @@ const Members = () => {
             {members.map((member, i) => (
                 <tr key={i}>
                   <td data-cell='name'>
-                    <p>{member.name}</p>
+                    <p>{member.username}</p>
                   </td>
                   <td data-cell='position'>
                     <p>{member.position}</p>

@@ -13,9 +13,12 @@ const useRefreshToken = () => {
         ...prev,
         id: res.data.id,
         avatar: res.data.avatar,
-        name: res.data.name,
+        username: res.data.username,
+        email: res.data.email,
         role: res.data.role,
         level: res.data.level,
+        isMember: res.data.isMember,
+        position: res.data.position,
         otp: res.data.otp,
         token: res.data.token, }
     });

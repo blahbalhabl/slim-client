@@ -94,8 +94,6 @@ const ForgotPass = () => {
       
       if(res.status === 200) {
         setInputError(false);
-        setSend(true);
-
         const emailData = {
           email: inputs.email,
           subject: `Forgot Password on SLIM`,
@@ -103,7 +101,9 @@ const ForgotPass = () => {
 
         await axios.post('/forgot-email', emailData, {
           headers: {'Content-Type': 'application/json'}
-        }).catch((err) => {
+        })
+        .then(setSend(true))
+        .catch((err) => {
           console.log('Error sending email:', err);
         });
       }

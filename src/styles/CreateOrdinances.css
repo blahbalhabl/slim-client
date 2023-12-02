@@ -18,7 +18,6 @@
 .CreateOrdinances__Container > form {
   display: flex;
   flex-direction: column;
-  /* align-items: flex-end; */
 }
 
 .CreateOrdinances__Container > h3 {
@@ -39,8 +38,8 @@
 .CreateOrdinances__Content {
   height: max-content;
   flex-grow: 1;
-  /* outline: 1px solid gainsboro; */
-  padding: 20px 0 20px 0;
+  outline: 1px solid gainsboro;
+  padding: 20px 10px;
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -138,5 +137,11 @@
 
   .CreateOrdinances__Button {
     font-size: 1rem;
+  }
+
+  .CreateOrdinances__Container {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
   }
 }

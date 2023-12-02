@@ -5,6 +5,16 @@ import { roles } from './userRoles';
 
 const role = roles.role
 
+const links = {
+  all: '/records/ordinances/all',
+  draft: '/records/ordinances/draft',
+  enacted: '/records/ordinances/enacted',
+  approved: '/records/ordinances/approved',
+  amended: '/records/ordinances/amended',
+  vetoed: '/records/ordinances/vetoed',
+  proceedings: '/proceedings',
+};
+
 export const sidebarAccordion = [
   {
     title: 'Reports',
@@ -12,7 +22,9 @@ export const sidebarAccordion = [
     contents: [
       {
         title: (
-          <Link className='Sidebar__Button' to={'/records/ordinances/all'}>
+          <Link 
+            className={`Sidebar__Button`}
+            to={links.all}>
             <FontAwesomeIcon icon={icons.reports} />
             <p>List of Ordinances</p>
           </Link>
@@ -20,7 +32,9 @@ export const sidebarAccordion = [
       },
       {
         title: (
-          <Link className='Sidebar__Button' to={'/records/ordinances/draft'}>
+          <Link 
+            className={`Sidebar__Button`}
+            to={links.draft}>
             <FontAwesomeIcon icon={icons.pencil} />
             <p>List of Draft Ordinances</p>
           </Link>
@@ -28,32 +42,32 @@ export const sidebarAccordion = [
       },
       {
         title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/enacted'}>
+                  className={`Sidebar__Button`}
+                  to={links.enacted}>
                     <FontAwesomeIcon icon={icons.like} />
                     <p>List of Enacted Ordinances</p>
                 </Link>
       },
       {
         title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/approved'}>
+                  className={`Sidebar__Button`}
+                  to={links.approved}>
                     <FontAwesomeIcon icon={icons.check} />
                     <p>List of Approved Ordinances</p>
                 </Link>
       },
       {
         title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/amended'}>
+                  className={`Sidebar__Button`}
+                  to={links.amended}>
                     <FontAwesomeIcon icon={icons.pencil} />
                     <p>List of Amended Ordinances</p>
                 </Link>
       },
       {
         title:  <Link
-                  className='Sidebar__Button'
-                  to={'/records/ordinances/vetoed'}>
+                  className={`Sidebar__Button`}
+                  to={links.vetoed}>
                     <FontAwesomeIcon icon={icons.eye} />
                     <p>List of Vetoed Ordinances</p>
                 </Link>
@@ -66,7 +80,9 @@ export const sidebarAccordion = [
     contents: [
       {
         title: (
-          <Link className='Sidebar__Button' to={'/proceedings'}>
+          <Link 
+            className={`Sidebar__Button`}
+            to={links.proceedings}>
             <FontAwesomeIcon icon={icons.horn} />
             <p>Proceedings</p>
           </Link>

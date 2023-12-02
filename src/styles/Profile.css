@@ -1,6 +1,7 @@
 .Profile {
   padding: 10px;
   flex-grow: 1;
+  color: var(--secondary-color);
 }
 
 .Profile__Container {
@@ -14,41 +15,127 @@
   display: flex;
   flex-direction: column;
   background-color: white;
-  width: 30%;
+  min-width: 20%;
+  max-width: 30%;
   border-radius: 15px;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  outline: 1px solid gainsboro;
 }
 
 .Profile__Card__Right {
   margin: 10px;
-  padding: 20px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   background-color: white;
   flex-grow: 1;
-  border-radius: 15px;
-  box-shadow: 3px 3px 3px #b6b5b5;
+  border-radius: 10px;
+  outline: 1px solid gainsboro;
   height: auto;
+}
+
+.Profile__Card__Right h2 {
+  font-size: 1.3rem;
+  padding: 0 0 30px 0;
+  border-bottom: 1px solid gainsboro;
+}
+
+.Profile__Info {
+  padding: 20px 0;
+}
+
+.Profile__Info__Item {
+ display: flex;
+ align-items: center;
+ margin: 20px 0;
+}
+
+.Profile__Info__Item > p {
+  text-transform: uppercase;
+  font-size: .9rem;
+  width: 20%;
+  color: gray;
+}
+
+.Profile__Info__Input {
+  font-size: 1rem;
+  padding: 10px;
+  border: none;
+  outline: 1px solid gray;
+  border-radius: 5px;
+}
+
+.Profile__Info__Input.disabled {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 10px 0;
+}
+
+.Profile__Info__Input:focus {
+  border: none;
+  outline: 1px solid var(--highlight-color);
+  box-shadow: 0px 0px 2px var(--highlight-color);
+}
+
+.Profile__Info__Edit__Button {
+  border: 1px solid gainsboro;
+  background-color: transparent;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  color: var(--secondary-color);
+  transition: all 200ms;
+}
+
+.Profile__Info__Cancel__Button {
+  border: none;
+  background-color: transparent;
+  color: var(--secondary-color);
+  font-weight: 500;
+  font-size: .9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-left: 20px;
+  height: 100%;
+  transition: all 200ms;
+}
+
+.Profile__Info__Cancel__Button:hover,
+.Profile__Info__Edit__Button:hover {
+  background-color: whitesmoke;
+}
+
+.Profile__Items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid gainsboro;
 }
 
 .Profile__Avatar {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-inline: auto;
-  height: 300px;
-  width: 300px;
+  height: auto;
+  width: fit-content;
   border-radius: 500px;
   overflow: hidden;
   background-color: transparent;
-  outline: 1px solid gainsboro;
   z-index: 0;
 }
 
 .Profile__Avatar__Img {
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: 90%;
   border-radius: 500px;
   user-select: none;
   z-index: 0;
+  outline: 1px solid gainsboro;
+  z-index: 10;
 }
 
 .Profile__Avatar__Change {
@@ -63,7 +150,7 @@
   top: 0;
   left: 0;
   border-radius: 500px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(141, 141, 141, 0.2);
   z-index: 10;
 }
 
@@ -93,14 +180,26 @@
 }
 
 .Profile__Modal {
-  width: 400px;
+  width: 500px;
+  padding: 0 20px;
+}
+
+.Profile__Modal > h2 {
+  padding-bottom: 20px;
+  border-bottom: 1px solid gainsboro;
 }
 
 .Profile__Modal__Form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+  padding: 20px 0 0 0;
+}
+
+.Profile__Modal__Button__Group {
+  display: flex;
+  justify-content: end;
+  margin-top: 20px;
 }
 
 .Profile__Modal__Button {
@@ -109,16 +208,31 @@
   border-radius: 5px;
   padding: 15px;
   font-size: 1rem;
-  width: 100%;
-  height: 10%;
   cursor: pointer;
   color: white;
   user-select: none;
   transition: ease-in-out 200ms;
 }
 
+.Profile__Modal__Cancel__Button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 20px;
+  color: var(--secondary-color);
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 200ms;
+  padding: 15px 20px;
+  height: 100%;
+}
+
 .Profile__Modal__Button:hover {
   border-radius: 40px;
+}
+
+.Profile__Modal__Cancel__Button:hover {
+  background-color: gainsboro;
 }
 
 .Profile__Password__Toggle {
@@ -131,12 +245,25 @@
 }
 
 .Profile__Google__Auth {
-  margin-top: 10px;
-  width: max-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-top: 10px; */
+  padding: 20px 0;
 }
 
-.Profile__Google__Auth > h3 {
-  font-size: 1rem;
+.Profile__Google__Auth__Con {
+  max-width: 75%;
+}
+
+.Profile__Google__Auth > p {
+  max-width: 60%;
+}
+
+.Profile__Google__Auth__Toggle {
+  display: flex;
+  align-items: center;
+  width: fit-content;
 }
 
 .Profile__Card__Info {
@@ -144,19 +271,110 @@
   height: max-content;
 }
 
+.Profile__Authenticator__Container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-top: 20px; */
+  border: 1px solid gainsboro;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.Profile__Authenticator__Item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .Profile__Card__Right__Button {
-  background-color: var(--highlight-color);
+  /* background-color: var(--highlight-color); */
   border: none;
   border-radius: 5px;
-  padding: 15px;
-  width: 40%;
-  font-size: 1rem;
+  outline: 1px solid gainsboro;
+  background-color: white;
+  padding: 10px 20px;
+  font-size: .9rem;
   font-weight: 600;
+  color: var(--secondary-color);
   transition: ease-in-out 200ms;
+  cursor: pointer;
 }
 
 .Profile__Card__Right__Button:hover {
   border-radius: 40px;
+  background-color: whitesmoke;
+}
+
+.Profile__Otp__Modal__Container {
+  width: 450px;
+  padding: 0 20px;
+}
+
+.Profile__Otp__Modal__Title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid gainsboro;
+  padding: 0 0 20px 0;
+}
+
+.Profile__Otp__Modal__Text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
+}
+
+.Profile__Otp__Modal__Text > p {
+  width: 90%;
+}
+
+.Profile__Otp__Modal__Icon {
+  color: var(--error-color);
+  font-size: 1.5rem;
+}
+.Profile__Otp__Modal__Input {
+  border-bottom: 1px solid gainsboro;
+  padding-bottom: 10px;
+}
+
+.Profile__Otp__Modal__Buttons {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.Profile__Otp__Modal__Disable__Button {
+  background-color: var(--error-color);
+  padding: 15px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.Profile__Nav {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 60%;
+  margin-inline: auto;
+  list-style: none;
+  padding-left: 0;
+}
+
+.Profile__Nav > li {
+  font-weight: 500;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.Profile__Nav > li:hover {
+  text-decoration: underline;
 }
 
 @media only screen and (max-width: 800px) {
@@ -175,5 +393,57 @@
 
   .Profile__Card__Right__Button {
     width: 100%;
+  }
+
+  .Profile__Info__Item,
+  .Profile__Info__Item > p {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .Profile__Container__Card {
+    max-width: 100%;
+  }
+
+  .Profile__Google__Auth {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Profile__Google__Auth__Con {
+    max-width: 100%;
+  }
+
+  .Profile__Google__Auth > p {
+    padding: 0;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .Profile__Authenticator__Container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Profile__Items {
+    flex-direction: column;
+  }
+
+  .Profile__Modal {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .Profile__Otp__Modal__Container {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .Profile__Card {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }

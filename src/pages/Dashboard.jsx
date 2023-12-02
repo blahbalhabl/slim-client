@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   return (
     <div className="Dashboard">
-      <div className="Dashboard__Header">
+      <div className="Dashboard__Container">
         <div className="Dashboard__Info">
           {auth && (
             <p>Welcome back, {auth.name}, {auth.role.toLowerCase()}</p>
