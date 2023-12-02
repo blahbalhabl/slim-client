@@ -30,6 +30,7 @@ const CreateOrdinances = () => {
   const [inputs, setInputs] = useState({
     author: '',
     coAuthor: '',
+    series: new Date().getFullYear(),
   });
   const [file, setFile] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,13 +46,14 @@ const CreateOrdinances = () => {
 
   const getAuthors = async () => {
     try {
-      const res = await axiosPrivate.get('/sanggunian-members');
-      const members = res.data;
+      const res = await axiosPrivate.get('/users');
+      const members = res.data.users.filter((user) => user?.isMember === true);
       return {
         members: members,
       }
     } catch (err) {
-      console.error(err);
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
     }
   };  
 
@@ -149,7 +151,29 @@ const CreateOrdinances = () => {
                   helperText={inputErr.number && `e.g. 01`}
                   onChange={handleChange}
                   variant="outlined" />
-                <TextField
+                <FormControl fullWidth>
+                <InputLabel id="author-id">Author</InputLabel>
+                <Select
+                  labelId="series-id"
+                  name='series'
+                  id="series-id"
+                  label="Series"
+                  margin='dense'
+                  // value={inputs.series}
+                  required
+                  onChange={handleChange}
+                >
+                  {members && members.map((member, i) => (
+                    <MenuItem
+                      key={i}
+                      value={member.username}
+                    >
+                      {member.username}
+                    </MenuItem>
+                  ))}
+                </Select>
+                </FormControl>
+                {/* <TextField
                   error={inputErr.series}
                   className='CreateOrdinances__Input'
                   name='series' 
@@ -159,7 +183,7 @@ const CreateOrdinances = () => {
                   required
                   helperText={inputErr.series && `e.g. 2021`}
                   onChange={handleChange}
-                  variant="outlined" />
+                  variant="outlined" /> */}
                 <TextField
                   className='CreateOrdinances__Input'
                   name='title' 
@@ -184,9 +208,9 @@ const CreateOrdinances = () => {
                     {members && members.map((member, i) => (
                       <MenuItem
                         key={i}
-                        value={member.name}
+                        value={member.username}
                       >
-                        {member.name}
+                        {member.username}
                       </MenuItem>
                     ))}
                   </Select>

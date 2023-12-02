@@ -4,7 +4,8 @@
   align-items: center;
   flex-grow: 1;
   /* background-color: rgba(226, 226, 226, 0.2); */
-  height: 90%;
+  /* height: 90%; */
+  min-height: 100%;
 }
 
 .loader {

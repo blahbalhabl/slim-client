@@ -2,22 +2,20 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: var(--secondary-color);
+    /* background-color: var(--secondary-color); */
     /* border-bottom: 0.1px inset var(--tertiary-color); */
     padding: 10px 0px 10px 20px;
     cursor: pointer;
+    border-radius: 7px;
 }
 
 .Accordion.active.color {
-    background-color: var(--highlight-color);
+	background-color: rgba(28, 176, 154, .2);
+  font-weight: 500;
 }
 
 .Accordion.active > .Accordion__Title {
-    color: white;
-}
-
-.Accordion:hover {
-    background-color: darkslateblue;
+	color: var(--highlight-color);
 }
 
 .Accordion__Title {
@@ -27,13 +25,16 @@
     width: 100%;
     user-select: none;
     height: 20px;
-    color: var(--tertiary-color);
+    color: var(--secondary-color);
+    font-size: 1.1rem;
 }
 
 .Accordion__Text {
-    margin-left: 10%;
+    /* margin-left: 10%; */
     flex-grow: 1;
     text-align: left;
+    font-size: 1rem;
+		font-weight: 500;
   }
 
 .Accordion__Icon {
@@ -43,7 +44,7 @@
 
 .Accordion__Content {
     /* padding-left: 5px; */
-    border-left: 5px solid var(--highlight-color);
+    /* border-left: 5px solid var(--highlight-color); */
     max-height: 0;
     font-size: .95rem;
     overflow: hidden;
@@ -53,7 +54,7 @@
 
 .Accordion__Content.active {
     /* padding-left: 5px; */
-    border-left: 5px solid var(--highlight-color);
+    /* border-left: 5px solid var(--highlight-color); */
     max-height: 400px;
     font-size: .95rem;
     display: flex;
@@ -69,20 +70,27 @@
 }
 
 .Accordion > span {
+		opacity: 0;
     max-height: 0;
-    width: 0;
+    max-width: 0;
     position: relative;
     transition: all 200ms;
 }
 
 .Accordion.collapsed:hover > span {
+		opacity: 1;
     position: absolute;
-    width: 200px;
+		min-width: 300px;
+    max-width: 400px;
     max-height: max-content;
-    left: 100%;
+    left: 55px;
     top: 0;
-    background-color: var(--secondary-color);
+    background-color: white;
     border-left: 5px solid var(--highlight-color);
+		border-radius: 5px;
+		z-index: 10000;
+		outline: 1px solid gainsboro;
+		transition: all 200ms;
 }
 
 .Accordion > span > div > div {

@@ -47,10 +47,13 @@ const Accordion = ({ data, collapse, userRole }) => {
                 onClick={() => toggleAccordion(i)}
               >
                 <div className="Accordion__Title">
-                  <FontAwesomeIcon icon={icons[item.title.toLowerCase()]} />
+                  {collapsed && (
+                    <FontAwesomeIcon icon={icons[item.title.toLowerCase()]} />
+                  )}
+                  
                   {!collapse && (
                     <>
-                      <div className="Accordion__Text">{item.title}</div>
+                      <p className="Accordion__Text">{item.title}</p>
                       <span className="Accordion__Icon">
                         {selected === i ? <FontAwesomeIcon icon={icons.left} /> : <FontAwesomeIcon icon={icons.down} />}
                       </span>
@@ -85,7 +88,7 @@ const Accordion = ({ data, collapse, userRole }) => {
                 {item.contents.map((content, j) => (
                   <div key={j}>
                     {!collapse && (
-                      <div>{content.title}</div>
+                      <div style={{marginTop: '5px'}}>{content.title}</div>
                     )}
                   </div>
                 ))}

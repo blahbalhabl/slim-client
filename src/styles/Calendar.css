@@ -5,7 +5,8 @@
   flex-grow: 1;
   border-radius: 15px;
   max-height: 100vh;
-  max-width: 20%;
+  min-width: 20rem;
+  max-width: 21%;
   background-color: white;
   outline: 1px solid gainsboro;
   padding: 20px;

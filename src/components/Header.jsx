@@ -124,7 +124,7 @@ const Header = () => {
               </span>
               )}
             <p>
-              {auth.name.toUpperCase()}
+              {auth.username.toUpperCase()}
             </p>
             <div>
               <Tooltip data={headerTooltip}/>

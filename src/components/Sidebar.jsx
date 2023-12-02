@@ -43,7 +43,7 @@ const Sidebar = () => {
     <div className={`Sidebar${collapsed}`}>
       <div className='Sidebar__Top'>
         <FontAwesomeIcon
-          className='Sidebar__Burger'
+          className={`Sidebar__Burger${collapsed}`}
           onClick={toggleSidebar}
           icon={icons.burger}
         />

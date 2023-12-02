@@ -15,16 +15,12 @@
   background-color: var(--highlight-color);
 }
 
-.Dashboard__Header {
-  flex-grow: 1;
-}
-
 .Dashboard__Container {
   flex-grow: 1;
 }
 
 .Dashboard__Title {
-  padding: 20px 20px 20px 0px;
+  padding: 20px 20px 20px 0;
   width: auto;
   font-size: 2rem;
   font-weight: 600;
@@ -37,5 +33,11 @@
 
   .Dashboard__Info {
     margin-right: 0;
+  }
+}
+
+@media only screen and (max-width: 380px) {
+  .Dashboard {
+    padding: 0;
   }
 }

@@ -27,8 +27,10 @@
 
 .BreadCrumbs__List {
     display: flex;
+    align-items: center;
     gap: 10px;
-    font-size: 1rem;
+    font-size: .9rem;
+    font-weight: 400;
 }
 
 .BreadCrumbs__List > label {

@@ -31,7 +31,8 @@ import { faPencil,
   faEllipsis,
   faChevronLeft,
   faShare,
-  faChevronRight, } from '@fortawesome/free-solid-svg-icons';
+  faChevronRight,
+  faTriangleExclamation, } from '@fortawesome/free-solid-svg-icons';
 
 export const icons = {
   reports: faScroll,
@@ -68,4 +69,5 @@ export const icons = {
   search: faMagnifyingGlass,
   ellipsis: faEllipsis,
   share: faShare,
+  danger: faTriangleExclamation,
 };

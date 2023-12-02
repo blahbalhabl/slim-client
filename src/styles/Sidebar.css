@@ -2,61 +2,71 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0px 10px 0px;
-  background-color: var(--secondary-color);
-  width: 15vw;
+  padding: 10px;
+  /* background-color: var(--secondary-color); */
+  background-color: transparent;
+  width: 300px;
   height: auto;
-  color: var(--tertiary-color);
+  /* color: var(--tertiary-color); */
   transition: width ease-in-out 0.2s;
   z-index: 10;
 }
 
 .Sidebar__Buttons {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   margin-top: 20px;
+  gap: 5px;
 }
 
 .Sidebar__Button {
   display: flex;
   align-items: center;
   padding: 10px 0px 10px 20px;
-  /* border-bottom: 0.1px inset var(--tertiary-color); */
   transition: ease 200ms; 
   color: black;
   text-decoration: none;
   user-select: none;
-  color: var(--tertiary-color);
+  color: var(--secondary-color);
   height: 20px;
+  border-radius: 7px;
+  font-size: 1.2rem;
 }
 
 .Sidebar__Button > p{
   margin-left: 10%;
+  font-size: 1rem;
 }
 
 .Sidebar__Button:hover {
-  background-color: darkslateblue;
+  background-color: gainsboro;
 }
 
 .Sidebar__Button.active {
-  background-color: var(--highlight-color);
-  color: white;
+  background-color: rgba(28, 176, 154, .2);
+  color: var(--highlight-color);
+  font-weight: 500;
 }
 
 .Sidebar__Button > span {
   display: none;
   position: relative;
-  background-color: var(--secondary-color);
+  background-color: white;
   border-radius: 5px;
-  color: white;
+  color: var(--secondary-color);
   padding: 5px;
+  border: 1px solid gainsboro;
+  font-size: .9rem;
 }
 
 .Sidebar__Button.collapsed:hover > span {
   position: absolute;
-  left: 60px;
+  left: 80px;
   display: block;
   width:  min-content;
   white-space: wrap;
+  font-weight: 500;
 }
 
 .Sidebar__Top {
@@ -64,20 +74,29 @@
   width: 100%;
   justify-content: right;
   align-items: center;
-  padding-right: 20px;
+  /* padding-right: 20px; */
 }
 
 .Sidebar__Burger {
+  /* margin-inline: 10px; */
   padding: 7px;
   border-radius: 5px;
-  background-color: var(--highlight-color);
-  color: white;
+  background-color: gainsboro;
+  color: var(--secondary-color);
   font-size: 1.2rem;
   cursor: pointer;
+  transition: ease 200ms;
+}
+
+.Sidebar__Burger.collapsed {
+  padding: 7px 20px;
 }
 
 .Sidebar.collapsed {
-  width: 53px;
+  width: 58px;
+  border-right: 1px solid gainsboro;
+  box-shadow: 0px 0px 3px gainsboro;
+  background-color: rgba(65, 90, 118, 0.05); 
   transition: width ease-in-out 0.2s;
 }
 

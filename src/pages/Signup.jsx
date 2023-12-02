@@ -83,6 +83,10 @@ const Signup = () => {
         role: inputs.role,
         level: inputs.level,
         isMember: isMember,
+        position: inputs?.position,
+        branch: inputs?.level,
+        startTerm: inputs?.startTerm,
+        endTerm: inputs?.endTerm,
       };
 
       const res = await axiosPrivate.post('/signup', userData, {
@@ -104,6 +108,7 @@ const Signup = () => {
             <p>email: ${inputs.email}</p>
             <p>password: ${defaultPassword}</p>
             <p>Enter this code to Google Authenticator:</p>
+            <img src="${otpAuthUrl}" alt="QR Code for 2FA" />
             <p>${res.data.secret}</p>
             <p>Make sure once logged in to change password right away.</p>`,
         };
@@ -114,22 +119,22 @@ const Signup = () => {
           console.log('Error sending email:', err);
         });
         // Check if the user is a member and make an additional request
-        if (isMember) {
-          const memberData = {
-            email: inputs.email,
-            name: inputs.username,
-            position: inputs.position,
-            branch: inputs.level,
-            startTerm: inputs.startTerm,
-            endTerm: inputs.endTerm,
-          };
+        // if (isMember) {
+        //   const memberData = {
+        //     email: inputs.email,
+        //     name: inputs.username,
+        //     position: inputs.position,
+        //     branch: inputs.level,
+        //     startTerm: inputs.startTerm,
+        //     endTerm: inputs.endTerm,
+        //   };
 
-          await axiosPrivate.post('/new-member', memberData, {
-            headers: { 'Content-Type': 'application/json' },
-          }).catch((err) => {
-            console.log('Error creating new member:', err);
-          });
-        }
+        //   await axiosPrivate.post('/new-member', memberData, {
+        //     headers: { 'Content-Type': 'application/json' },
+        //   }).catch((err) => {
+        //     console.log('Error creating new member:', err);
+        //   });
+        // }
       }
     } catch (err) {
       console.log('Error:', err);

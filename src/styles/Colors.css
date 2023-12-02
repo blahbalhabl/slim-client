@@ -1,9 +1,9 @@
 :root {
   --primary-color: #701d0b;
-  --secondary-color: #364150;
+  --secondary-color: rgb(54, 64, 79);
   --tertiary-color: #b4bcc8;
   --error-color: #C1121F;
-  --highlight-color: #1caf9a;
+  --highlight-color: rgb(28, 176, 154);
   --orange-color:#ffb703;
   --whitesmoke-color: rgb(249, 249, 249);
 }
