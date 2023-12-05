@@ -179,7 +179,7 @@ const Attendance = () => {
                   <p>Ordinance No.{ordinance.number}, Series of {ordinance.series} {ordinance.title}</p>
                   <p>{formatDate(pastProceeding.startTime)}</p>
                   <p>{formatDate(pastProceeding.endTime).split(',')[3]}</p>
-                  <p>{ordinance?.status?.toUpperCase()}</p>
+                  <p className={`Attendance__Proceedings__Status ${ordinance.status.toLowerCase()}`}>{ordinance.status.toUpperCase()}</p>
                 </div>
               ))
           ) : (
