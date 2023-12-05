@@ -1075,19 +1075,27 @@ const Ordinances = () => {
         isOpen={updateModalOpen}
         closeModal={closeUpdateModal}>
         <div className="Ordinances__Update__Modal">
-          <h3>Enter OTP</h3>
-          <TextField
-            className='Ordinances__Update__Modal__Input'
-            name='otp'
-            label="Enter OTP"
-            type='number'
-            variant="outlined"
-            onChange={handleChange}/>
-          <button 
-            className='Ordinances__Update__Modal__Button'
-            onClick={(e) => {confirmUpdateOrdinance(e, selectedOrdinance.file, selectedOrdinance.series); closeUpdateModal()}}>
-            Update
-          </button>
+          <h3>Confirm Ordinance Update</h3>
+          <div className='Ordinances__Update__Modal__Content'>
+            <p>The Mayor update confirmation is required to update existing the ordinance by providing the (TOTP) of the Mayor below.</p>
+            <TextField
+              fullWidth
+              className='Ordinances__Update__Modal__Input'
+              name='otp'
+              label="Enter OTP"
+              type='number'
+              variant="outlined"
+              onChange={handleChange}/>
+          </div>
+          <div className='Ordinance__Update__Modal__Buttons'>
+            <button className='Ordinances__Update__Cancel__Button' onClick={closeUpdateModal}>Cancel</button>
+            <button 
+              className='Ordinances__Update__Modal__Button'
+              onClick={(e) => {confirmUpdateOrdinance(e, selectedOrdinance.file, selectedOrdinance.series); closeUpdateModal()}}>
+              Update
+            </button>
+          </div>
+          
         </div>
       </Modal>
     </>

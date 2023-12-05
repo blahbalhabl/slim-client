@@ -571,6 +571,61 @@ cursor: pointer;
   background-color: var(--error-color);
 }
 
+.Ordinances__Update__Modal {
+  max-width: 450px;
+}
+
+.Ordinances__Update__Modal > h3 {
+  border-bottom: 1px solid gainsboro;
+  padding: 10px 0;
+}
+
+.Ordinances__Update__Modal__Content {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Ordinance__Update__Modal__Buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid gainsboro;
+  padding: 10px 0;
+}
+
+.Ordinances__Update__Cancel__Button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-color);
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 200ms;
+  padding: 15px 20px;
+  height: 100%;
+}
+
+.Ordinances__Update__Cancel__Button:hover {
+  background-color: gainsboro;
+}
+
+.Ordinances__Update__Modal__Button {
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+  user-select: none;
+  transition: ease-in-out 200ms;
+}
+
+.Ordinances__Update__Modal__Button:hover {
+  border-radius: 40px;
+}
 
 @media only screen and (max-width: 800px) {
   .Ordinances__Top__Header {
