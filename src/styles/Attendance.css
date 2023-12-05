@@ -16,15 +16,39 @@
 
 .Attendance__Card {
   outline: 1px solid gainsboro;
+  background-color: white;
   padding: 10px;
   border-radius: 10px;
 }
 
 .Attendance__Proceedings {
-  background-color: gainsboro;
+  /* background-color: gainsboro; */
+  outline: 1px solid gainsboro;
+  background-color: white;
   margin: 10px 0 10px 0;
   border-radius: 10px;
   padding: 10px;
+}
+
+.Attendance__Proceedings:hover {
+  cursor: pointer;
+  background-color: var(--whitesmoke-color);
+
+}
+
+.Attendance__Proceedings__Status {
+  padding: 4px;
+  width: fit-content;
+  border-radius: 5px;
+  font-size: .9rem;
+  margin: 5px 0;
+  font-weight: 500;
+}
+
+.Attendance__Proceedings__Status.draft {
+  background-color: rgba(255, 165, 0, 0.2);
+  outline: 1px solid orange;
+  color: orange;
 }
 
 @media only screen and (max-width: 800px) {
