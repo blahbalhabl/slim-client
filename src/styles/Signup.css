@@ -130,13 +130,53 @@
   width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
-  /* background-color: whitesmoke; */
   outline: 1px solid gainsboro;
   padding: 10px;
 }
 
-.Signup__Users__Body > td {
-  padding: 10px;
+.Signup__Users__Body > tr > td, th {
+  padding: 15px;
+}
+
+.Signup__Users__Table__Action {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Signup__Users__Table__Action__Button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 10px;
+  padding-inline: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.Signup__Users__Table__Action__Button:hover {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.Signup__Users__Table__Action__Button.edit {
+  color: orange;
+}
+
+.Signup__Users__Table__Action__Button.delete {
+  color: red;
+}
+
+.Signup__Users__Table__Action__Button.edit:hover {
+  background-color: orange;
+  color: white;
+}
+
+.Signup__Users__Table__Action__Button.delete:hover {
+  background-color: red;
+  color: white;
 }
 
 .Signup__Users__Table__Button {
@@ -149,7 +189,7 @@
 }
 
 .Signup__Users__Table > tbody > tr:hover {
-  background-color: var(--highlight-color); 
+  background-color: gainsboro; 
 }
 
 .Signup__Users__Table__Button:hover {

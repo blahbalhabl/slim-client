@@ -34,7 +34,7 @@
   font-size: 1.2rem;
 }
 
-.Sidebar__Button > p{
+.Sidebar__Button > p {
   margin-left: 10%;
   font-size: 1rem;
 }
@@ -74,11 +74,9 @@
   width: 100%;
   justify-content: right;
   align-items: center;
-  /* padding-right: 20px; */
 }
 
 .Sidebar__Burger {
-  /* margin-inline: 10px; */
   padding: 7px;
   border-radius: 5px;
   background-color: gainsboro;
