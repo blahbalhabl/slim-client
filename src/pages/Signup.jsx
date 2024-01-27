@@ -118,23 +118,6 @@ const Signup = () => {
         }).catch((err) => {
           console.log('Error sending email:', err);
         });
-        // Check if the user is a member and make an additional request
-        // if (isMember) {
-        //   const memberData = {
-        //     email: inputs.email,
-        //     name: inputs.username,
-        //     position: inputs.position,
-        //     branch: inputs.level,
-        //     startTerm: inputs.startTerm,
-        //     endTerm: inputs.endTerm,
-        //   };
-
-        //   await axiosPrivate.post('/new-member', memberData, {
-        //     headers: { 'Content-Type': 'application/json' },
-        //   }).catch((err) => {
-        //     console.log('Error creating new member:', err);
-        //   });
-        // }
       }
     } catch (err) {
       console.log('Error:', err);
@@ -151,16 +134,6 @@ const Signup = () => {
     console.error(err);
    }
   };
-
-  // const getMembers = async () => {
-  //   try {
-  //     const members = await axiosPrivate.get('/sanggunian-members');
-  //     const data = await members.data;
-  //     return data;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
   const handleEditing = (e, user, action) => {
     e.preventDefault()
@@ -194,7 +167,14 @@ const handleUpdateUser = async (e, user) => {
 };
 
   const renderUsers = () => {
-    return users.map((user, i) => {
+    // Check if the authentication level is 'Barangay'
+    const isBarangayAuth = auth.level === 'Barangay';
+
+    // Filter users based on the authentication level
+    const filteredUsers = isBarangayAuth ? 
+    users.filter(user => user.level === 'Barangay') : users;
+
+    return filteredUsers.map((user, i) => {
       let color;
       switch(user.role){
         case 'Superadmin':
@@ -273,20 +253,24 @@ const handleUpdateUser = async (e, user) => {
               user.role
             )}
           </td>
-          <td style={{display: 'flex', justifyContent: 'flex-end'}}>
+          <td className="Signup__Users__Table__Action">
             { isEditingThisUser && (
               <div>
                 <button
+                  className="Signup__Users__Table__Action__Button edit"
+
                   onClick={(e) => handleEditing(e, user, 'edit')}
                 >
                   Edit
                 </button>
                 <button
+                  className="Signup__Users__Table__Action__Button delete"
                   onClick={(e) => handleDeleteUser(e, user, 'delete')}
                 >
                   Delete
                 </button>
                 <button 
+                  className="Signup__Users__Table__Action__Button"
                   disabled={!isButtonDisabled}
                   onClick={(e) => {handleUpdateUser(e, user), handleEditing(e, user)}}
                 >
