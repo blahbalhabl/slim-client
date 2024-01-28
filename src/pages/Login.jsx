@@ -17,6 +17,8 @@ const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [passError, setPassError] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
+  const [initialSetup, setInitialSetup] = useState(false);
+  const [emailConfirmed, setEmailConfirmed] = useState(true);
   const inputType = visible ? "text" : "password";
   const toggleIcon = visible ? <FontAwesomeIcon icon={icons.eye} /> : <FontAwesomeIcon icon={icons.eyeslash} />;
 
@@ -97,13 +99,115 @@ const Login = () => {
     };
   };
 
+  const checkInitialUser = async () => {
+    try {
+      const res = await axios.get('/initial-user');
+      if (res.status === 200) {
+        setInitialSetup(true);
+      };
+    } catch (err) {
+      console.log(err);
+    };
+  };
+
+  const createFirstUser = async (e) => {
+    e.preventDefault();
+    try {
+      const email = {
+        email: inputs.email,
+      };
+      const res = await axios.post('/create-initial-user', email, {
+        headers: {"Content-Type": "application/json"},
+      });
+      if (res.status === 201) {
+        setInitialSetup(false);
+        setServerMessage(res.data.message);
+        setSeverity(res.status);
+      };
+    } catch (err) {
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
+    };
+  };
+
+  const sendEmail = async (e) => {
+    try {
+      e.preventDefault();
+      const email = {
+        email: inputs.email,
+      };
+      const res = await axios.post('/create-initial-user', email, {
+        headers: {"Content-Type": "application/json"},
+      });
+      if (res.status === 200) {
+        // setEmailConfirmed(true);
+        setServerMessage(res.data.message);
+        setSeverity(res.status);
+
+        const defaultPassword = res.data.defaultPassword;
+
+        const emailData = {
+          email: inputs.email,
+          subject: `SLIM Account Creation`,
+          html: `
+            <h1>Welcome to SLIM.</h1> 
+            <h3>Here are your account details:</h3>
+            </br>
+            </br>
+            <p>email: ${inputs.email}</p>
+            <p>password: ${defaultPassword}</p>
+            <p>Enter this code to Google Authenticator:</p>
+            <img src="${res.data.qrCode}" alt="QR Code for 2FA" />
+            <p>${res.data.secret}</p>
+            <p>Make sure once logged in to change password right away.</p>`,
+        };
+
+        await axios.post('/new-user-creds', emailData, {
+          headers: {'Content-Type': 'application/json'}
+        }).catch((err) => {
+          console.log('Error sending email:', err);
+        });
+      };
+    } catch (err) {
+      setServerMessage(err.response.data.message);
+      setSeverity(err.response.status);
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem('persist', persist);
     document.title = 'SLIM | Login';
+    checkInitialUser();
   },[persist]);
 
   return (
     <div className="Login">
+      {initialSetup ? (
+      <div className="Login__Container">
+        <h4>Initial Setup</h4>
+        <p>Create a Super admin Account to start</p>
+        <form style={{width: '100%'}} onSubmit={createFirstUser}>
+          <TextField
+            error={emailError}
+            className="Login__Input" 
+            id="email"
+            name="email"
+            label="Email Address" 
+            variant="outlined"
+            margin="normal"
+            helperText={emailError && 'Invalid Email.'}
+            onChange={handleChange}
+            required
+          />
+          <button
+            className="Login__Button"
+            type="submit"
+            onClick={emailConfirmed ? createFirstUser : sendEmail}
+            >
+            {emailConfirmed ? 'Create Account' : 'Send Email'}
+          </button>
+        </form>
+      </div>) : (
       <form onSubmit={userLogin}>
         <div className="Login__Container">
           <h4>Welcome to SLIM: Bacolor</h4>
@@ -169,6 +273,7 @@ const Login = () => {
           </div>
         </div>
       </form>
+      )}
       <Alert severity={severity} message={serverMessage} onClose={() => setServerMessage('')}/>
     </div>
   );
